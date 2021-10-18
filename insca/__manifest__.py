@@ -23,7 +23,7 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        # 'views/product_inherit_views.xml',
+        'views/product_inherit_views.xml',
     ],
 
     'installable': True,
