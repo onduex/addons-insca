@@ -19,13 +19,21 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
-        vals.update({'vault_code': vals['default_code'][0:3],
-                     })
         res = super(ProductTemplate, self).create(vals)
+        res.update({'vault_code': vals['default_code'][0:3]
+                    })
         return res
 
     def write(self, vals):
-        vals.update({'vault_code': vals['default_code'][0:3],
-                     })
+        if self.default_code:
+            vals.update({'vault_code': str(self.default_code)[0:3]})
+        if self.vault_length:
+            vals.update({'product_length': float(self.vault_length)})
+        if self.vault_width:
+            vals.update({'product_width': float(self.vault_width)})
+        if self.vault_height:
+            vals.update({'product_height': float(self.vault_height)})
+        if self.vault_thinkness:
+            vals.update({'product_thickness': float(self.vault_thinkness)})
         res = super(ProductTemplate, self).write(vals)
         return res
