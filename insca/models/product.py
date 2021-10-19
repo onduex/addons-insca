@@ -17,4 +17,15 @@ class ProductTemplate(models.Model):
     vault_color = fields.Char(string='Vault Color', required=False)
     vault_categ = fields.Char(string='Vault Categoría', required=False)
 
+    @api.model
+    def create(self, vals):
+        vals.update({'vault_code': vals['default_code'][0:3],
+                     })
+        res = super(ProductTemplate, self).create(vals)
+        return res
 
+    def write(self, vals):
+        vals.update({'vault_code': vals['default_code'][0:3],
+                     })
+        res = super(ProductTemplate, self).write(vals)
+        return res
