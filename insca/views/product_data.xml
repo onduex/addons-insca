@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Tree View-->
+    <record id="view_tree_res_code" model="ir.ui.view">
+        <field name="name">Códigos</field>
+        <field name="model">res.code</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Códigos" default_order="name asc">
+                <field name="name"/>
+                <field name="app"/>
+                <field name="type"/>
+                <field name="sale_ok"/>
+                <field name="purchase_ok"/>
+                <field name="product_route_ids" widget="many2many_tags"/>
+                <field name="type_store"/>
+                <field name="date_schedule_mrp"/>
+                <field name="date_schedule_customer"/>
+                <field name="type_mrp"/>
+                <field name="route_mrp"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Actions-->
+    <record id="action_res_codes" model="ir.actions.act_window">
+        <field name="name">Códigos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.code</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+
+    <!--Menu-->
+    <menuitem id="codes" name="Configuración de códigos" parent="stock.menu_stock_inventory_control"
+              action="action_res_codes" sequence="104"/>
+
+</odoo>

@@ -18,12 +18,15 @@
     'depends': [
         'product',
         'rainbow',
+        'stock',
     ],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/product_inherit_views.xml',
+        'views/product_data.xml',
+
     ],
 
     'installable': True,
