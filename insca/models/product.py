@@ -20,8 +20,9 @@ class ProductTemplate(models.Model):
     @api.model
     def create(self, vals):
         res = super(ProductTemplate, self).create(vals)
-        res.update({'vault_code': vals['default_code'][0:3]
-                    })
+        if vals.get('default_code'):
+            res.update({'vault_code': vals['default_code'][0:3]
+                        })
         return res
 
     def write(self, vals):
