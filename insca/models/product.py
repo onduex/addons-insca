@@ -55,11 +55,15 @@ class ProductTemplate(models.Model):
                              'type': res_code.type_store,
                              })
 
-                # Para categorías dinámicas
-                if not res_code.categ_fixed and vals['vault_code'] == 'A00':
-                    categ = self.env['product.category'].search([('name', '=', self.vault_categ)])
-                    parent_categ = res_code.type
-                    print(categ, parent_categ)
+                # Para categorías dinámicas y sin valor en categoría fija
+                if vals['vault_code'] == 'A00' and not res_code.categ_fixed:
+                    categ = self.env['product.category'].search([('name', '=', vals.get('vault_categ'))])
+                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    if not categ:
+                        categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
+                                                                            'parent_id': parent_categ.id,
+                                                                            })
+                    vals.update({'categ_id': categ.id})
 
         res = super(ProductTemplate, self).write(vals)
         return res
