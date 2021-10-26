@@ -56,6 +56,7 @@ class ProductTemplate(models.Model):
                              })
 
                 # Para categorías dinámicas y sin valor en categoría fija
+                # Código A00
                 if vals['vault_code'] == 'A00' and not res_code.categ_fixed:
                     categ = self.env['product.category'].search([('name', '=', vals.get('vault_categ'))])
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
