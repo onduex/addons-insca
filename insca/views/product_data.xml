@@ -17,7 +17,7 @@
                 <field name="date_schedule_mrp"/>
                 <field name="date_schedule_customer"/>
                 <field name="type_mrp"/>
-                <field name="route_mrp"/>
+                <field name="categ_fixed"/>
             </tree>
         </field>
     </record>
