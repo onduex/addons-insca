@@ -21,7 +21,7 @@ class ResCode(models.Model):
         ('service', 'Servicio'),
         ('product', 'Almacenable')], string='Tipo de producto', default='product', required=False)
     date_schedule_mrp = fields.Float(string='Plazo fabricación', required=False, help="En días")
-    date_schedule_customer = fields.Integer(string='Plazo cliente', required=False, help="En días")
+    date_schedule_customer = fields.Float(string='Plazo cliente', required=False, help="En días")
     type_mrp = fields.Selection([
         ('normal', 'Fabricar'),
         ('phantom', 'Kit'),
