@@ -29,7 +29,6 @@ class ProductTemplate(models.Model):
         if self.is_vault_product:
             res_code = self.env['res.code'].search([('name', '=', self.vault_code)])
             if res_code:
-
                 # Cambio tipo de datos
                 if self.default_code:
                     vals.update({'vault_code': str(self.default_code)[0:3]})
@@ -57,14 +56,47 @@ class ProductTemplate(models.Model):
 
                 # Para categorías dinámicas y sin valor en categoría fija
                 # Código A00
-                if vals['vault_code'] == 'A00' and not res_code.categ_fixed:
+                if vals['vault_code'] == 'A00':
                     categ = self.env['product.category'].search([('name', '=', vals.get('vault_categ'))])
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
-                    if not categ:
+                    if not categ and vals.get('vault_categ'):
                         categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
                                                                             'parent_id': parent_categ.id,
                                                                             })
                     vals.update({'categ_id': categ.id})
 
-        res = super(ProductTemplate, self).write(vals)
-        return res
+                # Código A10
+                elif vals['vault_code'] == 'A10':
+                    categ = self.env['product.category'].search([('name', '=', self.vault_material)])
+                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    if not categ and self.vault_material:
+                        categ = self.env['product.category'].sudo().create({'name': self.vault_material,
+                                                                            'parent_id': parent_categ.id,
+                                                                            })
+                    vals.update({'categ_id': categ.id})
+
+                # Código A30 CON COLOR
+                elif vals['vault_code'] == 'A30' and self.vault_color and self.vault_material:
+                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    categ = self.env['product.category'].search([('name', '=',
+                                                                  self.vault_material + ' ' + 'COLOR')])
+                    if not categ:
+                        categ = self.env['product.category'].sudo().\
+                            create({'name': self.vault_material + ' ' + 'COLOR',
+                                    'parent_id': parent_categ.id,
+                                    })
+                    vals.update({'categ_id': categ.id})
+
+                # Código A30 SIN PINTAR
+                elif vals['vault_code'] == 'A30' and not self.vault_color and self.vault_material:
+                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    categ = self.env['product.category'].search([('name', '=',
+                                                                  self.vault_material + ' ' + 'SIN PINTAR')])
+                    if not categ:
+                        categ = self.env['product.category'].sudo(). \
+                            create({'name': self.vault_material + ' ' + 'SIN PINTAR',
+                                    'parent_id': parent_categ.id,
+                                    })
+                    vals.update({'categ_id': categ.id})
+
+            return super(ProductTemplate, self).write(vals)
