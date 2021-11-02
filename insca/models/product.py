@@ -99,4 +99,4 @@ class ProductTemplate(models.Model):
                                     })
                     vals.update({'categ_id': categ.id})
 
-            return super(ProductTemplate, self).write(vals)
+        return super(ProductTemplate, self).write(vals)
