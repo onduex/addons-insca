@@ -19,6 +19,7 @@
         'product',
         'rainbow',
         'stock',
+        'mrp',
     ],
 
     # always loaded
@@ -26,6 +27,7 @@
         'security/ir.model.access.csv',
         'views/product_inherit_views.xml',
         'views/product_data.xml',
+        'views/mrp_bom_inherit_views.xml',
 
     ],
 
