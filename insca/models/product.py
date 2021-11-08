@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    vault_categ = fields.Char(string='Vault Categoría', required=False)
     vault_length = fields.Char(string='Vault Largo', required=False)
     vault_width = fields.Char(string='Vault Ancho', required=False)
     vault_height = fields.Char(string='Vault Hondo', required=False)
@@ -14,8 +15,8 @@ class ProductTemplate(models.Model):
     vault_route = fields.Char(string='Vault Ruta', required=False)
     vault_code = fields.Char(string='Vault Código', required=False)
     vault_material = fields.Char(string='Vault Material', required=False)
+    vault_material_code = fields.Char(string='Vault Material Code', required=False)
     vault_color = fields.Char(string='Vault Color', required=False)
-    vault_categ = fields.Char(string='Vault Categoría', required=False)
 
     @api.model
     def create(self, vals):
@@ -63,7 +64,10 @@ class ProductTemplate(models.Model):
                         categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
                                                                             'parent_id': parent_categ.id,
                                                                             })
-                    vals.update({'categ_id': categ.id})
+                        vals.update({'categ_id': categ.id})
+                    if not categ and not vals.get('vault_categ'):
+                        categ = self.env['product.category'].search([('name', '=', self.vault_categ)])
+                        vals.update({'categ_id': categ.id})
 
                 # Código A10
                 elif vals['vault_code'] == 'A10':

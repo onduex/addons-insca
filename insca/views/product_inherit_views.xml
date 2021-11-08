@@ -10,17 +10,18 @@
             <xpath expr="//group[@name='vault_product']" position="after">
                     <group name="vault_product2">
                         <group>
+                            <field name="vault_categ" readonly="1"/>
                             <field name="vault_code" readonly="1"/>
                             <field name="vault_route" readonly="1"/>
-                            <field name="vault_material" readonly="1"/>
-                            <field name="vault_color" readonly="1"/>
-                            <field name="vault_categ" readonly="1"/>
                         </group>
                         <group>
-                            <field name="vault_length" readonly="1"/>
-                            <field name="vault_width" readonly="1"/>
-                            <field name="vault_height" readonly="1"/>
-                            <field name="vault_thinkness" readonly="1"/>
+                            <field name="vault_material_code" readonly="1"/>
+                            <field name="vault_material" readonly="1"/>
+                            <field name="vault_color" readonly="1"/>
+                            <field name="vault_length" readonly="1" invisible="1"/>
+                            <field name="vault_width" readonly="1" invisible="1"/>
+                            <field name="vault_height" readonly="1" invisible="1"/>
+                            <field name="vault_thinkness" readonly="1" invisible="1"/>
                         </group>
                     </group>
             </xpath>
