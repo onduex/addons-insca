@@ -18,14 +18,6 @@ class ProductTemplate(models.Model):
     vault_material_code = fields.Char(string='Vault Material Code', required=False)
     vault_color = fields.Char(string='Vault Color', required=False)
 
-    @api.model
-    def create(self, vals):
-        res = super(ProductTemplate, self).create(vals)
-        if vals.get('default_code'):
-            res.update({'vault_code': vals['default_code'][0:3]
-                        })
-        return res
-
     def write(self, vals):
         if self.is_vault_product:
             res_code = self.env['res.code'].search([('name', '=', self.vault_code)])
@@ -42,6 +34,10 @@ class ProductTemplate(models.Model):
                 if self.vault_thinkness:
                     vals.update({'product_thickness': float(self.vault_thinkness)})
 
+                # Escribe material code
+                if self.vault_material_code:
+                    vals.update({'vault_material_code': self.vault_material_code})
+
                 # Para valores predeterminados
                 if res_code.route_mrp:
                     vals.update({'vault_route': res_code.route_mrp})
@@ -55,16 +51,18 @@ class ProductTemplate(models.Model):
                              'type': res_code.type_store,
                              })
 
-                # Para categorías dinámicas y sin valor en categoría fija
+                # Para categorías dinámicas
                 # Código A00
                 if vals['vault_code'] == 'A00':
                     categ = self.env['product.category'].search([('name', '=', vals.get('vault_categ'))])
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    # Crear categoría si no existe
                     if not categ and vals.get('vault_categ'):
                         categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
                                                                             'parent_id': parent_categ.id,
                                                                             })
                         vals.update({'categ_id': categ.id})
+                    # Seleccionar categoría si existe
                     if not categ and not vals.get('vault_categ'):
                         categ = self.env['product.category'].search([('name', '=', self.vault_categ)])
                         vals.update({'categ_id': categ.id})
@@ -77,6 +75,18 @@ class ProductTemplate(models.Model):
                         categ = self.env['product.category'].sudo().create({'name': self.vault_material,
                                                                             'parent_id': parent_categ.id,
                                                                             })
+                    # Crear lista de materiales
+                    if vals.get('vault_material_code'):
+                        product_id = self.env['product.product'].\
+                            search([('default_code', '=', vals['vault_material_code'])])
+                        self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
+                                                           'code': self.vault_revision,
+                                                           'product_qty': 1,
+                                                           'type': 'normal',
+                                                           'bom_line_ids': [(0, 0, {'product_id': product_id.id,
+                                                                                    'product_qty': 1}),
+                                                                            ]
+                                                           })
                     vals.update({'categ_id': categ.id})
 
                 # Código A30 CON COLOR
@@ -89,6 +99,18 @@ class ProductTemplate(models.Model):
                             create({'name': self.vault_material + ' ' + 'COLOR',
                                     'parent_id': parent_categ.id,
                                     })
+                    # Crear lista de materiales
+                    if vals.get('vault_material_code'):
+                        product_id = self.env['product.product']. \
+                            search([('default_code', '=', vals['vault_material_code'])])
+                        self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
+                                                           'code': self.vault_revision,
+                                                           'product_qty': 1,
+                                                           'type': 'normal',
+                                                           'bom_line_ids': [(0, 0, {'product_id': product_id.id,
+                                                                                    'product_qty': 1}),
+                                                                            ]
+                                                           })
                     vals.update({'categ_id': categ.id})
 
                 # Código A30 SIN PINTAR
@@ -101,6 +123,26 @@ class ProductTemplate(models.Model):
                             create({'name': self.vault_material + ' ' + 'SIN PINTAR',
                                     'parent_id': parent_categ.id,
                                     })
+                    # Crear lista de materiales
+                    if vals.get('vault_material_code'):
+                        product_id = self.env['product.product']. \
+                            search([('default_code', '=', vals['vault_material_code'])])
+                        self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
+                                                           'code': self.vault_revision,
+                                                           'product_qty': 1,
+                                                           'type': 'normal',
+                                                           'bom_line_ids': [(0, 0, {'product_id': product_id.id,
+                                                                                    'product_qty': 1}),
+                                                                            ]
+                                                           })
                     vals.update({'categ_id': categ.id})
 
         return super(ProductTemplate, self).write(vals)
+
+    @api.model
+    def create(self, vals):
+        res = super(ProductTemplate, self).create(vals)
+        if vals.get('default_code'):
+            res.update({'vault_code': vals['default_code'][0:3]
+                        })
+        return res
