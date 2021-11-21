@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_view_form_inherit_demo" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.demo</field>
+        <field name="model">product.template</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='vault_product']" position="after">
+                    <group name="vault_product2">
+                        <group>
+                            <field name="vault_material" readonly="1"/>
+                            <field name="vault_weight" readonly="1"/>
+                            <field name="vault_color" readonly="1"/>
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_product_tree_inherit_demo" model="ir.ui.view">
+        <field name="name">product.template.product.tree.inherit.demo</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="vault_material" readonly="1"/>
+                <field name="vault_weight" readonly="1"/>
+                <field name="vault_color" readonly="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
