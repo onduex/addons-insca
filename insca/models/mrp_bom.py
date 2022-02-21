@@ -22,8 +22,8 @@ class MrpBom(models.Model):
                 res.update({'type': res_code.type_mrp})
         return res
 
-    def write(self, values):
-        res = super().write(values)
-        for bom in self:
-            print(bom)
-        return res
+    # def write(self, values):
+    #     res = super().write(values)
+    #     for bom in self:
+    #         print(bom)
+    #     return res
