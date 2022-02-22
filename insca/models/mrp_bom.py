@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class MrpBom(models.Model):
@@ -16,10 +17,13 @@ class MrpBom(models.Model):
             res_code = self.env['res.code'].search([('name', '=', bom.product_tmpl_id.vault_code)])
             mrp_routing = self.env['mrp.routing'].search([('name', '=', bom.product_tmpl_id.vault_route)])
 
-            if mrp_routing:
-                res.update({'routing_id': mrp_routing.id})
             if res_code.type_mrp:
                 res.update({'type': res_code.type_mrp})
+            if not len(mrp_routing):
+                raise ValidationError(_('El producto (%s) no tiene ruta de producción asignada en vault'
+                                        % bom.product_tmpl_id.name))
+            elif len(mrp_routing):
+                res.update({'routing_id': mrp_routing.id})
         return res
 
     # def write(self, values):
