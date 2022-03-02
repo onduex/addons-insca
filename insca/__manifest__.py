@@ -18,6 +18,7 @@
     'depends': [
         'product',
         'rainbow',
+        'rainbow_bom_structure',
         'stock',
         'mrp',
     ],

@@ -2,21 +2,27 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    vault_categ = fields.Char(string='Vault Categoría', required=False)
-    vault_length = fields.Char(string='Vault Largo', required=False)
-    vault_width = fields.Char(string='Vault Ancho', required=False)
-    vault_height = fields.Char(string='Vault Hondo', required=False)
-    vault_thinkness = fields.Char(string='Vault Espesor', required=False)
-    vault_route = fields.Char(string='Vault Ruta', required=False)
-    vault_code = fields.Char(string='Vault Código', required=False)
-    vault_material = fields.Char(string='Vault Material', required=False)
-    vault_material_code = fields.Char(string='Vault Material Code', required=False)
-    vault_color = fields.Char(string='Vault Color', required=False)
+    vault_categ = fields.Char(string='Vault Categoría', required=False)  # Categoria
+    vault_categ_terminado = fields.Char(string='Vault Cat. PTERMINADO', required=False)  # Categoria PTERMINADO
+    vault_code = fields.Char(string='Vault Código', required=False)  # 3 primeros digitos
+    vault_material_code = fields.Char(string='Vault Virtual Material', required=False)  # Codigo_Virtual_Material
+    vault_route = fields.Char(string='Vault Ruta', required=False)  # Ruta de produccion
+    vault_material = fields.Char(string='Vault Material', required=False)  # Codigo material
+    vault_edge_code = fields.Char(string='Vault Edge Code', required=False)  # Codigo cantos
+
+    vault_color = fields.Char(string='Vault Color', required=False)  # Codigo color
+    vault_length = fields.Char(string='Vault Largo', required=False)  # Largo
+    vault_width = fields.Char(string='Vault Ancho', required=False)  # Ancho
+    vault_height = fields.Char(string='Vault Hondo', required=False)  # Hondo
+    vault_thinkness = fields.Char(string='Vault Espesor', required=False)  # Espesor
+    vault_diameter = fields.Char(string='Vault Diámetro', required=False)  # Diametro
+    vault_mesh = fields.Char(string='Vault Malla', required=False)  # Malla
 
     def write(self, vals):
         if self.is_vault_product:
@@ -25,14 +31,14 @@ class ProductTemplate(models.Model):
                 # Cambio tipo de datos
                 if self.default_code:
                     vals.update({'vault_code': str(self.default_code)[0:3]})
-                if self.vault_length:
-                    vals.update({'product_length': float(self.vault_length)})
-                if self.vault_width:
-                    vals.update({'product_width': float(self.vault_width)})
-                if self.vault_height:
-                    vals.update({'product_height': float(self.vault_height)})
-                if self.vault_thinkness:
-                    vals.update({'product_thickness': float(self.vault_thinkness)})
+                if vals.get('vault_length'):
+                    vals.update({'product_length': float(vals.get('vault_length'))})
+                if vals.get('vault_width'):
+                    vals.update({'product_width': float(vals.get('vault_width'))})
+                if vals.get('vault_height'):
+                    vals.update({'product_height': float(vals.get('vault_height'))})
+                if vals.get('vault_thinkness'):
+                    vals.update({'product_thickness': float(vals.get('vault_thinkness'))})
 
                 # Escribe material code
                 if self.vault_material_code:
@@ -54,25 +60,16 @@ class ProductTemplate(models.Model):
                 # Para categorías dinámicas
                 # Código A00
                 if vals['vault_code'] == 'A00':
-                    categ = self.env['product.category'].search([('name', '=', vals.get('vault_categ'))])
-                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
-                    # Crear categoría si no existe
-                    if not categ and vals.get('vault_categ'):
-                        categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
-                                                                            'parent_id': parent_categ.id,
-                                                                            })
-                        vals.update({'categ_id': categ.id})
-                    # Seleccionar categoría si existe
-                    if not categ and not vals.get('vault_categ'):
-                        categ = self.env['product.category'].search([('name', '=', self.vault_categ)])
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ_terminado'])])
+                    if categ:
                         vals.update({'categ_id': categ.id})
 
                 # Código A10
                 elif vals['vault_code'] == 'A10':
-                    categ = self.env['product.category'].search([('name', '=', self.vault_material)])
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ'])])
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
-                    if not categ and self.vault_material:
-                        categ = self.env['product.category'].sudo().create({'name': self.vault_material,
+                    if categ and categ.name != parent_categ:
+                        categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
                                                                             'parent_id': parent_categ.id,
                                                                             })
                     # Crear lista de materiales
@@ -90,51 +87,26 @@ class ProductTemplate(models.Model):
                     vals.update({'categ_id': categ.id})
 
                 # Código A30 CON COLOR
-                elif vals['vault_code'] == 'A30' and self.vault_color and self.vault_material:
+                elif vals['vault_code'] == 'A30' and vals['vault_color'] and vals['vault_categ']:
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ'] + ' ' + 'COLOR')])
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
-                    categ = self.env['product.category'].search([('name', '=',
-                                                                  self.vault_material + ' ' + 'COLOR')])
-                    if not categ:
-                        categ = self.env['product.category'].sudo().\
-                            create({'name': self.vault_material + ' ' + 'COLOR',
-                                    'parent_id': parent_categ.id,
-                                    })
-                    # Crear lista de materiales
-                    if vals.get('vault_material_code'):
-                        product_id = self.env['product.product']. \
-                            search([('default_code', '=', vals['vault_material_code'])])
-                        self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
-                                                           'code': self.vault_revision,
-                                                           'product_qty': 1,
-                                                           'type': 'normal',
-                                                           'bom_line_ids': [(0, 0, {'product_id': product_id.id,
-                                                                                    'product_qty': 1}),
-                                                                            ]
-                                                           })
-                    vals.update({'categ_id': categ.id})
-
-                # Código A30 SIN PINTAR
-                elif vals['vault_code'] == 'A30' and not self.vault_color and self.vault_material:
-                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
-                    categ = self.env['product.category'].search([('name', '=',
-                                                                  self.vault_material + ' ' + 'SIN PINTAR')])
                     if not categ:
                         categ = self.env['product.category'].sudo(). \
-                            create({'name': self.vault_material + ' ' + 'SIN PINTAR',
+                            create({'name': vals['vault_categ'] + ' ' + 'COLOR',
                                     'parent_id': parent_categ.id,
                                     })
                     # Crear lista de materiales
-                    if vals.get('vault_material_code'):
-                        product_id = self.env['product.product']. \
-                            search([('default_code', '=', vals['vault_material_code'])])
-                        self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
-                                                           'code': self.vault_revision,
-                                                           'product_qty': 1,
-                                                           'type': 'normal',
-                                                           'bom_line_ids': [(0, 0, {'product_id': product_id.id,
-                                                                                    'product_qty': 1}),
-                                                                            ]
-                                                           })
+                    # if vals.get('vault_material_code'):
+                    #     product_id = self.env['product.product']. \
+                    #         search([('default_code', '=', vals['vault_material_code'])])
+                    #     self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
+                    #                                        'code': self.vault_revision,
+                    #                                        'product_qty': 1,
+                    #                                        'type': 'normal',
+                    #                                        'bom_line_ids': [(0, 0, {'product_id': product_id.id,
+                    #                                                                 'product_qty': 1}),
+                    #                                                         ]
+                    #                                        })
                     vals.update({'categ_id': categ.id})
 
         return super(ProductTemplate, self).write(vals)
