@@ -39,6 +39,18 @@ class ProductTemplate(models.Model):
                     vals.update({'product_height': float(vals.get('vault_height'))})
                 if vals.get('vault_thinkness'):
                     vals.update({'product_thickness': float(vals.get('vault_thinkness'))})
+                if vals.get('vault_diameter'):
+                    vals.update({'vault_diameter': float(vals.get('vault_diameter'))})
+                if vals.get('vault_mesh'):
+                    vals.update({'vault_mesh': float(vals.get('vault_mesh'))})
+
+                # Recupera valores
+                if not vals.get('vault_categ'):
+                    vals.update({'vault_categ': self.categ_id.name})
+                if not vals.get('vault_color'):
+                    vals.update({'vault_color': self.vault_color})
+                if not vals.get('vault_categ_terminado') and vals['vault_code'] == 'A00':
+                    vals.update({'vault_categ_terminado': self.categ_id.name})
 
                 # Escribe material code
                 if self.vault_material_code:
@@ -63,38 +75,57 @@ class ProductTemplate(models.Model):
                     categ = self.env['product.category'].search([('name', '=', vals['vault_categ_terminado'])])
                     if categ:
                         vals.update({'categ_id': categ.id})
+                    if not categ:
+                        raise ValidationError(_('La categoría (%s) no está en Odoo' % vals['vault_categ_terminado']))
 
                 # Código A10
                 elif vals['vault_code'] == 'A10':
-                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ'])])
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
-                    if categ and categ.name != parent_categ:
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
+                                                                 ('parent_id', '=', parent_categ.id)
+                                                                 ])
+
+                    if categ and categ.parent_id.name != parent_categ.name:
                         categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
                                                                             'parent_id': parent_categ.id,
                                                                             })
+                    if categ:
+                        vals.update({'categ_id': categ.id})
+                    if not categ:
+                        raise ValidationError(_('La categoría (%s) no está en Odoo' % vals['vault_categ']))
+
                     # Crear lista de materiales
-                    if vals.get('vault_material_code'):
-                        product_id = self.env['product.product'].\
-                            search([('default_code', '=', vals['vault_material_code'])])
-                        self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
-                                                           'code': self.vault_revision,
-                                                           'product_qty': 1,
-                                                           'type': 'normal',
-                                                           'bom_line_ids': [(0, 0, {'product_id': product_id.id,
-                                                                                    'product_qty': 1}),
-                                                                            ]
-                                                           })
+                    if self.bom_count == 0:
+                        if vals.get('vault_material_code'):
+                            lines = []
+                            product_id = self.env['product.product'].\
+                                search([('default_code', '=', ('|', vals['vault_material_code'],
+                                                               vals['vault_edge_code']))])
+                            for product in product_id:
+                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                            self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
+                                                               'code': self.vault_revision,
+                                                               'product_qty': 1,
+                                                               'type': 'normal',
+                                                               'bom_line_ids': lines,
+                                                               })
                     vals.update({'categ_id': categ.id})
 
                 # Código A30 CON COLOR
                 elif vals['vault_code'] == 'A30' and vals['vault_color'] and vals['vault_categ']:
-                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ'] + ' ' + 'COLOR')])
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ'] + ' ' + 'COLOR'),
+                                                                 ('parent_id', '=', parent_categ.id)])
                     if not categ:
                         categ = self.env['product.category'].sudo(). \
                             create({'name': vals['vault_categ'] + ' ' + 'COLOR',
                                     'parent_id': parent_categ.id,
                                     })
+                    if categ:
+                        vals.update({'categ_id': categ.id})
+                    if not categ:
+                        raise ValidationError(_('La categoría (%s) no está en Odoo' % vals['vault_categ']))
+
                     # Crear lista de materiales
                     # if vals.get('vault_material_code'):
                     #     product_id = self.env['product.product']. \
@@ -107,7 +138,7 @@ class ProductTemplate(models.Model):
                     #                                                                 'product_qty': 1}),
                     #                                                         ]
                     #                                        })
-                    vals.update({'categ_id': categ.id})
+                    # vals.update({'categ_id': categ.id})
 
         return super(ProductTemplate, self).write(vals)
 
