@@ -60,7 +60,7 @@ class ProductTemplate(models.Model):
                 if res_code.route_mrp:
                     vals.update({'vault_route': res_code.route_mrp})
                 if res_code.categ_fixed:
-                    vals.update({'categ_id': res_code.categ_fixed})
+                    vals.update({'categ_id': res_code.categ_fixed.id})
 
                 vals.update({'sale_ok': res_code.sale_ok,
                              'purchase_ok': res_code.purchase_ok,
@@ -84,24 +84,27 @@ class ProductTemplate(models.Model):
                     categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
                                                                  ('parent_id', '=', parent_categ.id)
                                                                  ])
-
-                    if categ and categ.parent_id.name != parent_categ.name:
+                    if not categ:
                         categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
                                                                             'parent_id': parent_categ.id,
                                                                             })
-                    if categ:
-                        vals.update({'categ_id': categ.id})
-                    if not categ:
-                        raise ValidationError(_('La categoría (%s) no está en Odoo' % vals['vault_categ']))
+                    vals.update({'categ_id': categ.id})
 
                     # Crear lista de materiales
                     if self.bom_count == 0:
                         if vals.get('vault_material_code'):
                             lines = []
-                            product_id = self.env['product.product'].\
-                                search([('default_code', '=', ('|', vals['vault_material_code'],
-                                                               vals['vault_edge_code']))])
-                            for product in product_id:
+                            product_ids = {}
+                            if vals['vault_material_code']:
+                                product_ids = self.env['product.product'].search([('default_code', '=',
+                                                                                  vals['vault_material_code'])])
+                            if vals['vault_edge_code']:
+                                product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                    vals['vault_edge_code'])])
+                            if vals['vault_color']:
+                                product_ids += self.env['product.product'].search([('inventor_color', '=',
+                                                                                    vals['vault_color'])])
+                            for product in product_ids:
                                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
                             self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
                                                                'code': self.vault_revision,
@@ -109,37 +112,39 @@ class ProductTemplate(models.Model):
                                                                'type': 'normal',
                                                                'bom_line_ids': lines,
                                                                })
-                    vals.update({'categ_id': categ.id})
 
-                # Código A30 CON COLOR
-                elif vals['vault_code'] == 'A30' and vals['vault_color'] and vals['vault_categ']:
+                # Código A30
+                elif vals['vault_code'] == 'A30' and vals['vault_categ']:
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
-                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ'] + ' ' + 'COLOR'),
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
                                                                  ('parent_id', '=', parent_categ.id)])
                     if not categ:
-                        categ = self.env['product.category'].sudo(). \
-                            create({'name': vals['vault_categ'] + ' ' + 'COLOR',
-                                    'parent_id': parent_categ.id,
-                                    })
-                    if categ:
-                        vals.update({'categ_id': categ.id})
-                    if not categ:
-                        raise ValidationError(_('La categoría (%s) no está en Odoo' % vals['vault_categ']))
+                        categ = self.env['product.category'].sudo().create({'name': vals['vault_categ'],
+                                                                            'parent_id': parent_categ.id,
+                                                                            })
+                    vals.update({'categ_id': categ.id})
 
-                    # Crear lista de materiales
-                    # if vals.get('vault_material_code'):
-                    #     product_id = self.env['product.product']. \
-                    #         search([('default_code', '=', vals['vault_material_code'])])
-                    #     self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
-                    #                                        'code': self.vault_revision,
-                    #                                        'product_qty': 1,
-                    #                                        'type': 'normal',
-                    #                                        'bom_line_ids': [(0, 0, {'product_id': product_id.id,
-                    #                                                                 'product_qty': 1}),
-                    #                                                         ]
-                    #                                        })
-                    # vals.update({'categ_id': categ.id})
-
+                    if self.bom_count == 0:
+                        if vals.get('vault_material_code'):
+                            lines = []
+                            product_ids = {}
+                            if vals['vault_material_code']:
+                                product_ids = self.env['product.product'].search([('default_code', '=',
+                                                                                  vals['vault_material_code'])])
+                            if vals['vault_edge_code']:
+                                product_ids += (self.env['product.product'].search([('default_code', '=',
+                                                                                     vals['vault_edge_code'])]))
+                            if vals['vault_color']:
+                                product_ids += (self.env['product.product'].search([('inventor_color', '=',
+                                                                                     vals['vault_color'])]))
+                            for product in product_ids:
+                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                            self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
+                                                               'code': self.vault_revision,
+                                                               'product_qty': 1,
+                                                               'type': 'normal',
+                                                               'bom_line_ids': lines,
+                                                               })
         return super(ProductTemplate, self).write(vals)
 
     @api.model
