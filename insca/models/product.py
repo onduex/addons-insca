@@ -90,9 +90,14 @@ class ProductTemplate(models.Model):
                                                                             })
                     vals.update({'categ_id': categ.id})
 
+                    # Check si existe ruta
+                    mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                    if vals['vault_route'] and not len(mrp_routing):
+                        raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                % (vals['vault_route'], vals['name'])))
                     # Crear lista de materiales
                     if self.bom_count == 0:
-                        if vals.get('vault_material_code'):
+                        if vals.get('vault_material_code') or vals['vault_edge_code'] or vals['vault_color']:
                             lines = []
                             product_ids = {}
                             if vals['vault_material_code']:
@@ -110,6 +115,7 @@ class ProductTemplate(models.Model):
                                                                'code': self.vault_revision,
                                                                'product_qty': 1,
                                                                'type': 'normal',
+                                                               'routing_id': mrp_routing.id or None,
                                                                'bom_line_ids': lines,
                                                                })
 
@@ -124,8 +130,15 @@ class ProductTemplate(models.Model):
                                                                             })
                     vals.update({'categ_id': categ.id})
 
+                    # Check si existe ruta
+                    mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                    if vals['vault_route'] and not len(mrp_routing):
+                        raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                % (vals['vault_route'], vals['name'])))
+
+                    # Crear lista de materiales
                     if self.bom_count == 0:
-                        if vals.get('vault_material_code'):
+                        if vals.get('vault_material_code') or vals['vault_edge_code'] or vals['vault_color']:
                             lines = []
                             product_ids = {}
                             if vals['vault_material_code']:
@@ -143,6 +156,7 @@ class ProductTemplate(models.Model):
                                                                'code': self.vault_revision,
                                                                'product_qty': 1,
                                                                'type': 'normal',
+                                                               'routing_id': mrp_routing.id or None,
                                                                'bom_line_ids': lines,
                                                                })
         return super(ProductTemplate, self).write(vals)
