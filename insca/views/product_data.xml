@@ -19,6 +19,7 @@
                 <field name="type_mrp"/>
                 <field name="route_mrp"/>
                 <field name="categ_fixed"/>
+                <field name="uom_dimensions"/>
             </tree>
         </field>
     </record>

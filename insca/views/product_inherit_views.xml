@@ -24,6 +24,7 @@
                             <field name="vault_width" readonly="1" invisible="0"/>
                             <field name="vault_height" readonly="1" invisible="0"/>
                             <field name="vault_thinkness" readonly="1" invisible="0"/>
+                            <field name="vault_program_assoc" readonly="1" invisible="0"/>
                         </group>
                     </group>
             </xpath>

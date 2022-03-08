@@ -23,6 +23,7 @@ class ProductTemplate(models.Model):
     vault_thinkness = fields.Char(string='Vault Espesor', required=False)  # Espesor
     vault_diameter = fields.Char(string='Vault Diámetro', required=False)  # Diametro
     vault_mesh = fields.Char(string='Vault Malla', required=False)  # Malla
+    vault_program_assoc = fields.Boolean(string='Vault P. Asociado', required=False)
 
     def write(self, vals):
         if self.is_vault_product:
@@ -63,6 +64,8 @@ class ProductTemplate(models.Model):
                     vals.update({'vault_route': res_code.route_mrp})
                 if res_code.categ_fixed:
                     vals.update({'categ_id': res_code.categ_fixed.id})
+                if res_code.uom_dimensions:
+                    vals.update({'dimensional_uom_id': res_code.uom_dimensions.id})
 
                 vals.update({'sale_ok': res_code.sale_ok,
                              'purchase_ok': res_code.purchase_ok,

@@ -28,3 +28,4 @@ class ResCode(models.Model):
         ('subcontract', 'Subcontratación')], string='Tipo de LdM', default='normal', required=False)
     route_mrp = fields.Char(string='Ruta fija', required=False)
     categ_fixed = fields.Many2one(comodel_name='product.category', string='Categoría fija', required=False)
+    uom_dimensions = fields.Many2one(comodel_name='uom.uom', string='Dimensiones UdM', required=False)
