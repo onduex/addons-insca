@@ -52,6 +52,8 @@ class ProductTemplate(models.Model):
                     vals.update({'vault_color': self.vault_color})
                 if not vals.get('vault_route'):
                     vals.update({'vault_route': self.vault_route})
+                if not vals.get('vault_edge_code'):
+                    vals.update({'vault_edge_code': self.vault_edge_code})
                 if not vals.get('vault_categ_terminado') and vals['vault_code'] == 'A00':
                     vals.update({'vault_categ_terminado': self.categ_id.name})
 
