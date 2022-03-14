@@ -58,7 +58,7 @@ class ProductTemplate(models.Model):
                     vals.update({'vault_categ_terminado': self.categ_id.name})
 
                 # Escribe material code
-                if self.vault_material_code:
+                if not vals.get('vault_material_code'):
                     vals.update({'vault_material_code': self.vault_material_code})
 
                 # Para valores predeterminados
@@ -103,10 +103,10 @@ class ProductTemplate(models.Model):
                         raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                 % (vals['vault_route'], vals['name'])))
                     # Crear lista de materiales
-                    if self.bom_count == 0:
+                    if len(self.bom_ids) == 0:
                         if vals.get('vault_material_code') or vals['vault_edge_code'] or vals['vault_color']:
                             lines = []
-                            product_ids = {}
+                            product_ids = []
                             if vals['vault_material_code']:
                                 product_ids = self.env['product.product'].search([('default_code', '=',
                                                                                   vals['vault_material_code'])])
@@ -144,19 +144,19 @@ class ProductTemplate(models.Model):
                                                 % (vals['vault_route'], vals['name'])))
 
                     # Crear lista de materiales
-                    if self.bom_count == 0:
+                    if len(self.bom_ids) == 0:
                         if vals.get('vault_material_code') or vals['vault_edge_code'] or vals['vault_color']:
                             lines = []
-                            product_ids = {}
+                            product_ids = []
                             if vals['vault_material_code']:
                                 product_ids = self.env['product.product'].search([('default_code', '=',
-                                                                                  vals['vault_material_code'])])
+                                                                                   vals['vault_material_code'])])
                             if vals['vault_edge_code']:
-                                product_ids += (self.env['product.product'].search([('default_code', '=',
-                                                                                     vals['vault_edge_code'])]))
+                                product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                    vals['vault_edge_code'])])
                             if vals['vault_color']:
-                                product_ids += (self.env['product.product'].search([('inventor_color', '=',
-                                                                                     vals['vault_color'])]))
+                                product_ids += self.env['product.product'].search([('inventor_color', '=',
+                                                                                    vals['vault_color'])])
                             for product in product_ids:
                                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
                             self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
