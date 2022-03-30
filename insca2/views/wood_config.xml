@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Tree View-->
+    <record id="view_tree_res_code1" model="ir.ui.view">
+        <field name="name">Configuraciones madera</field>
+        <field name="model">wood.config</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Configuraciones" default_order="name asc">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="color_madera_id"/>
+                <field name="cantos_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Actions-->
+    <record id="action_res_codes1" model="ir.actions.act_window">
+        <field name="name">Configuraciones madera</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">wood.config</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+
+    <!--Menu-->
+    <menuitem id="codes1" name="Madera" parent="insca2.codes0"
+              action="action_res_codes1" sequence="16"/>
+    <menuitem id="insca2.codes0" name="Configuraciones" parent="base.menu_board_root" sequence="16"/>
+
+</odoo>
