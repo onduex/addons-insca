@@ -10,6 +10,8 @@
                 <field name="name"/>
                 <field name="color_madera_id"/>
                 <field name="cantos_id"/>
+                <field name="producto_categoria_tipo"/>
+
             </tree>
         </field>
     </record>

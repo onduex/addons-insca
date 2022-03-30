@@ -20,6 +20,10 @@ class WoodConfig(models.Model):
                                 string='Chapa cantos',
                                 required=False,
                                 domain="[('categ_base', '=', 'CANTO')]")
+    producto_categoria_tipo = fields.Many2one(comodel_name='product.category.type',
+                                              string='Color cantos',
+                                              required=False,
+                                              domain="[]")
 
     @api.model
     def create(self, vals):
