@@ -7,7 +7,6 @@
         <field name="model">wood.config</field>
         <field name="arch" type="xml">
             <tree editable="top" string="Configuraciones" default_order="name asc">
-                <field name="id"/>
                 <field name="name"/>
                 <field name="color_madera_id"/>
                 <field name="cantos_id"/>
