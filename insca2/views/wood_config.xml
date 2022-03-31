@@ -29,8 +29,8 @@
     </record>
 
     <!--Menu-->
+    <menuitem id="insca2.codes0" name="Configuraciones" parent="base.menu_board_root" sequence="16"/>
     <menuitem id="codes1" name="Madera" parent="insca2.codes0"
               action="action_res_codes1" sequence="16"/>
-    <menuitem id="insca2.codes0" name="Configuraciones" parent="base.menu_board_root" sequence="16"/>
 
 </odoo>
