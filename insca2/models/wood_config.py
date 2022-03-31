@@ -15,15 +15,15 @@ class WoodConfig(models.Model):
     name = fields.Char(string='Código', required=False, store=True, readonly=True)
     color_madera_id = fields.Many2one(comodel_name='product.template',
                                       string='Color pieza',
-                                      required=False,
+                                      required=True,
                                       domain="[('categ_base', '=', 'COLOR MADERA')]")
     cantos_id = fields.Many2one(comodel_name='product.template',
                                 string='Chapa cantos',
-                                required=False,
+                                required=True,
                                 domain="[('categ_base', '=', 'CANTO')]")
     color_cantos_id = fields.Many2one(comodel_name='product.template',
                                       string='Color cantos',
-                                      required=False,
+                                      required=True,
                                       domain="[('categ_base', '=', 'COLOR MADERA')]")
     obsoleto = fields.Boolean(string='Obsoleto', required=False)
 
