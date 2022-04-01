@@ -80,7 +80,7 @@ class ProductTemplate(models.Model):
                 # Código A00
                 if vals['vault_code'] == 'A00':
                     categ = self.env['product.category'].search([('name', '=', vals['vault_categ_terminado'])])
-                    if categ:
+                    if categ and vals['vault_categ_terminado'] != vals['vault_categ']:
                         vals.update({'categ_id': categ.id})
                     if not categ:
                         raise ValidationError(_('La categoría (%s) no está en Odoo' % vals['vault_categ_terminado']))
