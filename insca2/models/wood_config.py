@@ -59,7 +59,7 @@ class WoodConfig(models.Model):
                               str(rec.color_cantos_id.default_code) or None
             rec.color_madera_name = str(rec.color_madera_id.name) or None
             rec.cantos_name = str(rec.cantos_id.name) or None
-            rec.color_cantos_name = str(rec.color_madera_id.name) or None
+            rec.color_cantos_name = str(rec.color_cantos_id.name) or None
         return True
 
     code_concat = fields.Char(string='Códigos concatenados', required=False,
