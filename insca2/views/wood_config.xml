@@ -12,6 +12,10 @@
                 <field name="color_madera_id"/>
                 <field name="cantos_id"/>
                 <field name="color_cantos_id"/>
+                <field name="code_concat"/>
+                <field name="color_madera_name"/>
+                <field name="cantos_name"/>
+                <field name="color_cantos_name"/>
             </tree>
         </field>
     </record>

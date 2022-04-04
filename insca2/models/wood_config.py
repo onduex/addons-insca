@@ -39,8 +39,7 @@ class WoodConfig(models.Model):
 
         for record in wood_config_ids[:-1]:
             used_keywords.append(record.name)
-            existing_string2compare = str(record.color_madera_id.id) + \
-                                      str(record.cantos_id.id) + \
+            existing_string2compare = str(record.color_madera_id.id) + str(record.cantos_id.id) + \
                                       str(record.color_cantos_id.id)
             print('Existing sting: ', existing_string2compare)
             if new_string2compare == existing_string2compare:
@@ -51,3 +50,23 @@ class WoodConfig(models.Model):
         res.update({'name': difference[0], })
 
         return res
+
+    @api.depends('color_madera_id', 'cantos_id', 'color_cantos_id')
+    def _compute_code_concat(self):
+        for rec in self:
+            rec.code_concat = str(rec.color_madera_id.default_code) + '-' + \
+                              str(rec.cantos_id.default_code) + '-' + \
+                              str(rec.color_cantos_id.default_code) or None
+            rec.color_madera_name = str(rec.color_madera_id.name) or None
+            rec.cantos_name = str(rec.cantos_id.name) or None
+            rec.color_cantos_name = str(rec.color_madera_id.name) or None
+        return True
+
+    code_concat = fields.Char(string='Códigos concatenados', required=False,
+                              compute=_compute_code_concat, store=True)
+    color_madera_name = fields.Char(string='Color pieza nombre', required=False,
+                                    compute=_compute_code_concat, store=True)
+    cantos_name = fields.Char(string='Chapa cantos nombre', required=False,
+                                    compute=_compute_code_concat, store=True)
+    color_cantos_name = fields.Char(string='Color cantos nombre', required=False,
+                                    compute=_compute_code_concat, store=True)
