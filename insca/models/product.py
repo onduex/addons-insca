@@ -26,6 +26,7 @@ class ProductTemplate(models.Model):
     vault_program_assoc = fields.Boolean(string='Vault P. Asociado', required=False)
 
     def write(self, vals):
+        mrp_bom_object = self.env['mrp.bom']
         if self.is_vault_product:
             res_code = self.env['res.code'].search([('name', '=', self.vault_code)])
             if res_code:
@@ -118,7 +119,7 @@ class ProductTemplate(models.Model):
                                                                                     vals['vault_color'])])
                             for product in product_ids:
                                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
-                            self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
+                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
                                                                'code': self.vault_revision,
                                                                'product_qty': 1,
                                                                'type': 'normal',
@@ -143,29 +144,92 @@ class ProductTemplate(models.Model):
                         raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                 % (vals['vault_route'], vals['name'])))
 
+                    # Check si existe producto sin pintar
+                    product_zero = self.env['product.product'].search([('default_code', '=',
+                                                                       self.default_code[:-3] + '000')])
+                    if not len(product_zero):
+                        raise ValidationError(_('Producto %s no encontrado. Revise Vault'
+                                                % (self.default_code[:-3] + '000')))
+
                     # Crear lista de materiales
-                    if len(self.bom_ids) == 0:
-                        if vals.get('vault_material_code') or vals['vault_edge_code'] or vals['vault_color']:
+                    if len(self.bom_ids) == 0 and self.default_code[-3:] == '000':
+                        if vals.get('vault_material_code'):
                             lines = []
                             product_ids = []
                             if vals['vault_material_code']:
                                 product_ids = self.env['product.product'].search([('default_code', '=',
                                                                                    vals['vault_material_code'])])
-                            if vals['vault_edge_code']:
-                                product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                    vals['vault_edge_code'])])
-                            if vals['vault_color']:
-                                product_ids += self.env['product.product'].search([('inventor_color', '=',
-                                                                                    vals['vault_color'])])
                             for product in product_ids:
                                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
-                            self.env['mrp.bom'].sudo().create({'product_tmpl_id': self.id,
+                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
                                                                'code': self.vault_revision,
                                                                'product_qty': 1,
                                                                'type': 'normal',
                                                                'routing_id': mrp_routing.id or None,
                                                                'bom_line_ids': lines,
                                                                })
+                    elif len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
+                        if vals['vault_color']:
+                            lines = []
+                            product_ids = []
+                            if vals['vault_color']:
+                                product_ids += self.env['product.product'].search([('inventor_color', '=',
+                                                                                    vals['vault_color'])])
+                            product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                self.default_code[:-3] + '000')])
+                            for product in product_ids:
+                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                               'code': self.vault_revision,
+                                                               'product_qty': 1,
+                                                               'type': 'normal',
+                                                               'routing_id': mrp_routing.id or None,
+                                                               'bom_line_ids': lines,
+                                                               })
+
+                # Código A31
+                elif vals['vault_code'] == 'A31' and vals['vault_categ']:
+                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
+                                                                 ('parent_id', '=', parent_categ.id)])
+                    if not categ:
+                        categ = self.env['product.category'].sudo().create({'name': vals['vault_categ'],
+                                                                            'parent_id': parent_categ.id,
+                                                                            })
+                    vals.update({'categ_id': categ.id})
+
+                    # Check si existe ruta
+                    mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                    if vals['vault_route'] and not len(mrp_routing):
+                        raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                % (vals['vault_route'], vals['name'])))
+
+                    # Check si existe producto sin pintar
+                    product_zero = self.env['product.product'].search([('default_code', '=',
+                                                                        self.default_code[:-3] + '000')])
+                    if not len(product_zero):
+                        raise ValidationError(_('Producto %s no encontrado. Revise Vault'
+                                                % (self.default_code[:-3] + '000')))
+
+                    if len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
+                        if vals['vault_color']:
+                            lines = []
+                            product_ids = []
+
+                            if vals['vault_color']:
+                                product_ids += self.env['product.product'].search([('inventor_color', '=',
+                                                                                    vals['vault_color'])])
+                            product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                self.default_code[:-3] + '000')])
+                            for product in product_ids:
+                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                               'code': self.vault_revision,
+                                                               'product_qty': 1,
+                                                               'type': 'normal',
+                                                               'routing_id': mrp_routing.id or None,
+                                                               'bom_line_ids': lines,
+                                                          })
         return super(ProductTemplate, self).write(vals)
 
     @api.model
@@ -174,4 +238,7 @@ class ProductTemplate(models.Model):
         if vals.get('default_code'):
             res.update({'vault_code': vals['default_code'][0:3]
                         })
+        # if self.is_vault_product:
+        #     res_code = self.env['res.code'].search([('name', '=', self.vault_code)])
+
         return res
