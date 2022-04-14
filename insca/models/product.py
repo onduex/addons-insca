@@ -211,25 +211,6 @@ class ProductTemplate(models.Model):
                         raise ValidationError(_('Producto %s no encontrado. Revise Vault'
                                                 % (self.default_code[:-3] + '000')))
 
-                    if len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
-                        if vals['vault_color']:
-                            lines = []
-                            product_ids = []
-
-                            if vals['vault_color']:
-                                product_ids += self.env['product.product'].search([('inventor_color', '=',
-                                                                                    vals['vault_color'])])
-                            product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                self.default_code[:-3] + '000')])
-                            for product in product_ids:
-                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
-                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
-                                                               'code': self.vault_revision,
-                                                               'product_qty': 1,
-                                                               'type': 'normal',
-                                                               'routing_id': mrp_routing.id or None,
-                                                               'bom_line_ids': lines,
-                                                          })
         return super(ProductTemplate, self).write(vals)
 
     @api.model

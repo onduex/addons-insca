@@ -44,7 +44,6 @@ class MrpBom(models.Model):
             for product in product_ids:
                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
             vals_list.update({'bom_line_ids': lines})
-            print(self)
         return super(MrpBom, self).write(vals_list)
 
 
