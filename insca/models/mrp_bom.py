@@ -28,3 +28,37 @@ class MrpBom(models.Model):
             elif product_for_bom.vault_route and len(mrp_routing):
                 res.update({'routing_id': mrp_routing.id})
         return res
+
+    def write(self, vals_list):
+        lines = []
+        product_ids = []
+
+        if self.product_tmpl_id.vault_code == 'A31' and \
+                self.product_tmpl_id.default_code[-3:] != '000' and \
+                self.is_vault_bom:
+
+            product_ids += self.env['product.product'].search([('inventor_color', '=', self.product_tmpl_id.vault_color)])
+            product_ids += self.env['product.product'].\
+                search([('default_code', '=', self.product_tmpl_id.default_code[:-3] + '000')])
+            for product in product_ids:
+                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+            vals_list.update({'bom_line_ids': lines})
+            print(self)
+        return super(MrpBom, self).write(vals_list)
+
+
+class MrpBomLine(models.Model):
+    _inherit = "mrp.bom.line"
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        for record in res:
+            # Código A31 borrar líneas de BoM
+            if record.bom_id.product_tmpl_id.vault_code == 'A31' and \
+                    record.bom_id.product_tmpl_id.default_code[-3:] != '000' and \
+                    record.bom_id.is_vault_bom and \
+                    record.product_tmpl_id.vault_code == 'A30':
+                print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
+                record.unlink()
+        return res
