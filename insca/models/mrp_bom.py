@@ -37,7 +37,8 @@ class MrpBom(models.Model):
                 self.product_tmpl_id.default_code[-3:] != '000' and \
                 self.is_vault_bom:
 
-            product_ids += self.env['product.product'].search([('inventor_color', '=', self.product_tmpl_id.vault_color)])
+            product_ids += self.env['product.product'].\
+                search([('inventor_color', '=', self.product_tmpl_id.vault_color)])
             product_ids += self.env['product.product'].\
                 search([('default_code', '=', self.product_tmpl_id.default_code[:-3] + '000')])
             for product in product_ids:
