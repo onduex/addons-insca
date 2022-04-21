@@ -33,9 +33,7 @@ class MrpBom(models.Model):
         lines = []
         product_ids = []
 
-        if self.product_tmpl_id.vault_code == 'A31' and \
-                self.product_tmpl_id.default_code[-3:] != '000' and \
-                self.is_vault_bom:
+        if self.product_tmpl_id.vault_code == 'A31P' and self.is_vault_bom:
 
             product_ids += self.env['product.product'].\
                 search([('inventor_color', '=', self.product_tmpl_id.vault_color)])
@@ -55,8 +53,7 @@ class MrpBomLine(models.Model):
         res = super().create(vals_list)
         for record in res:
             # Código A31 borrar líneas de BoM
-            if record.bom_id.product_tmpl_id.vault_code == 'A31' and \
-                    record.bom_id.product_tmpl_id.default_code[-3:] != '000' and \
+            if record.bom_id.product_tmpl_id.vault_code == 'A31P' and \
                     record.bom_id.is_vault_bom and \
                     record.product_tmpl_id.vault_code == 'A30':
                 print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))

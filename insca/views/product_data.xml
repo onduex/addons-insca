@@ -38,7 +38,7 @@
     </record>
 
     <!--Menu-->
-    <menuitem id="codes" name="Configuración de códigos" parent="stock.menu_stock_inventory_control"
+    <menuitem id="codes" name="Matriz de parametrización" parent="stock.menu_stock_inventory_control"
               action="action_res_codes" sequence="104"/>
 
 </odoo>
