@@ -31,8 +31,8 @@ class ProductTemplate(models.Model):
             res_code = self.env['res.code'].search([('name', '=', self.vault_code)])
             if res_code:
                 # Cambio tipo de datos
-                if self.default_code:
-                    vals.update({'vault_code': str(self.default_code)[0:3]})
+                if self.vault_code:
+                    vals.update({'vault_code': self.vault_code})
                 if vals.get('vault_length'):
                     vals.update({'product_length': float(vals.get('vault_length'))})
                 if vals.get('vault_width'):
@@ -187,8 +187,94 @@ class ProductTemplate(models.Model):
                                                                'bom_line_ids': lines,
                                                                })
 
+                # Código A30P
+                elif vals['vault_code'] == 'A30P' and vals['vault_categ']:
+                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
+                                                                 ('parent_id', '=', parent_categ.id)])
+                    if not categ:
+                        categ = self.env['product.category'].sudo().create({'name': vals['vault_categ'],
+                                                                            'parent_id': parent_categ.id,
+                                                                            })
+                    vals.update({'categ_id': categ.id})
+
+                    # Check si existe ruta
+                    mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                    if vals['vault_route'] and not len(mrp_routing):
+                        raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                % (vals['vault_route'], vals['name'])))
+
+                    # Check si existe producto sin pintar
+                    product_zero = self.env['product.product'].search([('default_code', '=',
+                                                                        self.default_code[:-3] + '000')])
+                    if not len(product_zero):
+                        raise ValidationError(_('Producto %s no encontrado. Revise Vault'
+                                                % (self.default_code[:-3] + '000')))
+
+                    # Crear lista de materiales
+                    if len(self.bom_ids) == 0 and self.default_code[-3:] == '000':
+                        if vals.get('vault_material_code'):
+                            lines = []
+                            product_ids = []
+                            if vals['vault_material_code']:
+                                product_ids = self.env['product.product'].search([('default_code', '=',
+                                                                                   vals[
+                                                                                       'vault_material_code'])])
+                            for product in product_ids:
+                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                          'code': self.vault_revision,
+                                                          'product_qty': 1,
+                                                          'type': 'normal',
+                                                          'routing_id': mrp_routing.id or None,
+                                                          'bom_line_ids': lines,
+                                                          })
+                    elif len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
+                        if vals['vault_color']:
+                            lines = []
+                            product_ids = []
+                            if vals['vault_color']:
+                                product_ids += self.env['product.product'].search([('inventor_color', '=',
+                                                                                    vals['vault_color'])])
+                            product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                self.default_code[
+                                                                                :-3] + '000')])
+                            for product in product_ids:
+                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                          'code': self.vault_revision,
+                                                          'product_qty': 1,
+                                                          'type': 'normal',
+                                                          'routing_id': mrp_routing.id or None,
+                                                          'bom_line_ids': lines,
+                                                          })
+
                 # Código A31
                 elif vals['vault_code'] == 'A31' and vals['vault_categ']:
+                    parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                    categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
+                                                                 ('parent_id', '=', parent_categ.id)])
+                    if not categ:
+                        categ = self.env['product.category'].sudo().create({'name': vals['vault_categ'],
+                                                                            'parent_id': parent_categ.id,
+                                                                            })
+                    vals.update({'categ_id': categ.id})
+
+                    # Check si existe ruta
+                    mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                    if vals['vault_route'] and not len(mrp_routing):
+                        raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                % (vals['vault_route'], vals['name'])))
+
+                    # Check si existe producto sin pintar
+                    product_zero = self.env['product.product'].search([('default_code', '=',
+                                                                        self.default_code[:-3] + '000')])
+                    if not len(product_zero):
+                        raise ValidationError(_('Producto %s no encontrado. Revise Vault'
+                                                % (self.default_code[:-3] + '000')))
+
+                # Código A31P
+                elif vals['vault_code'] == 'A31P' and vals['vault_categ']:
                     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
                     categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
                                                                  ('parent_id', '=', parent_categ.id)])
@@ -216,10 +302,13 @@ class ProductTemplate(models.Model):
     @api.model
     def create(self, vals):
         res = super(ProductTemplate, self).create(vals)
-        if vals.get('default_code'):
+        if vals.get('default_code')[0:3] == 'A30' and vals.get('default_code')[-3:] != '000':
+            res.update({'vault_code': vals['default_code'][0:3] + 'P'
+                        })
+        elif vals.get('default_code')[0:3] == 'A31' and vals.get('default_code')[-3:] != '000':
+            res.update({'vault_code': vals['default_code'][0:3] + 'P'
+                        })
+        elif vals.get('default_code'):
             res.update({'vault_code': vals['default_code'][0:3]
                         })
-        # if self.is_vault_product:
-        #     res_code = self.env['res.code'].search([('name', '=', self.vault_code)])
-
         return res
