@@ -20,6 +20,17 @@
         </field>
     </record>
 
+    <record id="view_tree_res_code2" model="ir.ui.view">
+        <field name="name">Tabla tipos pieza</field>
+        <field name="model">tipo.pieza</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Tipos" default_order="name asc">
+                <field name="name"/>
+                <field name="abreviatura"/>
+            </tree>
+        </field>
+    </record>
+
     <!--Actions-->
     <record id="action_res_codes1" model="ir.actions.act_window">
         <field name="name">Tabla acabados madera</field>
@@ -32,9 +43,24 @@
         </field>
     </record>
 
+    <record id="action_res_codes2" model="ir.actions.act_window">
+        <field name="name">Tabla tipos pieza</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">tipo.pieza</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+
     <!--Menu-->
-    <menuitem id="insca2.codes0" name="Configurador acabados madera" parent="base.menu_board_root" sequence="16"/>
-    <menuitem id="codes1" name="Tabla acabados madera" parent="insca2.codes0"
-              action="action_res_codes1" sequence="16"/>
+    <menuitem id="codes0" name="Configurador acabados madera" parent="base.menu_board_root" sequence="116"/>
+    <menuitem id="codes1" name="Tabla acabados madera" parent="codes0" action="action_res_codes1" sequence="116"/>
+
+    <menuitem id="codes2" name="Tipo pieza" parent="base.menu_board_root" sequence="119"/>
+    <menuitem id="codes3" name="Tabla tipos pieza" parent="codes2" action="action_res_codes2" sequence="119"/>
+
+
 
 </odoo>
