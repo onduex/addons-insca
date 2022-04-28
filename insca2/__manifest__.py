@@ -24,9 +24,6 @@
     'data': [
         'security/ir.model.access.csv',
         'views/wood_config.xml',
-        # 'views/product_data.xml',
-        # 'views/mrp_bom_inherit_views.xml',
-
     ],
 
     'installable': True,
