@@ -198,11 +198,12 @@ class ProductTemplate(models.Model):
                         if vals['vault_color']:
                             lines = []
                             product_ids = []
+                            product_ids_max = self.env['product.product'].search([('default_code', '=',
+                                                                                   self.default_code[:-3] + '000')])
                             if vals['vault_color']:
                                 product_ids += self.env['product.product'].search([('inventor_color', '=',
                                                                                     vals['vault_color'])])
-                            product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                self.default_code[:-3] + '000')])
+                            product_ids += max(product_ids_max)
                             for product in product_ids:
                                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
                             mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
