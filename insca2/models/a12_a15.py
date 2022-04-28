@@ -51,7 +51,7 @@ class A12A15(models.Model):
 
         return res
 
-    @api.depends('color_madera1_id', 'color_madera3_id', 'color_madera3_id')
+    @api.depends('color_madera1_id', 'color_madera2_id', 'color_madera3_id')
     def _compute_code_concat(self):
         for rec in self:
             rec.code_concat = str(rec.color_madera1_id.default_code) + '-' + \
