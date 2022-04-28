@@ -25,7 +25,10 @@ class MrpBom(models.Model):
             if res_code.type_mrp:
                 res.update({'type': res_code.type_mrp})
                 if res_code.type_mrp == 'subcontract':
-                    res.update({'subcontractor_ids': res_code.supplier_id})
+                    res.update({'subcontractor_ids': res_code.supplier_id,
+                                'location_id': 45,  # INSCA TRADEMARK, S.L.: Subcontracting Location
+                                'product_id': product_for_bom.product_variant_id.id,
+                                })
 
             if product_for_bom.vault_route and not len(mrp_routing):
                 raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'

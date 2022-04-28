@@ -206,6 +206,7 @@ class ProductTemplate(models.Model):
                             for product in product_ids:
                                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
                             mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                          'product_id': self.product_variant_id.id,
                                                           'code': self.vault_revision,
                                                           'product_qty': 1,
                                                           'type': 'normal',
