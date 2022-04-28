@@ -125,7 +125,7 @@ class ProductTemplate(models.Model):
                                                                'type': 'normal',
                                                                'routing_id': mrp_routing.id or None,
                                                                'bom_line_ids': lines,
-                                                               })
+                                                          })
 
                 # Código A30
                 elif vals['vault_code'] == 'A30' and vals['vault_categ']:
@@ -167,25 +167,7 @@ class ProductTemplate(models.Model):
                                                                'type': 'normal',
                                                                'routing_id': mrp_routing.id or None,
                                                                'bom_line_ids': lines,
-                                                               })
-                    elif len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
-                        if vals['vault_color']:
-                            lines = []
-                            product_ids = []
-                            if vals['vault_color']:
-                                product_ids += self.env['product.product'].search([('inventor_color', '=',
-                                                                                    vals['vault_color'])])
-                            product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                self.default_code[:-3] + '000')])
-                            for product in product_ids:
-                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
-                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
-                                                               'code': self.vault_revision,
-                                                               'product_qty': 1,
-                                                               'type': 'normal',
-                                                               'routing_id': mrp_routing.id or None,
-                                                               'bom_line_ids': lines,
-                                                               })
+                                                          })
 
                 # Código A30P
                 elif vals['vault_code'] == 'A30P' and vals['vault_categ']:
@@ -212,24 +194,7 @@ class ProductTemplate(models.Model):
                                                 % (self.default_code[:-3] + '000')))
 
                     # Crear lista de materiales
-                    if len(self.bom_ids) == 0 and self.default_code[-3:] == '000':
-                        if vals.get('vault_material_code'):
-                            lines = []
-                            product_ids = []
-                            if vals['vault_material_code']:
-                                product_ids = self.env['product.product'].search([('default_code', '=',
-                                                                                   vals[
-                                                                                       'vault_material_code'])])
-                            for product in product_ids:
-                                lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
-                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
-                                                          'code': self.vault_revision,
-                                                          'product_qty': 1,
-                                                          'type': 'normal',
-                                                          'routing_id': mrp_routing.id or None,
-                                                          'bom_line_ids': lines,
-                                                          })
-                    elif len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
+                    if len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
                         if vals['vault_color']:
                             lines = []
                             product_ids = []
@@ -237,8 +202,7 @@ class ProductTemplate(models.Model):
                                 product_ids += self.env['product.product'].search([('inventor_color', '=',
                                                                                     vals['vault_color'])])
                             product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                self.default_code[
-                                                                                :-3] + '000')])
+                                                                                self.default_code[:-3] + '000')])
                             for product in product_ids:
                                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
                             mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
