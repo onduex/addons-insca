@@ -39,10 +39,11 @@ class MrpBom(models.Model):
             if bom.product_tmpl_id.vault_code == 'A31P' and \
                     bom.product_tmpl_id.default_code[-3:] != '000' and \
                     bom.is_vault_bom:
+                product_ids_max = self.env['product.product']. \
+                    search([('default_code', '=', bom.product_tmpl_id.default_code[:-3] + '000')])
                 product_ids += self.env['product.product']. \
                     search([('inventor_color', '=', bom.product_tmpl_id.vault_color)])
-                product_ids += self.env['product.product']. \
-                    search([('default_code', '=', bom.product_tmpl_id.default_code[:-3] + '000')])
+                product_ids += max(product_ids_max)
                 for product in product_ids:
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
                 res.update({'bom_line_ids': lines})
@@ -54,6 +55,7 @@ class MrpBomLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Borrado de las mrp.bom.lines que vienen de vault
         res = super().create(vals_list)
         for record in res:
             # Código A31 borrar líneas de BoM
