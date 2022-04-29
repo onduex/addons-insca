@@ -35,8 +35,37 @@ class A12A15(models.Model):
         keywords = sorted([''.join(i) for i in product(ascii_uppercase, repeat=3, )], reverse=True)
 
         new_string2compare = str(res.color_madera1_id.id) + str(res.color_madera2_id.id) + str(res.color_madera3_id.id)
-        print('New sting: ', new_string2compare)
+        # print('New sting: ', new_string2compare)
 
+        for record in config_ids[:-1]:
+            used_keywords.append(record.name)
+            existing_string2compare = str(record.color_madera1_id.id) + str(record.color_madera2_id.id) + \
+                                      str(record.color_madera3_id.id)
+            # print('Existing sting: ', existing_string2compare)
+            if new_string2compare == existing_string2compare:
+                raise ValidationError(_('La nueva combinación existe con el código %s' % record.name))
+
+        difference = list(set(keywords).difference(used_keywords))
+        difference.sort(reverse=True)
+        res.update({'name': difference[0], })
+        return res
+
+    def write(self, vals):
+        used_keywords = []
+        config_ids = self.env['a12.a15'].search([])
+        c_madera1 = self.color_madera1_id.id
+        c_madera2 = self.color_madera2_id.id
+        c_madera3 = self.color_madera3_id.id
+
+        if vals.get('color_madera1_id'):
+            c_madera1 = vals.get('color_madera1_id')
+        elif vals.get('color_madera2_id'):
+            c_madera2 = vals.get('color_madera2_id')
+        elif vals.get('color_madera3_id'):
+            c_madera3 = vals.get('color_madera3_id')
+
+        new_string2compare = str(c_madera1) + str(c_madera2) + str(c_madera3)
+        print('New sting: ', new_string2compare)
         for record in config_ids[:-1]:
             used_keywords.append(record.name)
             existing_string2compare = str(record.color_madera1_id.id) + str(record.color_madera2_id.id) + \
@@ -45,11 +74,7 @@ class A12A15(models.Model):
             if new_string2compare == existing_string2compare:
                 raise ValidationError(_('La nueva combinación existe con el código %s' % record.name))
 
-        difference = list(set(keywords).difference(used_keywords))
-        difference.sort(reverse=True)
-        res.update({'name': difference[0], })
-
-        return res
+        return super(A12A15, self).write(vals)
 
     @api.depends('color_madera1_id', 'color_madera2_id', 'color_madera3_id')
     def _compute_code_concat(self):

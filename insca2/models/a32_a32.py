@@ -50,6 +50,32 @@ class A32A32(models.Model):
         res.update({'name': difference[0], })
 
         return res
+    
+    def write(self, vals):
+        used_keywords = []
+        config_ids = self.env['a12.a15'].search([])
+        c_metal1 = self.color_metal1_id.id
+        c_metal2 = self.color_metal2_id.id
+        c_metal3 = self.color_metal3_id.id
+
+        if vals.get('color_metal1_id'):
+            c_metal1 = vals.get('color_metal1_id')
+        elif vals.get('color_metal2_id'):
+            c_metal2 = vals.get('color_metal2_id')
+        elif vals.get('color_metal3_id'):
+            c_metal3 = vals.get('color_metal3_id')
+
+        new_string2compare = str(c_metal1) + str(c_metal2) + str(c_metal3)
+        print('New sting: ', new_string2compare)
+        for record in config_ids[:-1]:
+            used_keywords.append(record.name)
+            existing_string2compare = str(record.color_metal1_id.id) + str(record.color_metal2_id.id) + \
+                                      str(record.color_metal3_id.id)
+            print('Existing sting: ', existing_string2compare)
+            if new_string2compare == existing_string2compare:
+                raise ValidationError(_('La nueva combinación existe con el código %s' % record.name))
+
+        return super(A32A32, self).write(vals)
 
     @api.depends('color_metal1_id', 'color_metal2_id', 'color_metal3_id')
     def _compute_code_concat(self):
