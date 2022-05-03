@@ -14,5 +14,8 @@ class ProductTemplate(models.Model):
             vals.update({'seller_ids': [(0, 0, {'min_qty': 1.0,
                                                 'price': 1.0,
                                                 'delay': 1.0,
-                                                'name': res_code.supplier_id.id})]})
+                                                'name': res_code.supplier_id.id,
+                                                'product_id': self.product_variant_id.id,
+                                                }
+                                         )]})
         return super(ProductTemplate, self).write(vals)
