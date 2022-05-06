@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Tree View-->
+    <record id="view_tree_carpetas_proyectos" model="ir.ui.view">
+        <field name="name">Carpetas</field>
+        <field name="model">res.folder</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Carpetas proyectos" default_order="folder_name desc">
+                <field name="name" invisible="1"/>
+                <field name="folder_name"/>
+                <field name="description"/>
+                <field name="subfolder_ids" widget="many2many_tags"/>
+                <field name="creadas"/>
+                <button name="make_dir" type="object" string="Crear carpetas" class="oe_highlight"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_tree_sub_carpetas_proyectos" model="ir.ui.view">
+        <field name="name">SubCarpetas</field>
+        <field name="model">res.subfolder</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="SubCarpetas proyectos" default_order="name asc">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Actions-->
+    <record id="action_carpetas_proyectos" model="ir.actions.act_window">
+        <field name="name">Carpetas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.folder</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+    <record id="action_sub_carpetas_proyectos" model="ir.actions.act_window">
+        <field name="name">SubCarpetas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.subfolder</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+
+    <!--Menu-->
+    <menuitem id="res_folder_root_menu" name="Expedientes"
+              sequence="10" web_icon="insca3,static/description/icon.png"/>
+    <menuitem id="tablas_varias" name="Tablas" parent="res_folder_root_menu" sequence="117"/>
+    <menuitem id="carpetas_proyectos" name="Carpetas proyectos" parent="tablas_varias"
+              action="action_carpetas_proyectos" sequence="117"/>
+    <menuitem id="sub_carpetas_proyectos" name="SubCarpetas proyectos" parent="tablas_varias"
+              action="action_sub_carpetas_proyectos" sequence="118"/>
+</odoo>
