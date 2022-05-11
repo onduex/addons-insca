@@ -54,7 +54,11 @@ class ResFolder(models.Model):
                                              'default_code': record.folder_name,
                                              'type': "service",
                                              'categ_id': 5020,  # EXPEDIENTE
+                                             'sale_ok': False,
+                                             'purchase_ok': False,
                                              })
+                else:
+                    product_tmpl.write({'name': record.description})
 
                 conn.createDirectory(res_company_obj.filestore_server_shared_folder,
                                      "/" + res_company_obj.filestore_server_shared_folder_level1 + "/" +
