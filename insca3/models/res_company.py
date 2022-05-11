@@ -13,3 +13,4 @@ class ResCompany(models.Model):
     filestore_server_ip = fields.Char(string='Filestore Srv IP', required=False)
     filestore_server_port = fields.Char(string='Filestore Srv Port', required=False)
     filestore_server_shared_folder = fields.Char(string='Filestore Srv Shared Folder', required=False)
+    filestore_server_shared_folder_level1 = fields.Char(string='Filestore Srv Shared Folder L1', required=False)

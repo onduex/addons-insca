@@ -48,11 +48,14 @@ class ResFolder(models.Model):
 
             try:
                 conn.createDirectory(res_company_obj.filestore_server_shared_folder,
+                                     "/" + res_company_obj.filestore_server_shared_folder_level1 + "/" +
                                      record.folder_name + " " + record.description)
                 self.creadas = True
                 for subfolder in self.subfolder_ids:
                     conn.createDirectory(res_company_obj.filestore_server_shared_folder,
+                                         "/" + res_company_obj.filestore_server_shared_folder_level1 + "/" +
                                          record.folder_name + " " + record.description + "/" + subfolder.name)
             except Exception:
                 raise ValidationError(_('La carpeta %s ya existe. Check'
                                         % (record.folder_name + " " + record.description)))
+            conn.close()

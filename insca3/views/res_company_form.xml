@@ -19,6 +19,7 @@
                                 <field name="filestore_server_ip"/>
                                 <field name="filestore_server_port"/>
                                 <field name="filestore_server_shared_folder"/>
+                                <field name="filestore_server_shared_folder_level1"/>
                             </group>
                         </group>
                     </page>
