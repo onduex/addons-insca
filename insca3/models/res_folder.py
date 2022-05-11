@@ -41,21 +41,32 @@ class ResFolder(models.Model):
 
     def make_dir(self):
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+        product_tmpl_obj = self.env['product.template']
         for record in self:
+            product_tmpl = product_tmpl_obj.search([('default_code', '=', record.folder_name)])
             conn = SMBConnection(res_company_obj.smb_user, res_company_obj.smb_pass,
                                  res_company_obj.odoo_server_name, res_company_obj.filestore_server_name)
             conn.connect(res_company_obj.filestore_server_ip, res_company_obj.filestore_server_port)
 
             try:
+                if not len(product_tmpl):
+                    product_tmpl_obj.create({'name': record.description,
+                                             'default_code': record.folder_name,
+                                             'type': "service",
+                                             'categ_id': 5020,  # EXPEDIENTE
+                                             })
+
                 conn.createDirectory(res_company_obj.filestore_server_shared_folder,
                                      "/" + res_company_obj.filestore_server_shared_folder_level1 + "/" +
                                      record.folder_name + " " + record.description)
+
                 self.creadas = True
                 for subfolder in self.subfolder_ids:
                     conn.createDirectory(res_company_obj.filestore_server_shared_folder,
                                          "/" + res_company_obj.filestore_server_shared_folder_level1 + "/" +
                                          record.folder_name + " " + record.description + "/" + subfolder.name)
             except Exception:
+                conn.close()
                 raise ValidationError(_('La carpeta %s ya existe. Check'
                                         % (record.folder_name + " " + record.description)))
             conn.close()
