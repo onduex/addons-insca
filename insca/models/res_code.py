@@ -8,7 +8,7 @@ class ResCode(models.Model):
     _name = "res.code"
     _description = "Objeto para la correcta creación/actualización de las propiedades de los productos"
 
-    name = fields.Char(string='Código', required=False)
+    name = fields.Char(string='Código', required=True)
     app = fields.Char(string='Aplicación', required=False)
     type = fields.Char(string='Tipo', required=False)
     sale_ok = fields.Boolean(string='Puede ser vendido', required=False)
@@ -31,3 +31,5 @@ class ResCode(models.Model):
     uom_dimensions = fields.Many2one(comodel_name='uom.uom', string='Dimensiones UdM', required=False)
     supplier_id = fields.Many2one(comodel_name='res.partner', string='Proveedor', required=False,
                                   domain="[('supplier_rank', '>', 0), ('supplier_rank', '!=', False)]")
+    supplier_ids = fields.Many2many(comodel_name='res.partner', string='Proveedores', required=False,
+                                    domain="[('supplier_rank', '>', 0), ('supplier_rank', '!=', False)]")

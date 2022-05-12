@@ -10,7 +10,7 @@
                 <field name="name"/>
                 <field name="app"/>
                 <field name="type"/>
-                <field name="supplier_id"/>
+                <field name="supplier_ids" widget="many2many_tags"/>
                 <field name="sale_ok"/>
                 <field name="purchase_ok"/>
                 <field name="product_route_ids" widget="many2many_tags"/>

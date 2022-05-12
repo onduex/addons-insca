@@ -9,13 +9,16 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     def write(self, vals):
+        supplier_lines = []
         res_code = self.env['res.code'].search([('name', '=', vals.get('vault_code'))])
-        if res_code.supplier_id:
-            vals.update({'seller_ids': [(0, 0, {'min_qty': 1.0,
-                                                'price': 1.0,
-                                                'delay': 1.0,
-                                                'name': res_code.supplier_id.id,
-                                                'product_id': self.product_variant_id.id,
-                                                }
-                                         )]})
+        if res_code.supplier_ids:
+            for rec in res_code.supplier_ids:
+                supplier_lines.append((0, 0, {'min_qty': 1.0,
+                                              'price': 1.0,
+                                              'delay': 1.0,
+                                              'name': rec.id,
+                                              'product_id': self.product_variant_id.id,
+                                              }
+                                       ))
+            vals.update({'seller_ids': supplier_lines})
         return super(ProductTemplate, self).write(vals)
