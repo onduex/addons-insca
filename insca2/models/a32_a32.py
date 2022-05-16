@@ -53,7 +53,7 @@ class A32A32(models.Model):
     
     def write(self, vals):
         used_keywords = []
-        config_ids = self.env['a12.a15'].search([])
+        config_ids = self.env['a32.a32'].search([])
         c_metal1 = self.color_metal1_id.id
         c_metal2 = self.color_metal2_id.id
         c_metal3 = self.color_metal3_id.id
