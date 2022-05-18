@@ -35,19 +35,21 @@ class WoodConfig(models.Model):
         keywords = sorted([''.join(i) for i in product(ascii_uppercase, repeat=3, )], reverse=True)
 
         new_string2compare = str(res.color_madera_id.id) + str(res.cantos_id.id) + str(res.color_cantos_id.id)
-        # print('New sting: ', new_string2compare)
+        print('New sting: ', new_string2compare)
+        if new_string2compare == '302262053022':
+            res.update({'name': '000', })
+        else:
+            for record in wood_config_ids[:-1]:
+                used_keywords.append(record.name)
+                existing_string2compare = str(record.color_madera_id.id) + str(record.cantos_id.id) + \
+                                          str(record.color_cantos_id.id)
+                # print('Existing sting: ', existing_string2compare)
+                if new_string2compare == existing_string2compare:
+                    raise ValidationError(_('La nueva combinación existe con el código %s' % record.name))
 
-        for record in wood_config_ids[:-1]:
-            used_keywords.append(record.name)
-            existing_string2compare = str(record.color_madera_id.id) + str(record.cantos_id.id) + \
-                                      str(record.color_cantos_id.id)
-            # print('Existing sting: ', existing_string2compare)
-            if new_string2compare == existing_string2compare:
-                raise ValidationError(_('La nueva combinación existe con el código %s' % record.name))
-
-        difference = list(set(keywords).difference(used_keywords))
-        difference.sort(reverse=True)
-        res.update({'name': difference[0], })
+            difference = list(set(keywords).difference(used_keywords))
+            difference.sort(reverse=True)
+            res.update({'name': difference[0], })
         return res
 
     def write(self, vals):
@@ -65,12 +67,10 @@ class WoodConfig(models.Model):
             c_cantos = vals.get('color_cantos_id')
 
         new_string2compare = str(c_madera) + str(cantos) + str(c_cantos)
-        print('New sting: ', new_string2compare)
         for record in wood_config_ids[:-1]:
             used_keywords.append(record.name)
             existing_string2compare = str(record.color_madera_id.id) + str(record.cantos_id.id) + \
                                       str(record.color_cantos_id.id)
-            print('Existing sting: ', existing_string2compare)
             if new_string2compare == existing_string2compare:
                 raise ValidationError(_('La nueva combinación existe con el código %s' % record.name))
 
