@@ -27,7 +27,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         mrp_bom_object = self.env['mrp.bom']
-        if self.is_vault_product:
+        if self.is_vault_product and not self.is_old_revision:
             res_code = self.env['res.code'].search([('name', '=', self.vault_code)])
             if res_code:
                 # Cambio tipo de datos
@@ -70,12 +70,14 @@ class ProductTemplate(models.Model):
                 if res_code.uom_dimensions:
                     vals.update({'dimensional_uom_id': res_code.uom_dimensions.id})
 
-                vals.update({'sale_ok': res_code.sale_ok,
-                             'purchase_ok': res_code.purchase_ok,
-                             'produce_delay': res_code.date_schedule_mrp,
-                             'route_ids': [(6, 0, [x.id for x in res_code.product_route_ids])],
-                             'type': res_code.type_store,
-                             })
+                if vals.get('vault_internal_id'):
+                    # si rainbow modifica el vault_internal_id se actualizara
+                    vals.update({'sale_ok': res_code.sale_ok,
+                                 'purchase_ok': res_code.purchase_ok,
+                                 'produce_delay': res_code.date_schedule_mrp,
+                                 'route_ids': [(6, 0, [x.id for x in res_code.product_route_ids])],
+                                 'type': res_code.type_store,
+                                 })
 
                 # Para categorías dinámicas
                 # Código A00
@@ -267,14 +269,24 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
+        var = ''
         res = super(ProductTemplate, self).create(vals)
+
         if vals.get('default_code')[0:3] == 'A30' and vals.get('default_code')[-3:] != '000':
-            res.update({'vault_code': vals['default_code'][0:3] + 'P'
-                        })
+            var = vals['default_code'][0:3] + 'P'
         elif vals.get('default_code')[0:3] == 'A31' and vals.get('default_code')[-3:] != '000':
-            res.update({'vault_code': vals['default_code'][0:3] + 'P'
-                        })
+            var = vals['default_code'][0:3] + 'P'
         elif vals.get('default_code'):
-            res.update({'vault_code': vals['default_code'][0:3]
-                        })
+            var = vals['default_code'][0:3]
+
+        # estas funcionan porque no las importa rainbow
+        res_code = self.env['res.code'].search([('name', '=', var)])
+        res.update({'sale_ok': res_code.sale_ok,
+                    'purchase_ok': res_code.purchase_ok,
+                    'produce_delay': res_code.date_schedule_mrp,
+                    'route_ids': [(6, 0, [x.id for x in res_code.product_route_ids])],
+                    'type': res_code.type_store,
+                    })
+        res.update({'vault_code': var})
+
         return res
