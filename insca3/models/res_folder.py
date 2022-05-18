@@ -21,10 +21,11 @@ class ResFolder(models.Model):
 
     @api.model
     def create(self, vals):
+        company = self.env['res.company'].search([('id', '=', 1)])
         res = super(ResFolder, self).create(vals)
         used_keywords = []
         codigo_ids = self.env['res.folder'].search([])
-        numbers = list(range(0, 100000))
+        numbers = list(range(company.ds_sequence_start, 100000))
         numbers_list = [str(item).zfill(6) for item in numbers]
         res_subfolder_ids = self.env['res.subfolder'].search([])
 
