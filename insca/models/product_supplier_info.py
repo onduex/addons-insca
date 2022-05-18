@@ -11,6 +11,8 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         supplier_lines = []
         res_code = self.env['res.code'].search([('name', '=', vals.get('vault_code'))])
+
+        # escribir proveedores
         if res_code.supplier_ids:
             for rec in res_code.supplier_ids:
                 supplier_lines.append((0, 0, {'min_qty': 1.0,

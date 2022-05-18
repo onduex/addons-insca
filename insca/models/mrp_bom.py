@@ -22,10 +22,11 @@ class MrpBom(models.Model):
 
         for bom in res:
             res_code = self.env['res.code'].search([('name', '=', bom.product_tmpl_id.vault_code)])
+
             if res_code.type_mrp:
                 res.update({'type': res_code.type_mrp})
                 if res_code.type_mrp == 'subcontract':
-                    res.update({'subcontractor_ids': res_code.supplier_id,
+                    res.update({'subcontractor_ids': [(6, 0, [x.id for x in res_code.supplier_ids])],
                                 'location_id': 45,  # INSCA TRADEMARK, S.L.: Subcontracting Location
                                 'product_id': product_for_bom.product_variant_id.id,
                                 })
