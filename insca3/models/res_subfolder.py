@@ -12,3 +12,8 @@ class ResSubfolder(models.Model):
     _description = "Modelo para almacenar las subcarpetas a crear"
 
     name = fields.Char(string='Descripción', required=True, store=True)
+
+    @api.onchange('name')
+    def set_upper(self):
+        self.name = str(self.name).upper()
+        return
