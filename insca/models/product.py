@@ -62,14 +62,6 @@ class ProductTemplate(models.Model):
                 if not vals.get('vault_material_code'):
                     vals.update({'vault_material_code': self.vault_material_code})
 
-                # Para valores predeterminados
-                if res_code.route_mrp:
-                    vals.update({'vault_route': res_code.route_mrp})
-                if res_code.categ_fixed:
-                    vals.update({'categ_id': res_code.categ_fixed.id})
-                if res_code.uom_dimensions:
-                    vals.update({'dimensional_uom_id': res_code.uom_dimensions.id})
-
                 if vals.get('vault_internal_id'):
                     # si rainbow modifica el vault_internal_id se actualizara
                     vals.update({'sale_ok': res_code.sale_ok,
@@ -264,6 +256,14 @@ class ProductTemplate(models.Model):
                     if not len(product_zero):
                         raise ValidationError(_('Producto %s no encontrado. Revise Vault'
                                                 % (self.default_code[:-3] + '000')))
+
+                # Para valores predeterminados
+                if res_code.route_mrp:
+                    vals.update({'vault_route': res_code.route_mrp})
+                if res_code.categ_fixed:
+                    vals.update({'categ_id': res_code.categ_fixed.id})
+                if res_code.uom_dimensions:
+                    vals.update({'dimensional_uom_id': res_code.uom_dimensions.id})
 
         return super(ProductTemplate, self).write(vals)
 
