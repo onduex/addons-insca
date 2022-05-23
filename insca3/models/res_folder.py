@@ -19,6 +19,11 @@ class ResFolder(models.Model):
     creadas = fields.Boolean(string='Creadas', required=False, default=False)
     subfolder_ids = fields.Many2many(comodel_name='res.subfolder', string='SubCarpetas', required=False)
 
+    @api.onchange('description')
+    def set_upper(self):
+        self.description = str(self.description).upper()
+        return
+
     @api.model
     def create(self, vals):
         company = self.env['res.company'].search([('id', '=', 1)])
