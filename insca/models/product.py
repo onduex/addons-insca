@@ -280,13 +280,14 @@ class ProductTemplate(models.Model):
             var = vals['default_code'][0:3]
 
         # estas funcionan porque no las importa rainbow
-        res_code = self.env['res.code'].search([('name', '=', var)])
-        res.update({'sale_ok': res_code.sale_ok,
-                    'purchase_ok': res_code.purchase_ok,
-                    'produce_delay': res_code.date_schedule_mrp,
-                    'route_ids': [(6, 0, [x.id for x in res_code.product_route_ids])],
-                    'type': res_code.type_store,
-                    })
+        if self.is_vault_product:
+            res_code = self.env['res.code'].search([('name', '=', var)])
+            res.update({'sale_ok': res_code.sale_ok,
+                        'purchase_ok': res_code.purchase_ok,
+                        'produce_delay': res_code.date_schedule_mrp,
+                        'route_ids': [(6, 0, [x.id for x in res_code.product_route_ids])],
+                        'type': res_code.type_store,
+                        })
         res.update({'vault_code': var})
 
         return res
