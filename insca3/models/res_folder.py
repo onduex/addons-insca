@@ -59,7 +59,8 @@ class ResFolder(models.Model):
                     product_tmpl_obj.create({'name': record.description,
                                              'default_code': record.folder_name,
                                              'type': "service",
-                                             'categ_id': 5020,  # EXPEDIENTE
+                                             'categ_id': self.env['product.category']
+                                            .search([('name', '=', 'EXPEDIENTE')]).id,
                                              'sale_ok': False,
                                              'purchase_ok': False,
                                              })
