@@ -272,15 +272,15 @@ class ProductTemplate(models.Model):
         var = ''
         res = super(ProductTemplate, self).create(vals)
 
-        if vals.get('default_code')[0:3] == 'A30' and vals.get('default_code')[-3:] != '000':
-            var = vals['default_code'][0:3] + 'P'
-        elif vals.get('default_code')[0:3] == 'A31' and vals.get('default_code')[-3:] != '000':
-            var = vals['default_code'][0:3] + 'P'
-        elif vals.get('default_code'):
-            var = vals['default_code'][0:3]
+        if res.is_vault_product:
+            if vals.get('default_code')[0:3] == 'A30' and vals.get('default_code')[-3:] != '000':
+                var = vals['default_code'][0:3] + 'P'
+            elif vals.get('default_code')[0:3] == 'A31' and vals.get('default_code')[-3:] != '000':
+                var = vals['default_code'][0:3] + 'P'
+            elif vals.get('default_code'):
+                var = vals['default_code'][0:3]
 
-        # estas funcionan porque no las importa rainbow
-        if self.is_vault_product:
+            # estas funcionan porque no las importa rainbow
             res_code = self.env['res.code'].search([('name', '=', var)])
             res.update({'sale_ok': res_code.sale_ok,
                         'purchase_ok': res_code.purchase_ok,
@@ -288,6 +288,6 @@ class ProductTemplate(models.Model):
                         'route_ids': [(6, 0, [x.id for x in res_code.product_route_ids])],
                         'type': res_code.type_store,
                         })
-        res.update({'vault_code': var})
+            res.update({'vault_code': var})
 
         return res

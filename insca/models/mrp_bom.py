@@ -6,6 +6,44 @@ from odoo.exceptions import ValidationError
 from collections import OrderedDict
 
 
+class MrpBomLine(models.Model):
+    _inherit = "mrp.bom.line"
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Borrado de las mrp.bom.lines que vienen de vault
+        product_ids = []
+        lines = []
+        new_line_list = []
+        res = super().create(vals_list)
+        for record in res:
+            # Código A31 borrar líneas de BoM
+            if record.bom_id.product_tmpl_id.vault_code == 'A31P' and \
+                    record.bom_id.product_tmpl_id.default_code[-3:] != '000' and \
+                    record.bom_id.is_vault_bom and \
+                    record.product_tmpl_id.vault_code == 'A30':
+                # Obtener las nuevas líneas a crear
+                product_ids_max = self.env['product.product']. \
+                    search([('default_code', '=', record.bom_id.product_tmpl_id.default_code[:-3] + '000')])
+                product_ids += self.env['product.product']. \
+                    search([('inventor_color', '=', record.bom_id.product_tmpl_id.vault_color)])
+                product_ids += max(product_ids_max)
+                for product in product_ids:
+                    lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
+                print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
+                record.unlink()
+        for rec in lines:
+            new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
+                                                                 ('product_id', '=', rec[2]['product_id'])])
+            print(new_bom_lines_id)
+            if not new_bom_lines_id:
+                print('dentro1')
+                self.env['mrp.bom.line'].sudo().create({'bom_id': rec[2]['bom_id'].id,
+                                                        'product_id': rec[2]['product_id'],
+                                                        'product_qty': 1})
+        return res
+
+
 class MrpBom(models.Model):
     _inherit = "mrp.bom"
 
@@ -48,22 +86,4 @@ class MrpBom(models.Model):
                 for product in product_ids:
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
                 res.update({'bom_line_ids': lines})
-        return res
-
-
-class MrpBomLine(models.Model):
-    _inherit = "mrp.bom.line"
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        # Borrado de las mrp.bom.lines que vienen de vault
-        res = super().create(vals_list)
-        for record in res:
-            # Código A31 borrar líneas de BoM
-            if record.bom_id.product_tmpl_id.vault_code == 'A31P' and \
-                    record.bom_id.product_tmpl_id.default_code[-3:] != '000' and \
-                    record.bom_id.is_vault_bom and \
-                    record.product_tmpl_id.vault_code == 'A30':
-                print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
-                record.unlink()
         return res
