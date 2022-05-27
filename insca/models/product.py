@@ -109,7 +109,7 @@ class ProductTemplate(models.Model):
                                 product_ids += self.env['product.product'].search([('default_code', '=',
                                                                                     vals['vault_edge_code'])])
                             if vals['vault_color']:
-                                product_ids += self.env['product.product'].search([('inventor_color', '=',
+                                product_ids += self.env['product.product'].search([('default_code', '=',
                                                                                     vals['vault_color'])])
                             for product in product_ids:
                                 lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
@@ -195,7 +195,7 @@ class ProductTemplate(models.Model):
                             product_ids_max = self.env['product.product'].search([('default_code', '=',
                                                                                    self.default_code[:-3] + '000')])
                             if vals['vault_color']:
-                                product_ids += self.env['product.product'].search([('inventor_color', '=',
+                                product_ids += self.env['product.product'].search([('default_code', '=',
                                                                                     vals['vault_color'])])
                             product_ids += max(product_ids_max)
                             for product in product_ids:
