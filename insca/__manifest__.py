@@ -16,6 +16,7 @@
 
     # any module necessary for this one to work correctly
     'depends': [
+        'rainbow',
         'product',
         'stock',
         'mrp',
