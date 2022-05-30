@@ -17,8 +17,6 @@
     # any module necessary for this one to work correctly
     'depends': [
         'product',
-        'rainbow',
-        'rainbow_bom_structure',
         'stock',
         'mrp',
     ],
