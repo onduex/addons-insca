@@ -8,22 +8,29 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    vault_categ = fields.Char(string='Vault Categoría', required=False)  # Categoria
-    vault_categ_terminado = fields.Char(string='Vault Cat. PTERMINADO', required=False)  # Categoria PTERMINADO
-    vault_code = fields.Char(string='Vault Código', required=False)  # 3 primeros digitos
-    vault_material_code = fields.Char(string='Vault Virtual Material', required=False)  # Codigo_Virtual_Material
-    vault_route = fields.Char(string='Vault Ruta', required=False)  # Ruta de produccion
-    vault_material = fields.Char(string='Vault Material', required=False)  # Codigo material
-    vault_edge_code = fields.Char(string='Vault Edge Code', required=False)  # Codigo cantos
+    vault_categ = fields.Char(string='Vault Categoría', required=False)                     # Categoria
+    vault_categ_terminado = fields.Char(string='Vault Cat. PTERMINADO', required=False)     # Categoria PTERMINADO
+    vault_code = fields.Char(string='Vault Código', required=False)                         # 3 primeros digitos
+    vault_material_code = fields.Char(string='Vault Virtual Material', required=False)      # Codigo_Virtual_Material
+    vault_route = fields.Char(string='Vault Ruta', required=False)                          # Ruta de produccion
+    vault_material = fields.Char(string='Vault Material', required=False)                   # Codigo material
+    vault_edge_code = fields.Char(string='Vault Cod. Cantos', required=False)               # Codigo cantos
+    vault_edge_num = fields.Char(string='Vault Num. Cantos', required=False)                # Número cantos
+    vault_edge_len = fields.Char(string='Vault Long. Cantos', required=False)               # Longitud cantos
+    vault_length_sheet = fields.Char(string='Vault Largo Chapa', required=False)            # Largo Chapa
+    vault_width_sheet = fields.Char(string='Vault Ancho Chapa', required=False)             # Ancho Chapa
 
-    vault_color = fields.Char(string='Vault Color', required=False)  # Codigo color
-    vault_length = fields.Char(string='Vault Largo', required=False)  # Largo
-    vault_width = fields.Char(string='Vault Ancho', required=False)  # Ancho
-    vault_height = fields.Char(string='Vault Hondo', required=False)  # Hondo
-    vault_thinkness = fields.Char(string='Vault Espesor', required=False)  # Espesor
-    vault_diameter = fields.Char(string='Vault Diámetro', required=False)  # Diametro
-    vault_mesh = fields.Char(string='Vault Malla', required=False)  # Malla
-    vault_program_assoc = fields.Boolean(string='Vault P. Asociado', required=False)
+    vault_color = fields.Char(string='Vault Color', required=False)                         # Codigo color
+    vault_sup_pintada = fields.Char(string='Vault Sup. Pintada', required=False)            # Superficie pintada
+    vault_sup_madera = fields.Char(string='Vault Sup. Madera', required=False)              # Superficie madera
+    vault_weight = fields.Char(string='Vault Peso', required=False)                         # Peso
+    vault_length = fields.Char(string='Vault Largo', required=False)                        # Largo
+    vault_width = fields.Char(string='Vault Ancho', required=False)                         # Ancho
+    vault_height = fields.Char(string='Vault Hondo', required=False)                        # Hondo
+    vault_thinkness = fields.Char(string='Vault Espesor', required=False)                   # Espesor
+    vault_diameter = fields.Char(string='Vault Diámetro', required=False)                   # Diametro
+    vault_mesh = fields.Char(string='Vault Malla', required=False)                          # Malla
+    vault_program_assoc = fields.Boolean(string='Vault P. Asociado', required=False)        # CNC
 
     def write(self, vals):
         mrp_bom_object = self.env['mrp.bom']
