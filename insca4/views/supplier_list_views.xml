@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Tree View-->
+    <record id="view_tree_componentes" model="ir.ui.view">
+        <field name="name">Componentes</field>
+        <field name="model">supplier.list</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Componentes" default_order="sale_name desc">
+                <!--<field name="id"/>-->
+                <field name="sale_name"/>
+                <field name="product_code"/>
+                <field name="product_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Actions-->
+    <record id="action_componentes" model="ir.actions.act_window">
+        <field name="name">Componentes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">supplier.list</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+
+    <!--Menu-->
+    <menuitem id="supplier_list_root_menu" name="LdM Proveedores"
+              sequence="10" web_icon="insca4,static/description/icon.png"/>
+    <menuitem id="datos_principales" name="Datos principales" parent="supplier_list_root_menu" sequence="117"/>
+    <menuitem id="res_componentes" name="Componentes" parent="datos_principales"
+              action="action_componentes" sequence="117"/>
+</odoo>
