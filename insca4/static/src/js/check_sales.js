@@ -1,6 +1,6 @@
 console.log('Eureka')
 
-odoo.define('your_module_name.check_sales', function (require){
+odoo.define('insca4.check_sales', function (require){
     "use strict";
 
     var ajax = require('web.ajax');
