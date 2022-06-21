@@ -35,13 +35,13 @@ class ProductTemplate(models.Model):
     vault_mesh = fields.Char(string='MALLA', required=False, default='#')                                # Texto
     vault_edge_num = fields.Char(string='NRO CANTOS CHAPADOS', required=False, default='#')              # Texto
     vault_edge_num_pin = fields.Char(string='NRO CANTOS PINTADOS', required=False, default='#')          # Texto
-    vault_painted_face = fields.Char(string='NRO CARAS PINTADAS', required=False, default='#')           # Integer, rev
+    vault_painted_face = fields.Integer(string='NRO CARAS PINTADAS', required=False, default='#')        # Integer
     vault_weight = fields.Char(string='PESO', required=False, default='#')                               # Texto
-    vault_edge_paint = fields.Boolean(string='PINTAR CANTOS', required=False)                            # Booleano, rev
+    vault_edge_paint = fields.Char(string='PINTAR CANTOS', required=False, default='#')                  # Texto
     vault_route = fields.Char(string='RUTA PRODUCCION', required=False)                                  # Texto
     vault_edge_painted_sup = fields.Char(string='SUP. CANTOS PINTADOS', required=False, default='#')     # Texto
     vault_sup_madera = fields.Char(string='SUP. PIEZA', required=False, default='#')                     # Texto
-    vault_sup_pintada = fields.Char(string='SUP. PINTURA', required=False, default='#')                  # Float, rev
+    vault_sup_pintada = fields.Float(string='SUP. PINTURA', required=False, default='#')                 # Float
 
     def write(self, vals):
         mrp_bom_object = self.env['mrp.bom']
