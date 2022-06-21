@@ -9,31 +9,41 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='vault_product']" position="after">
                     <group name="vault_product2">
-                        <group string="Codes">
-                            <field name="vault_categ" readonly="1"/>
-                            <field name="vault_categ_terminado" readonly="1"/>
+                        <group string="Bloque A">
                             <field name="vault_code" readonly="1"/>
-                            <field name="vault_material_code" readonly="1"/>
-                            <field name="vault_route" readonly="1"/>
-                            <field name="vault_material" readonly="1"/>
-                            <field name="vault_edge_code" readonly="1"/>
-                            <field name="vault_edge_num" readonly="1"/>
-                            <field name="vault_edge_len" readonly="1"/>
-                            <field name="vault_length_sheet" readonly="1"/>
-                            <field name="vault_width_sheet" readonly="1"/>
-                        </group>
-                        <group string="Dimensiones">
-                            <field name="vault_color" readonly="1"/>
-                            <field name="vault_sup_pintada" readonly="1"/>
-                            <field name="vault_sup_madera" readonly="1"/>
-                            <field name="vault_weight" readonly="1"/>
-                            <field name="vault_length" readonly="1" invisible="0"/>
-                            <field name="vault_width" readonly="1" invisible="0"/>
-                            <field name="vault_height" readonly="1" invisible="0"/>
-                            <field name="vault_thinkness" readonly="1" invisible="0"/>
-                            <field name="vault_diameter" readonly="1" invisible="0"/>
-                            <field name="vault_mesh" readonly="1" invisible="0"/>
+                            <field name="vault_categ_terminado" readonly="1"/>
                             <field name="vault_program_assoc" readonly="1" invisible="0"/>
+                            <field name="vault_width" readonly="1" invisible="0"/>
+                            <field name="vault_width_sheet" readonly="1"/>
+                            <field name="vault_width_cut" readonly="1"/>
+                            <field name="vault_working_face" readonly="1"/>
+                            <field name="vault_categ" readonly="1"/>
+                            <field name="vault_edge_code" readonly="1"/>
+                            <field name="vault_color" readonly="1"/>
+                            <field name="vault_edge_pin_code" readonly="1"/>
+                            <field name="vault_material" readonly="1"/>
+                            <field name="vault_material_code" readonly="1"/>
+                            <field name="vault_diameter" readonly="1" invisible="0"/>
+                            <field name="vault_thinkness" readonly="1" invisible="0"/>
+                        </group>
+
+                        <group string="Bloque B">
+                            <field name="vault_height" readonly="1" invisible="0"/>
+                            <field name="vault_length" readonly="1" invisible="0"/>
+                            <field name="vault_length_sheet" readonly="1"/>
+                            <field name="vault_length_cut" readonly="1"/>
+                            <field name="vault_length_tub" readonly="1"/>
+                            <field name="vault_edge_len" readonly="1"/>
+                            <field name="vault_mesh" readonly="1" invisible="0"/>
+                            <field name="vault_edge_num" readonly="1"/>
+                            <field name="vault_edge_num_pin" readonly="1"/>
+                            <field name="vault_painted_face" readonly="1"/>
+                            <field name="vault_weight" readonly="1"/>
+                            <field name="vault_edge_paint" readonly="1"/>
+                            <field name="vault_route" readonly="1"/>
+                            <field name="vault_edge_painted_sup" readonly="1"/>
+                            <field name="vault_sup_madera" readonly="1"/>
+                            <field name="vault_sup_pintada" readonly="1"/>
                         </group>
                     </group>
             </xpath>
