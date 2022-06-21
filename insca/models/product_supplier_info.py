@@ -13,16 +13,15 @@ class ProductTemplate(models.Model):
         res_code = self.env['res.code'].search([('name', '=', vals.get('vault_code'))])
 
         # escribir proveedores
-        for product in self:
-            if product.is_vault_product and not product.is_old_revision:
-                if res_code.supplier_ids:
-                    for rec in res_code.supplier_ids:
-                        supplier_lines.append((0, 0, {'min_qty': 1.0,
-                                                      'price': 1.0,
-                                                      'delay': 1.0,
-                                                      'name': rec.id,
-                                                      'product_id': product.product_variant_id.id,
-                                                      }
-                                               ))
-                    vals.update({'seller_ids': supplier_lines})
+        if self.is_vault_product and not self.is_old_revision:
+            if res_code.supplier_ids:
+                for rec in res_code.supplier_ids:
+                    supplier_lines.append((0, 0, {'min_qty': 1.0,
+                                                  'price': 1.0,
+                                                  'delay': 1.0,
+                                                  'name': rec.id,
+                                                  'product_id': self.product_variant_id.id,
+                                                  }
+                                           ))
+                vals.update({'seller_ids': supplier_lines})
         return super(ProductTemplate, self).write(vals)
