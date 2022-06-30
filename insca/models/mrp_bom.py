@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from collections import OrderedDict
 
 
 class MrpBomLine(models.Model):
@@ -26,7 +25,7 @@ class MrpBomLine(models.Model):
                 product_ids_max = self.env['product.product']. \
                     search([('default_code', '=', record.bom_id.product_tmpl_id.default_code[:-3] + '000')])
                 product_ids += self.env['product.product']. \
-                    search([('inventor_color', '=', record.bom_id.product_tmpl_id.vault_color)])
+                    search([('default_code', '=', record.bom_id.product_tmpl_id.vault_color)])
                 product_ids += max(product_ids_max)
                 for product in product_ids:
                     lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
@@ -34,7 +33,7 @@ class MrpBomLine(models.Model):
                 record.unlink()
         for rec in lines:
             new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
-                                                                 ('product_id', '=', rec[2]['product_id'])])
+                                                                ('product_id', '=', rec[2]['product_id'])])
             print(new_bom_lines_id)
             if not new_bom_lines_id:
                 print('dentro1')
