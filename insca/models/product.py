@@ -10,38 +10,38 @@ class ProductTemplate(models.Model):
 
     vault_code = fields.Char(string='CODIGO TRUNCADO', required=False)
 
-    vault_categ_terminado = fields.Char(string='00 CAT. PTERMINADO', required=False)        # Texto
+    vault_categ_terminado = fields.Char(string='00 CAT. PTERMINADO', required=False)  # Texto
     # 01 NOTAS INTERNAS --> description                                                                  # Texto
-    vault_program_assoc = fields.Boolean(string='02 P. ASOCIADO', required=False)                        # Booleano
-    vault_width = fields.Char(string='ANCHO', required=False)                               # Texto
-    vault_width_sheet = fields.Char(string='ANCHO CHAPA', required=False)                   # Texto
-    vault_width_cut = fields.Char(string='ANCHO CORTE', required=False)                     # Texto
-    vault_working_face = fields.Boolean(string='CARA BUENA', required=False)                             # Booleano
-    vault_categ = fields.Char(string='CATEGORIA', required=False)                           # Texto
-    vault_edge_code = fields.Char(string='CODIGO CANTOS', required=False)                   # Texto
-    vault_color = fields.Char(string='CODIGO COLOR', required=False)                        # Texto
-    vault_edge_pin_code = fields.Char(string='COD COLOR CANTOS', required=False)            # Texto
-    vault_material = fields.Char(string='CODIGO MATERIAL', required=False)                  # Texto
-    vault_material_code = fields.Char(string='CODIGO VIRTUAL', required=False)              # Texto
+    vault_program_assoc = fields.Boolean(string='02 P. ASOCIADO', required=False)  # Booleano
+    vault_width = fields.Char(string='ANCHO', required=False)  # Texto
+    vault_width_sheet = fields.Char(string='ANCHO CHAPA', required=False)  # Texto
+    vault_width_cut = fields.Char(string='ANCHO CORTE', required=False)  # Texto
+    vault_working_face = fields.Boolean(string='CARA BUENA', required=False)  # Booleano
+    vault_categ = fields.Char(string='CATEGORIA', required=False)  # Texto
+    vault_edge_code = fields.Char(string='CODIGO CANTOS', required=False)  # Texto
+    vault_color = fields.Char(string='CODIGO COLOR', required=False)  # Texto
+    vault_edge_pin_code = fields.Char(string='COD COLOR CANTOS', required=False)  # Texto
+    vault_material = fields.Char(string='CODIGO MATERIAL', required=False)  # Texto
+    vault_material_code = fields.Char(string='CODIGO VIRTUAL', required=False)  # Texto
     # COLOR MATERIAL --> product_color                                                                   # Texto
-    vault_diameter = fields.Char(string='DIAMETRO', required=False)                         # Texto
-    vault_thinkness = fields.Char(string='ESPESOR', required=False)                         # Texto
-    vault_height = fields.Char(string='HONDO', required=False)                              # Texto
-    vault_length = fields.Char(string='LARGO', required=False)                              # Texto
-    vault_length_sheet = fields.Char(string='LARGO CHAPA', required=False)                  # Texto
-    vault_length_cut = fields.Char(string='LARGO CORTE', required=False)                    # Texto
-    vault_length_tub = fields.Char(string='LARGO TUBO', required=False)                     # Texto
-    vault_edge_len = fields.Char(string='L CANTOS CHAPADOS', required=False)                # Texto
-    vault_mesh = fields.Char(string='MALLA', required=False)                                # Texto
-    vault_edge_num = fields.Char(string='NRO CANTOS CHAPADOS', required=False)              # Texto
-    vault_edge_num_pin = fields.Char(string='NRO CANTOS PINTADOS', required=False)          # Texto
-    vault_painted_face = fields.Integer(string='NRO CARAS PINTADAS', required=False)                     # Integer
-    vault_weight = fields.Char(string='PESO', required=False)                               # Texto
-    vault_edge_paint = fields.Char(string='PINTAR CANTOS', required=False)                  # Texto
-    vault_route = fields.Char(string='RUTA PRODUCCION', required=False)                                  # Texto
-    vault_edge_painted_sup = fields.Char(string='SUP. CANTOS PINTADOS', required=False)     # Texto
-    vault_sup_madera = fields.Char(string='SUP. PIEZA', required=False)                     # Texto
-    vault_sup_pintada = fields.Float(string='SUP. PINTURA', required=False)                              # Float
+    vault_diameter = fields.Char(string='DIAMETRO', required=False)  # Texto
+    vault_thinkness = fields.Char(string='ESPESOR', required=False)  # Texto
+    vault_height = fields.Char(string='HONDO', required=False)  # Texto
+    vault_length = fields.Char(string='LARGO', required=False)  # Texto
+    vault_length_sheet = fields.Char(string='LARGO CHAPA', required=False)  # Texto
+    vault_length_cut = fields.Char(string='LARGO CORTE', required=False)  # Texto
+    vault_length_tub = fields.Char(string='LARGO TUBO', required=False)  # Texto
+    vault_edge_len = fields.Char(string='L CANTOS CHAPADOS', required=False)  # Texto
+    vault_mesh = fields.Char(string='MALLA', required=False)  # Texto
+    vault_edge_num = fields.Char(string='NRO CANTOS CHAPADOS', required=False)  # Texto
+    vault_edge_num_pin = fields.Char(string='NRO CANTOS PINTADOS', required=False)  # Texto
+    vault_painted_face = fields.Integer(string='NRO CARAS PINTADAS', required=False)  # Integer
+    vault_weight = fields.Char(string='PESO', required=False)  # Texto
+    vault_edge_paint = fields.Char(string='PINTAR CANTOS', required=False)  # Texto
+    vault_route = fields.Char(string='RUTA PRODUCCION', required=False)  # Texto
+    vault_edge_painted_sup = fields.Char(string='SUP. CANTOS PINTADOS', required=False)  # Texto
+    vault_sup_madera = fields.Char(string='SUP. PIEZA', required=False)  # Texto
+    vault_sup_pintada = fields.Float(string='SUP. PINTURA', required=False)  # Float
 
     def write(self, vals):
         mrp_bom_object = self.env['mrp.bom']
@@ -97,7 +97,8 @@ class ProductTemplate(models.Model):
                         if categ and vals['vault_categ_terminado'] != vals['vault_categ']:
                             vals.update({'categ_id': categ.id})
                         if not categ:
-                            raise ValidationError(_('La categoría (%s) no está en Odoo' % vals['vault_categ_terminado']))
+                            raise ValidationError(
+                                _('La categoría (%s) no está en Odoo' % vals['vault_categ_terminado']))
 
                     # Código A10
                     elif vals['vault_code'] == 'A10':
@@ -119,11 +120,12 @@ class ProductTemplate(models.Model):
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0:
                             if vals.get('vault_material_code') or vals['vault_edge_code'] or vals['vault_color']:
+                                qty = ''
                                 lines = []
                                 product_ids = []
                                 if vals['vault_material_code']:
                                     product_ids = self.env['product.product'].search([('default_code', '=',
-                                                                                      vals['vault_material_code'])])
+                                                                                       vals['vault_material_code'])])
                                 if vals['vault_edge_code']:
                                     product_ids += self.env['product.product'].search([('default_code', '=',
                                                                                         vals['vault_edge_code'])])
@@ -131,13 +133,27 @@ class ProductTemplate(models.Model):
                                     product_ids += self.env['product.product'].search([('default_code', '=',
                                                                                         vals['vault_color'])])
                                 for product in product_ids:
-                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                                    if product.categ_base == 'MADERA':
+                                        if 'vault_sup_madera' in vals:
+                                            qty = vals['vault_sup_madera']
+                                    if product.categ_base == 'CANTO':
+                                        if 'vault_edge_len' in vals and product.default_code != '000000':
+                                            qty = vals['vault_edge_len']
+                                        else:   # Si es chapado
+                                            qty = 0
+                                    if product.categ_base == 'COLOR MADERA':
+                                        if 'vault_sup_pintada' in vals and product.default_code != 'I0039Y':
+                                            qty = str(vals['vault_sup_pintada'])
+                                        else:  # Si es crudo
+                                            qty = 0.00
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                    qty = None
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
-                                                                   'code': self.vault_revision,
-                                                                   'product_qty': 1,
-                                                                   'type': 'normal',
-                                                                   'routing_id': mrp_routing.id or None,
-                                                                   'bom_line_ids': lines,
+                                                              'code': self.vault_revision,
+                                                              'product_qty': 1,
+                                                              'type': 'normal',
+                                                              'routing_id': mrp_routing.id or None,
+                                                              'bom_line_ids': lines,
                                                               })
 
                     # Código A30
