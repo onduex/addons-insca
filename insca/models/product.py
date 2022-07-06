@@ -175,6 +175,7 @@ class ProductTemplate(models.Model):
 
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0 and self.default_code[-3:] == '000':
+                            qty = ''
                             if vals.get('vault_material_code'):
                                 lines = []
                                 product_ids = []
@@ -182,7 +183,12 @@ class ProductTemplate(models.Model):
                                     product_ids = self.env['product.product'].search([('default_code', '=',
                                                                                        vals['vault_material_code'])])
                                 for product in product_ids:
-                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                                    if vals['name'][0:3] == ('CPF' or 'CPC'):
+                                        qty = vals['vault_sup_madera']
+                                    if vals['name'][0:2] == ('TR' or 'TC' or 'TO' or 'MZ'):
+                                        qty = vals['vault_length_tub']
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                    qty = None
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
                                                               'code': self.vault_revision,
                                                               'product_qty': 1,
@@ -227,7 +233,13 @@ class ProductTemplate(models.Model):
                                                                                         vals['vault_color'])])
                                 product_ids += max(product_ids_max)
                                 for product in product_ids:
-                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                                    if product.categ_base == 'COLOR METAL':
+                                        if 'vault_sup_pintada' in vals:
+                                            qty = str(vals['vault_sup_pintada'])
+                                    else:
+                                        qty = 1
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                    qty = None
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
                                                               'product_id': self.product_variant_id.id,
                                                               'code': self.vault_revision,
