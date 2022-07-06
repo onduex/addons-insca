@@ -127,25 +127,24 @@ class ProductTemplate(models.Model):
                                     product_ids = self.env['product.product'].search([('default_code', '=',
                                                                                        vals['vault_material_code'])])
                                 if vals['vault_edge_code']:
-                                    product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                        vals['vault_edge_code'])])
+                                    product_ids += self.env['product.product'].\
+                                        search([('default_code', '=', vals['vault_edge_code']),
+                                                ('default_code', '!=', '000000')])
                                 if vals['vault_color']:
-                                    product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                        vals['vault_color'])])
+                                    if 'vault_sup_pintada' in vals:
+                                        product_ids += self.env['product.product'].\
+                                            search([('default_code', '=', vals['vault_color']),
+                                                    ('default_code', '!=', 'I0039Y')])
                                 for product in product_ids:
                                     if product.categ_base == 'MADERA':
                                         if 'vault_sup_madera' in vals:
                                             qty = vals['vault_sup_madera']
                                     if product.categ_base == 'CANTO':
-                                        if 'vault_edge_len' in vals and product.default_code != '000000':
+                                        if 'vault_edge_len' in vals:
                                             qty = vals['vault_edge_len']
-                                        else:   # Si es chapado
-                                            qty = 0
                                     if product.categ_base == 'COLOR MADERA':
-                                        if 'vault_sup_pintada' in vals and product.default_code != 'I0039Y':
+                                        if 'vault_sup_pintada' in vals:
                                             qty = str(vals['vault_sup_pintada'])
-                                        else:  # Si es crudo
-                                            qty = 0.00
                                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                                     qty = None
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
