@@ -34,9 +34,9 @@ class MrpBomLine(models.Model):
         for rec in lines:
             new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
                                                                 ('product_id', '=', rec[2]['product_id'])])
-            print(new_bom_lines_id)
+            for records in new_bom_lines_id:
+                print(records.product_id.name)
             if not new_bom_lines_id:
-                print('dentro1')
                 self.env['mrp.bom.line'].sudo().create({'bom_id': rec[2]['bom_id'].id,
                                                         'product_id': rec[2]['product_id'],
                                                         'product_qty': 1})
@@ -80,9 +80,14 @@ class MrpBom(models.Model):
                 product_ids_max = self.env['product.product']. \
                     search([('default_code', '=', bom.product_tmpl_id.default_code[:-3] + '000')])
                 product_ids += self.env['product.product']. \
-                    search([('inventor_color', '=', bom.product_tmpl_id.vault_color)])
+                    search([('default_code', '=', bom.product_tmpl_id.vault_color)])
                 product_ids += max(product_ids_max)
                 for product in product_ids:
-                    lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                    if product.categ_base == 'COLOR METAL':
+                        qty = str(bom.product_tmpl_id.vault_sup_pintada)
+                    else:
+                        qty = 1
+                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                    qty = None
                 res.update({'bom_line_ids': lines})
         return res

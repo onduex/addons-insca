@@ -119,8 +119,8 @@ class ProductTemplate(models.Model):
                                                     % (vals['vault_route'], vals['name'])))
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0:
+                            qty = ''
                             if vals.get('vault_material_code') or vals['vault_edge_code'] or vals['vault_color']:
-                                qty = ''
                                 lines = []
                                 product_ids = []
                                 if vals['vault_material_code']:
@@ -183,9 +183,12 @@ class ProductTemplate(models.Model):
                                     product_ids = self.env['product.product'].search([('default_code', '=',
                                                                                        vals['vault_material_code'])])
                                 for product in product_ids:
-                                    if vals['name'][0:3] == ('CPF' or 'CPC'):
+                                    if vals['name'][0:3] == 'CPF' or vals['name'][0:3] == 'CPC':
                                         qty = vals['vault_sup_madera']
-                                    if vals['name'][0:2] == ('TR' or 'TC' or 'TO' or 'MZ'):
+                                    if vals['name'][0:2] == 'TR' or \
+                                            vals['name'][0:2] == 'TC' or \
+                                            vals['name'][0:2] == 'TO' or \
+                                            vals['name'][0:2] == 'MZ':
                                         qty = vals['vault_length_tub']
                                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                                     qty = None
@@ -223,6 +226,7 @@ class ProductTemplate(models.Model):
 
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
+                            qty = ''
                             if vals['vault_color']:
                                 lines = []
                                 product_ids = []
