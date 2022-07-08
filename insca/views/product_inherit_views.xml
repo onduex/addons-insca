@@ -5,9 +5,10 @@
         <field name="name">product.template.view.form.inherit.insca</field>
         <field name="model">product.template</field>
         <field name="priority">99</field>
-        <field name="inherit_id" ref="rainbow.product_template_view_form_inherit_rainbow"/>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='vault_product']" position="after">
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page name="vault_info" string="Extra Vault Info">
                     <group name="vault_product2">
                         <group string="Bloque A">
                             <field name="vault_code" readonly="1"/>
@@ -46,24 +47,9 @@
                             <field name="vault_sup_pintada" readonly="1"/>
                         </group>
                     </group>
+                </page>
             </xpath>
         </field>
     </record>
-
-    <!--<record id="product_template_product_tree_inherit_insca" model="ir.ui.view">
-        <field name="name">product.template.product.tree.inherit.insca</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_tree_view"/>
-        <field name="arch" type="xml">
-
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="vault_material" readonly="1"/>
-                <field name="vault_color" readonly="1"/>
-                <field name="vault_categ" readonly="1"/>
-                <field name="categ_id" readonly="1"/>
-            </xpath>
-
-        </field>
-    </record>-->
 
 </odoo>
