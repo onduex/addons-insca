@@ -28,9 +28,9 @@ class Supplierlist(models.Model):
         so_line_ids = self.env['sale.order.line'].search([])
 
         # only for sale order lines
+        # line['product_id']['default_code'][0:9] == 'A00.03321' and
         for line in so_line_ids:
             if line['product_id']['default_code'] and \
-                    line['product_id']['default_code'][0:9] == 'A00.03321' and \
                     line['id'] not in self._get_supplier_list_ids_for_sales():
                 self.create({'sale_name': line['order_id']['name'],
                              'product_code': line['product_id']['default_code'],
