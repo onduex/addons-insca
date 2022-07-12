@@ -7,6 +7,9 @@
         <field name="model">supplier.list</field>
         <field name="arch" type="xml">
             <tree editable="top" string="Componentes" default_order="sale_name desc">
+                <field name="sale_origin"/>
+                <field name="product_origin"/>
+                <field name="manufacturing_origin"/>
                 <field name="sale_name"/>
                 <field name="product_code"/>
                 <field name="product_name"/>
