@@ -25,4 +25,23 @@ odoo.define('insca4.check_sales', function (require){
             }
         },
     });
+
+    ListController.include({
+        renderButtons: function($node) {
+            this._super.apply(this, arguments);
+            var self = this;
+            if (this.$buttons) {
+                $(this.$buttons).find('.oe_new_custom_button2').on('click', function() {
+                    rpc.query({
+                        model: 'supplier.list',
+                        method: 'your_function2',
+                        args: [],
+                    }).then(function(res){
+                        console.log(res)
+                        self.reload();
+                    })
+                });
+            }
+        },
+    });
 });
