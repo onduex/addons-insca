@@ -45,26 +45,10 @@ class Supplierlist(models.Model):
 
     @api.model
     def your_function(self):
-        po_origin_list = []
-        po_ids = self.env['purchase.order'].search([])
-        sm_ids = self.env['stock.move'].search([])
-
-        for po in po_ids:
-            po_origin_list += po['origin'].split(", ", -1)
-        po_origin_list = list(filter(lambda x: x[0:2] == 'OP', po_origin_list))
-        # print(po_origin_list, len(po_origin_list))
-
-        for op in po_origin_list:
-            sm_ids = self.env['stock.move'].search([('name', '=', op)])
-        for sm in sm_ids:
-            if sm.product_id.default_code[0:3] in ('A30', 'A31'):
-                print(sm.product_id.default_code)
-        res = 'Good Job'
-        return res
-
-        """
         so_line_ids = self.env['sale.order.line'].search([])
 
+        # only for sale order lines
+        # line['product_id']['default_code'][0:9] == 'A00.03321' and
         for so_line in so_line_ids:
             if so_line['product_id']['default_code'] and so_line['order_id']['state'] == 'sale' and \
                     so_line['id'] not in self._get_supplier_list_ids_for_so():
@@ -81,6 +65,7 @@ class Supplierlist(models.Model):
                              'type_model_id': 'SOL' + str(so_line['id']),
                              })
 
+        # searching po_line for each sale order
         supplier_list_ids = self.env['supplier.list'].search([('type', '=', 'SOL')])
         for each in supplier_list_ids:
             po_line_ids = self.env['purchase.order.line'].search([('order_id.origin', 'ilike', each['sale_name'])])
@@ -98,6 +83,7 @@ class Supplierlist(models.Model):
                                  'model_id': po_line['id'],
                                  'type': 'POL',
                                  'type_model_id': 'POL' + str(po_line['id']),
-                                 }) """
+                                 })
 
-
+        res = 'Good Job'
+        return res
