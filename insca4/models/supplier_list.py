@@ -56,22 +56,14 @@ class Supplierlist(models.Model):
 
     @api.model
     def your_function2(self):
-        po_origin_list = []
-        po_ids = self.env['purchase.order'].search([('sale_order_id', '=', False)])
-        for po in po_ids:
-            po_origin_list += po['origin'].split(", ", -1)
-        po_origin_list = list(set(filter(lambda x: x[0:2] == 'WH', po_origin_list)))
-        # print(po_origin_list)
-        for picking in po_origin_list:
-            sm_ids = self.env['stock.picking'].search([('name', '=', picking)])
-            po_id = self.env['purchase.order'].search([('origin', 'ilike', op), ('sale_order_id', '!=', False)])
-            # print(po_id.name)
-            for sm in sm_ids:
-                if sm.product_id.default_code[0:3] in ('A30', 'A31') and \
-                        sm['id'] not in self._get_supplier_list_ids_for_sm():
-                    mo_id = self.env['mrp.production'].search([('name', '=', sm.origin)])
-
-        res = 'Good Job 2'
+        supplier_list_ids = self.env['supplier.list'].search([])
+        for record in supplier_list_ids:
+            bom_ids_max = self.env['mrp.bom'].search([('product_tmpl_id.default_code', '=', record.product_code)])
+            for bom_line in bom_ids_max.bom_line_ids:
+                bom_ids_max2 = self.env['mrp.bom'].\
+                    search([('product_tmpl_id.default_code', '=', bom_line.product_id.default_code)])
+                print(record.product_code, bom_line.product_id.default_code, bom_ids_max2)
+        res = 'Obtener BoM'
         return res
 
     def _get_supplier_list_ids_for_sm(self):
