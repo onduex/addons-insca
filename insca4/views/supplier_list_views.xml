@@ -17,6 +17,15 @@
                 <field name="type" invisible="1"/>
                 <field name="model_id" invisible="1"/>
                 <field name="type_model_id"/>
+                <field name="pin"/>
+                <field name="sol"/>
+                <field name="man"/>
+                <field name="lst"/>
+                <field name="lsc"/>
+                <field name="plg"/>
+                <field name="sec"/>
+                <field name="cmz"/>
+                <field name="emb"/>
             </tree>
         </field>
     </record>
