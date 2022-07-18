@@ -91,8 +91,8 @@ class Supplierlist(models.Model):
 
     @api.model
     def your_function2(self):
+        route_list = []
         route_list2 = []
-        route_list3 = []
         supplier_list_ids = self.env['supplier.list'].search([])
         for record in supplier_list_ids:
             if not record['checked']:
@@ -106,64 +106,75 @@ class Supplierlist(models.Model):
                     bom_ids_max2 = self._get_bom(code)
                     for bom in bom_ids_max2:
                         # print('  N2', bom.product_tmpl_id.default_code, bom.vault_route)
-                        route_list2 += bom['vault_route'].split("-", -1)
+                        route_list += bom['vault_route'].split("-", -1)
                         self.create({'checked': True,
                                      'sale_origin': record.sale_origin,
                                      'product_origin': record.product_origin,
                                      'manufacturing_origin': record.manufacturing_origin,
-                                     'sale_name': record.sale_name,
+                                     'sale_name': '',
                                      'product_code': bom.product_tmpl_id.default_code,
                                      'product_name': bom.product_tmpl_id.name,
                                      'product_quantity': record.product_quantity * bom.product_qty,
                                      'model_id': '',
                                      'type': '',
                                      'type_model_id': record.type_model_id,
-                                     'pin': '1' if 'PIN' in route_list2 else '',
-                                     'sol': '1' if 'SOL' in route_list2 else '',
-                                     'man': '1' if 'MAN' in route_list2 else '',
-                                     'lst': '1' if 'LST' in route_list2 else '',
-                                     'lsc': '1' if 'LSC' in route_list2 else '',
-                                     'plg': '1' if 'PLG' in route_list2 else '',
-                                     'sec': '1' if 'SEC' in route_list2 else '',
-                                     'cmz': '1' if 'CMZ' in route_list2 else '',
-                                     'emb': '1' if 'EMB' in route_list2 else '',
+                                     'pin': '1' if 'PIN' in route_list else '',
+                                     'sol': '1' if 'SOL' in route_list else '',
+                                     'man': '1' if 'MAN' in route_list else '',
+                                     'lst': '1' if 'LST' in route_list else '',
+                                     'lsc': '1' if 'LSC' in route_list else '',
+                                     'plg': '1' if 'PLG' in route_list else '',
+                                     'sec': '1' if 'SEC' in route_list else '',
+                                     'cmz': '1' if 'CMZ' in route_list else '',
+                                     'emb': '1' if 'EMB' in route_list else '',
                                      })
-                        route_list2 = []
+                        route_list = []
 
                     for bom_line2 in bom_ids_max2.bom_line_ids:
                         code = bom_line2.product_id.default_code
                         bom_ids_max3 = self._get_bom(code)
                         for bom in bom_ids_max3:
                             # print('    N3', bom.product_tmpl_id.default_code, bom.vault_route)
-                            route_list3 += bom['vault_route'].split("-", -1)
+                            route_list2 += bom['vault_route'].split("-", -1)
                             self.create({'checked': True,
                                          'sale_origin': record.sale_origin,
                                          'product_origin': record.product_origin,
                                          'manufacturing_origin': record.manufacturing_origin,
-                                         'sale_name': record.sale_name,
+                                         'sale_name': '',
                                          'product_code': bom.product_tmpl_id.default_code,
                                          'product_name': bom.product_tmpl_id.name,
-                                         'product_quantity': record.product_quantity * bom.product_qty,
+                                         'product_quantity': bom.product_quantity * bom.product_qty,
                                          'model_id': '',
                                          'type': '',
                                          'type_model_id': record.type_model_id,
-                                         'pin': '1' if 'PIN' in route_list3 else '',
-                                         'sol': '1' if 'SOL' in route_list3 else '',
-                                         'man': '1' if 'MAN' in route_list3 else '',
-                                         'lst': '1' if 'LST' in route_list3 else '',
-                                         'lsc': '1' if 'LSC' in route_list3 else '',
-                                         'plg': '1' if 'PLG' in route_list3 else '',
-                                         'sec': '1' if 'SEC' in route_list3 else '',
-                                         'cmz': '1' if 'CMZ' in route_list3 else '',
-                                         'emb': '1' if 'EMB' in route_list3 else '',
+                                         'pin': '1' if 'PIN' in route_list2 else '',
+                                         'sol': '1' if 'SOL' in route_list2 else '',
+                                         'man': '1' if 'MAN' in route_list2 else '',
+                                         'lst': '1' if 'LST' in route_list2 else '',
+                                         'lsc': '1' if 'LSC' in route_list2 else '',
+                                         'plg': '1' if 'PLG' in route_list2 else '',
+                                         'sec': '1' if 'SEC' in route_list2 else '',
+                                         'cmz': '1' if 'CMZ' in route_list2 else '',
+                                         'emb': '1' if 'EMB' in route_list2 else '',
                                          })
-                            route_list3 = []
+                            route_list2 = []
 
                         for bom_line3 in bom_ids_max3.bom_line_ids:
                             code = bom_line3.product_id.default_code
                             bom_ids_max4 = self._get_bom(code)
-                            print('      N4', code)
-
+                            # print('      N4', code)
+                            self.create({'checked': True,
+                                         'sale_origin': record.sale_origin,
+                                         'product_origin': record.product_origin,
+                                         'manufacturing_origin': record.manufacturing_origin,
+                                         'sale_name': '',
+                                         'product_code': bom_line3.product_id.default_code,
+                                         'product_name': bom_line3.product_id.name,
+                                         'product_quantity': bom_line3.bom_id.product_quantity * bom_line3.product_qty,
+                                         'model_id': '',
+                                         'type': '',
+                                         'type_model_id': record.type_model_id,
+                                         })
         res = 'Obtener BoM'
         return res
 
