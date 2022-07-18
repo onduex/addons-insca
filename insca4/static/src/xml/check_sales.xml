@@ -4,7 +4,7 @@
     <t t-jquery="div.o_list_buttons" t-operation="append">
       <t t-if="widget.modelName=='supplier.list'">
         <button class="oe_new_custom_button btn btn-primary" type="button">Check</button>
-        <button class="oe_new_custom_button2 btn btn-primary" type="button">Check2</button>
+        <!--<button class="oe_new_custom_button2 btn btn-primary" type="button">Check2</button>-->
       </t>
     </t>
   </t>
