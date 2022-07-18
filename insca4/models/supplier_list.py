@@ -11,7 +11,7 @@ class Supplierlist(models.Model):
     manufacturing_origin = fields.Char(string='Fabricación origen', required=False, readonly=True)
     product_origin = fields.Char(string='Producto origen', required=True, readonly=True)
     sale_origin = fields.Char(string='Venta origen', required=True, readonly=True)
-    sale_name = fields.Char(string='Pedido', required=True, readonly=True)
+    sale_name = fields.Char(string='Pedido', required=False, readonly=True)
     product_code = fields.Char(string='Código de producto', required=True, readonly=True)
     product_name = fields.Char(string='Producto', required=True, readonly=True)
     product_quantity = fields.Float(string='Cantidad', required=False, readonly=True)
@@ -143,7 +143,7 @@ class Supplierlist(models.Model):
                                          'sale_name': '',
                                          'product_code': bom.product_tmpl_id.default_code,
                                          'product_name': bom.product_tmpl_id.name,
-                                         'product_quantity': bom.product_quantity * bom.product_qty,
+                                         'product_quantity': bom.product_qty * bom.product_qty,
                                          'model_id': '',
                                          'type': '',
                                          'type_model_id': record.type_model_id,
@@ -170,7 +170,7 @@ class Supplierlist(models.Model):
                                          'sale_name': '',
                                          'product_code': bom_line3.product_id.default_code,
                                          'product_name': bom_line3.product_id.name,
-                                         'product_quantity': bom_line3.bom_id.product_quantity * bom_line3.product_qty,
+                                         'product_quantity': bom_line3.bom_id.product_qty * bom_line3.product_qty,
                                          'model_id': '',
                                          'type': '',
                                          'type_model_id': record.type_model_id,
