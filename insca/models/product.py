@@ -91,6 +91,14 @@ class ProductTemplate(models.Model):
                                      })
 
                     # Para categorías dinámicas
+                    # Código PC0
+                    if vals['vault_code'] == 'PC0':
+                        parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                        categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
+                                                                     ('parent_id', '=', parent_categ.id)
+                                                                     ])
+                        vals.update({'categ_id': categ.id})
+
                     # Código A00
                     if vals['vault_code'] == 'A00':
                         categ = self.env['product.category'].search([('name', '=', vals['vault_categ_terminado'])])
