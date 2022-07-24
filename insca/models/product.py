@@ -98,6 +98,9 @@ class ProductTemplate(models.Model):
                                                                      ('parent_id', '=', parent_categ.id)
                                                                      ])
                         vals.update({'categ_id': categ.id})
+                        if not categ:
+                            raise ValidationError(
+                                _('La categoría (%s) no está en Odoo' % vals['vault_categ']))
 
                     # Código A00
                     if vals['vault_code'] == 'A00':
