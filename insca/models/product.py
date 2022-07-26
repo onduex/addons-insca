@@ -91,6 +91,21 @@ class ProductTemplate(models.Model):
                                      })
 
                     # Para categorías dinámicas
+                    # Código EM0
+                    if vals['vault_code'] == 'EM0':
+                        # Check si existe ruta
+                        mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                        if vals['vault_route'] and not len(mrp_routing):
+                            raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                    % (vals['vault_route'], vals['name'])))
+                        # Crear lista de materiales
+                        if len(self.bom_ids) == 0:
+                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                          'code': self.vault_revision,
+                                                          'product_qty': 1,
+                                                          'type': 'normal',
+                                                          'routing_id': mrp_routing.id or None,
+                                                          })
                     # Código PC0
                     if vals['vault_code'] == 'PC0':
                         parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
