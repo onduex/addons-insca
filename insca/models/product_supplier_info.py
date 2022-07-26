@@ -18,7 +18,7 @@ class ProductTemplate(models.Model):
                 if res_code.supplier_ids:
                     for rec in res_code.supplier_ids:
                         supplier_lines.append((0, 0, {'min_qty': 1.0,
-                                                      'price': 1.0,
+                                                      'price': 0.0,
                                                       'delay': 1.0,
                                                       'name': rec.id,
                                                       'product_id': self.product_variant_id.id,
