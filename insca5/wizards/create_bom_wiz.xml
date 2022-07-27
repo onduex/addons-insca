@@ -28,7 +28,7 @@
                                     <field name="base" style="width:80%"/>
                                     <field name="base_id" style="width:15%"/>
                                 </div>
-                                <label for="l_largo" string="Lateral lergo"/>
+                                <label for="l_largo" string="Lateral largo"/>
                                 <div>
                                     <field name="l_largo" style="width:80%"/>
                                     <field name="l_largo_id" style="width:15%"/>
