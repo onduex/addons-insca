@@ -10,6 +10,7 @@
                         <group>
                             <field name="product_id"/>
                             <field name="embalaje_id"/>
+                            <field name="embalaje_bom"/>
                             <group>
                                 <field name="largo"/>
                                 <field name="ancho"/>
@@ -48,7 +49,7 @@
 
                     </sheet>
                     <footer>
-                        <button name="added" type="object" string="Crear" class="oe_highlight"/>
+                        <button name="create_bom" type="object" string="Crear" class="oe_highlight"/>
                         or
                         <button special="cancel" string="Cancelar"/>
                     </footer>

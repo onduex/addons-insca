@@ -15,6 +15,9 @@ class CreateBomWiz(models.TransientModel):
     embalaje_id = fields.Many2one(
         comodel_name='product.template', string="Producto",
         help="Producto embalaje.", ondelete='cascade', readonly=True)
+    embalaje_bom = fields.Many2one(
+        comodel_name='mrp.bom', string="LdM",
+        help="Producto embalaje.", ondelete='cascade', readonly=True)
     largo = fields.Integer(string='Largo', required=False)
     ancho = fields.Integer(string='Ancho', required=False)
     alto = fields.Integer(string='Alto', required=False)
@@ -45,7 +48,116 @@ class CreateBomWiz(models.TransientModel):
         self.base_id = self.env["product.template"].search([("name", "=", self.base)])
         self.l_largo_id = self.env["product.template"].search([("name", "=", self.l_largo)])
         self.l_corto_id = self.env["product.template"].search([("name", "=", self.l_corto)])
-        self.taco_id = self.env["product.template"].search([("name", "=", self.taco)]).id
+        self.taco_id = self.env["product.template"].search([("name", "=", self.taco)])
+
+    def create_bom(self):
+        self.onchange_values()
+        product_ids = []
+        lines = []
+        product_tmpl_obj = self.env['product.template']
+        if self.largo == 0 or \
+                self.ancho == 0 or \
+                self.alto == 0 or \
+                self.espesor_base == 0 or \
+                self.n_tacos == 0:
+            raise ValidationError(_('Obligatorio todas las dimensiones distintas de cero!!!'))
+
+        # Tapa
+        self.tapa_id = self.env["product.template"].search([("name", "=", self.tapa)])
+        if self.tapa_id:
+            product_ids.append({'id': self.tapa_id,
+                                'qty': 1,
+                                })
+        if not self.tapa_id:
+            product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
+                                                               'default_code': 'EM01.' + self.embalaje_id.default_code[4:],
+                                                               'type': "product",
+                                                               'categ_id': self.embalaje_id.categ_id.id,
+                                                               'sale_ok': False,
+                                                               'purchase_ok': False,
+                                                               }).id,
+                                'qty': 1,
+                                })
+
+        # Base
+        self.base_id = self.env["product.template"].search([("name", "=", self.base)])
+        if self.base_id:
+            product_ids.append({'id': self.base_id,
+                                'qty': 1,
+                                })
+        if not self.base_id:
+            product_ids.append({'id': product_tmpl_obj.create({'name': self.base,
+                                                               'default_code': 'EM02.' + self.embalaje_id.default_code[4:],
+                                                               'type': "product",
+                                                               'categ_id': self.embalaje_id.categ_id.id,
+                                                               'sale_ok': False,
+                                                               'purchase_ok': False,
+                                                               }).id,
+                                'qty': 1,
+                                })
+
+        # Lateral largo
+        self.l_largo_id = self.env["product.template"].search([("name", "=", self.l_largo)])
+        if self.l_largo_id:
+            product_ids.append({'id': self.l_largo_id,
+                                'qty': 2,
+                                })
+        if not self.l_largo_id:
+            product_ids.append({'id': product_tmpl_obj.create({'name': self.l_largo,
+                                                               'default_code': 'EM03.' + self.embalaje_id.default_code[4:],
+                                                               'type': "product",
+                                                               'categ_id': self.embalaje_id.categ_id.id,
+                                                               'sale_ok': False,
+                                                               'purchase_ok': False,
+                                                               }).id,
+                                'qty': 2,
+                                })
+
+        # Lateral corto
+        self.l_corto_id = self.env["product.template"].search([("name", "=", self.l_corto)])
+        if self.l_corto_id:
+            product_ids.append({'id': self.l_corto_id,
+                                'qty': 2,
+                                })
+        if not self.l_corto_id:
+            product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
+                                                               'default_code': 'EM04.' + self.embalaje_id.default_code[4:],
+                                                               'type': "product",
+                                                               'categ_id': self.embalaje_id.categ_id.id,
+                                                               'sale_ok': False,
+                                                               'purchase_ok': False,
+                                                               }).id,
+                                'qty': 2,
+                                })
+
+        # Taco
+        self.taco_id = self.env["product.template"].search([("name", "=", self.taco)])
+        if self.taco_id:
+            product_ids.append({'id': self.taco_id,
+                                'qty': self.n_tacos,
+                                })
+        if not self.taco_id:
+            product_ids.append({'id': product_tmpl_obj.create({'name': self.taco,
+                                                               'default_code': 'EM05.' + self.embalaje_id.default_code[4:],
+                                                               'type': "product",
+                                                               'categ_id': self.embalaje_id.categ_id.id,
+                                                               'sale_ok': False,
+                                                               'purchase_ok': False,
+                                                               }).id,
+                                'qty': self.n_tacos,
+                                })
+
+        for rec in product_ids:
+            if rec['id'] not in lines:
+                lines.append({'id': rec['id'],
+                              'qty': rec['qty'],
+                              })
+            else:
+                continue
+        print(lines)
+        #     self.env['mrp.bom.line'].sudo().create({'bom_id': self.embalaje_bom.id,
+        #                                             'product_id': self.env['product.product'].search([('product_tmpl_id', '=', rec['id'])]).id,
+        #                                             'product_qty': rec['qty']})
 
 
 class ProductTemplate(models.Model):
@@ -54,8 +166,12 @@ class ProductTemplate(models.Model):
     def create_bom_wiz_action(self):
         embalaje_id = self.env["product.template"].search([("default_code", "ilike",
                                                             'EM0.' + self.default_code[4:10])])
+        embalaje_bom = self.env["mrp.bom"].search([("product_tmpl_id", "=", embalaje_id.id)])
+
         context = {'default_product_id': self.id,
-                   'default_embalaje_id': embalaje_id.id}
+                   'default_embalaje_id': embalaje_id.id,
+                   'default_embalaje_bom': max(embalaje_bom).id,
+                   }
         return {
             'name': 'Crear embalaje',
             'type': 'ir.actions.act_window',
