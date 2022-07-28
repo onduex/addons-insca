@@ -60,7 +60,7 @@ class CreateBomWiz(models.TransientModel):
                 self.alto == 0 or \
                 self.espesor_base == 0 or \
                 self.n_tacos == 0:
-            raise ValidationError(_('Obligatorio todas las dimensiones distintas de cero!!!'))
+            raise ValidationError(_('¡Obligatorio todas las dimensiones distintas de cero!'))
 
         # Tapa
         self.tapa_id = self.env["product.template"].search([("name", "=", self.tapa)])
@@ -147,18 +147,21 @@ class CreateBomWiz(models.TransientModel):
                                 'qty': self.n_tacos,
                                 })
 
-        for rec in product_ids:
-            if rec['id'] not in lines:
-                lines.append({'id': rec['id'],
-                              'qty': rec['qty'],
-                              })
-            else:
-                continue
-        print(lines)
-        #     self.env['mrp.bom.line'].sudo().create({'bom_id': self.embalaje_bom.id,
-        #                                             'product_id': self.env['product.product'].search([('product_tmpl_id', '=', rec['id'])]).id,
-        #                                             'product_qty': rec['qty']})
+        if self.embalaje_bom.bom_line_ids:
+            raise ValidationError(_('¡Esta LdM no está vacía, comprobar!'))
+        else:
+            for rec in product_ids:
+                product_id = self.env['product.product'].search([('product_tmpl_id', '=', rec['id'])]).id
+                exist = self.env['mrp.bom.line'].search([('bom_id', '=', self.embalaje_bom.id),
+                                                         ('product_id', '=', product_id)])
 
+                if not exist:
+                    self.env['mrp.bom.line'].sudo().create({'bom_id': self.embalaje_bom.id,
+                                                            'product_id': product_id,
+                                                            'product_qty': rec['qty']})
+                else:
+                    exist.update({'product_qty': exist['product_qty'] + rec['qty']})
+                                                                                                 
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
