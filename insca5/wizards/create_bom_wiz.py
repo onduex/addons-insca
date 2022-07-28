@@ -53,8 +53,9 @@ class CreateBomWiz(models.TransientModel):
     def create_bom(self):
         self.onchange_values()
         product_ids = []
-        lines = []
+        mrp_bom_lines = []
         product_tmpl_obj = self.env['product.template']
+        mrp_bom_obj = self.env['mrp.bom']
         if self.largo == 0 or \
                 self.ancho == 0 or \
                 self.alto == 0 or \
@@ -161,7 +162,7 @@ class CreateBomWiz(models.TransientModel):
                                                             'product_qty': rec['qty']})
                 else:
                     exist.update({'product_qty': exist['product_qty'] + rec['qty']})
-                                                                                                 
+
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
