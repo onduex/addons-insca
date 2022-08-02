@@ -17,12 +17,15 @@
     # any module necessary for this one to work correctly
     'depends': [
         'bi_sql_editor',
-        'base'
+        'base',
+        'stock'
     ],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'wizards/create_packaging_wiz.xml',
+        'views/product_inherit_views.xml',
         'views/wood_config.xml',
     ],
 

@@ -6,8 +6,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class CreateBomWiz(models.TransientModel):
-    _name = 'create.bom.wiz'
+class CreatePackagingWiz(models.TransientModel):
+    _name = 'create.packaging.wiz'
 
     product_id = fields.Many2one(
         comodel_name='product.template', string="Producto",
@@ -76,6 +76,11 @@ class CreateBomWiz(models.TransientModel):
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
                                                                'purchase_ok': False,
+                                                               'vault_material_code': 'VT.00AAM016mm',
+                                                               'vault_lenght': False,
+                                                               'vault_width': False,
+                                                               'vault_thinkness': False,
+
                                                                }).id,
                                 'qty': 1,
                                 })
@@ -93,6 +98,7 @@ class CreateBomWiz(models.TransientModel):
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
                                                                'purchase_ok': False,
+                                                               'vault_material_code': 'VT.00AAM0' + self.espesor_base + 'mm'
                                                                }).id,
                                 'qty': 1,
                                 })
@@ -110,6 +116,7 @@ class CreateBomWiz(models.TransientModel):
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
                                                                'purchase_ok': False,
+                                                               'vault_material_code': 'VT.00AAM016mm'
                                                                }).id,
                                 'qty': 2,
                                 })
@@ -127,6 +134,7 @@ class CreateBomWiz(models.TransientModel):
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
                                                                'purchase_ok': False,
+                                                               'vault_material_code': 'VT.00AAM016mm'
                                                                }).id,
                                 'qty': 2,
                                 })
@@ -172,14 +180,18 @@ class ProductTemplate(models.Model):
                                                             'EM0.' + self.default_code[4:10])])
         embalaje_bom = self.env["mrp.bom"].search([("product_tmpl_id", "=", embalaje_id.id)])
 
+        if not embalaje_bom:
+            raise ValidationError(
+                _('El embalaje %s no tiene LdM' % embalaje_id['default_code']))
+
         context = {'default_product_id': self.id,
                    'default_embalaje_id': embalaje_id.id,
-                   'default_embalaje_bom': max(embalaje_bom).id,
+                   'default_embalaje_bom': max(embalaje_bom).id or None,
                    }
         return {
             'name': 'Crear embalaje',
             'type': 'ir.actions.act_window',
-            'res_model': 'create.bom.wiz',
+            'res_model': 'create.packaging.wiz',
             'context': context,
             'view_type': 'form',
             'view_mode': 'form',
