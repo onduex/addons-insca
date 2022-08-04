@@ -19,7 +19,7 @@
         'bi_sql_editor',
         'base',
         'stock',
-        'mrp'
+        'mrp',
     ],
 
     # always loaded

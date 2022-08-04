@@ -10,30 +10,35 @@
                         <div>
                             <group>
                                 <group>
-                                    <label for="product_id" string="Mueble: "/>
+                                    <label for="product_id" string="Mueble"/>
                                     <div>
                                         <field name="product_id"/>
                                     </div>
-                                    <label for="embalaje_id" string="Embalaje: "/>
+                                    <label for="embalaje_id" string="Embalaje"/>
                                     <div>
                                         <field name="embalaje_id"/>
                                     </div>
-                                    <label for="embalaje_bom" string="LdM Embalaje: "/>
+                                </group>
+                                <group>
+                                    <label for="embalaje_bom" string="LdM Embalaje"/>
                                     <div>
                                         <field name="embalaje_bom"/>
                                     </div>
-                                </group>
-                                <group>
-
+                                    <label for="n_bulto_lines" string="Nº de bulto"/>
+                                    <div>
+                                        <field name="n_bulto_lines"/>
+                                    </div>
                                 </group>
                             </group>
                         </div>
                         <div>
                             <group>
                                 <group>
+                                    <field name="n_bultos"/>
                                     <field name="largo"/>
                                     <field name="ancho"/>
                                     <field name="alto"/>
+                                    <field name="espesor_general"/>
                                     <field name="espesor_base"/>
                                     <field name="n_tacos"/>
                                 </group>
@@ -68,7 +73,7 @@
                         </div>
                     </sheet>
                     <footer>
-                        <button name="create_bom" type="object" string="Crear" class="oe_highlight"/>
+                        <button name="create_bom" type="object" string="Aplicar" class="oe_highlight"/>
                         or
                         <button special="cancel" string="Cancelar"/>
                     </footer>
