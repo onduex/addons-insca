@@ -105,10 +105,6 @@ class CreatePackagingWiz(models.TransientModel):
         self.env['mrp.bom.line'].sudo().create({'bom_id': self.embalaje_bom.id,
                                                 'product_id': product_obj.id,
                                                 'product_qty': self.n_bultos})
-        self.n_bultos = 1
-        self.largo = 0
-        self.ancho = 0
-        self.alto = 0
 
         # Tapa
         self.tapa_id = self.env["product.template"].search([("name", "=", self.tapa)])
@@ -118,8 +114,9 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.tapa_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
-                                                               'default_code': 'EM01.' + self.embalaje_id.default_code[
-                                                                                         4:],
+                                                               'default_code': str(self.largo).zfill(4) +
+                                                                               str(self.ancho).zfill(4) +
+                                                                               str(self.espesor_general).zfill(3),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
@@ -142,8 +139,9 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.base_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.base,
-                                                               'default_code': 'EM02.' + self.embalaje_id.default_code[
-                                                                                         4:],
+                                                               'default_code': str(self.largo).zfill(4) +
+                                                                               str(self.ancho).zfill(4) +
+                                                                               str(self.espesor_base).zfill(3),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
@@ -165,8 +163,9 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.l_largo_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.l_largo,
-                                                               'default_code': 'EM03.' + self.embalaje_id.default_code[
-                                                                                         4:],
+                                                               'default_code': str(self.largo).zfill(4) +
+                                                                               str(self.alto).zfill(4) +
+                                                                               str(self.espesor_general).zfill(3),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
@@ -189,8 +188,9 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.l_corto_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
-                                                               'default_code': 'EM04.' + self.embalaje_id.default_code[
-                                                                                         4:],
+                                                               'default_code': str(self.alto).zfill(4) +
+                                                                               str(self.ancho).zfill(4) +
+                                                                               str(self.espesor_general).zfill(3),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
@@ -236,6 +236,11 @@ class CreatePackagingWiz(models.TransientModel):
                                                         'product_qty': rec['qty']})
             else:
                 exist.update({'product_qty': exist['product_qty'] + rec['qty']})
+
+        self.n_bultos = 1
+        self.largo = 0
+        self.ancho = 0
+        self.alto = 0
 
         return {
             'name': 'Crear embalaje',
