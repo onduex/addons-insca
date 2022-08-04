@@ -8,12 +8,13 @@ from odoo.exceptions import UserError, ValidationError
 
 class CreatePackagingWiz(models.TransientModel):
     _name = 'create.packaging.wiz'
+    _description = 'Wizard para crear LdM de embalajes'
 
     product_id = fields.Many2one(
         comodel_name='product.template', string="Producto",
         help="Producto a embalar", ondelete='cascade', readonly=True)
     embalaje_id = fields.Many2one(
-        comodel_name='product.template', string="Producto",
+        comodel_name='product.template', string="Embalaje",
         help="Producto embalaje.", ondelete='cascade', readonly=True)
     embalaje_bom = fields.Many2one(
         comodel_name='mrp.bom', string="LdM",
@@ -30,11 +31,11 @@ class CreatePackagingWiz(models.TransientModel):
     l_corto = fields.Char(string='Lateral corto', required=False, readonly=True)
     taco = fields.Char(string='Taco', required=False, readonly=True)
 
-    tapa_id = fields.Integer(string='Tapa', required=False, readonly=True)
-    base_id = fields.Integer(string='Base', required=False, readonly=True)
-    l_largo_id = fields.Integer(string='Lateral largo', required=False, readonly=True)
-    l_corto_id = fields.Integer(string='Lateral corto', required=False, readonly=True)
-    taco_id = fields.Integer(string='Taco', required=False, readonly=True)
+    tapa_id = fields.Integer(string='Tapa Id', required=False, readonly=True)
+    base_id = fields.Integer(string='Base Id', required=False, readonly=True)
+    l_largo_id = fields.Integer(string='Lateral largo Id', required=False, readonly=True)
+    l_corto_id = fields.Integer(string='Lateral corto Id', required=False, readonly=True)
+    taco_id = fields.Integer(string='Taco Id', required=False, readonly=True)
 
     @api.onchange('largo', 'ancho', 'alto', 'espesor_base', 'n_tacos')
     def onchange_values(self):

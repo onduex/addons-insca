@@ -18,7 +18,8 @@
     'depends': [
         'bi_sql_editor',
         'base',
-        'stock'
+        'stock',
+        'mrp'
     ],
 
     # always loaded
