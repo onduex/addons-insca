@@ -74,6 +74,20 @@
                                 </group>
                             </group>
                         </div>
+                        <div class="alert alert-info" role="alert">
+                            <p><span class="fa fa-info-circle"/> Valores calculados</p>
+                        </div>
+                        <div>
+                            <group>
+                                <group>
+                                    <field name="largo_taco"/>
+                                </group>
+                                <group>
+
+                                </group>
+                            </group>
+                        </div>
+
                     </sheet>
                     <footer>
                         <button name="create_bom" type="object" string="Aplicar" class="oe_highlight"/>

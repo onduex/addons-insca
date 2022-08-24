@@ -28,6 +28,7 @@ class CreatePackagingWiz(models.TransientModel):
     espesor_base = fields.Selection(string='Espesor base', selection=[('25', '25'), ('30', '30'), ], required=False, )
     n_tacos = fields.Integer(string='Nº de tacos', required=False, default=4)
     n_bultos = fields.Integer(string='Nº de bultos', required=False, default=1)
+    largo_taco = fields.Integer(string='Largo taco', required=False, readonly=True)
 
     bulto = fields.Char(string='Bulto', required=False, readonly=True)
     tapa = fields.Char(string='Tapa', required=False, readonly=True)
@@ -41,6 +42,14 @@ class CreatePackagingWiz(models.TransientModel):
     l_largo_id = fields.Integer(string='Lateral largo Id', required=False, readonly=True)
     l_corto_id = fields.Integer(string='Lateral corto Id', required=False, readonly=True)
     taco_id = fields.Integer(string='Taco Id', required=False, readonly=True)
+
+    @api.onchange('largo', 'espesor_general')
+    def onchange_largo_taco(self):
+        sep_taco_lateral = self.env["res.packaging"].search([("name", "=", 'Separación taco lateral')]).value
+        l_taco_lateral = self.env["res.packaging"].search([("name", "=", 'Largo taco lateral')]).value
+        a = 2 * int(self.espesor_general)
+        b = 2 * sep_taco_lateral
+        self.largo_taco = (int(a) + self.largo - b - l_taco_lateral) / 2
 
     @api.onchange('largo', 'ancho', 'alto', 'espesor_base', 'espesor_general', 'n_tacos', 'n_bultos')
     def onchange_values(self):
