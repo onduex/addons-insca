@@ -44,6 +44,7 @@ class CreatePackagingWiz(models.TransientModel):
 
     @api.onchange('largo', 'ancho', 'alto', 'espesor_base', 'espesor_general', 'n_tacos', 'n_bultos')
     def onchange_values(self):
+        taco_material = self.env["res.packaging"].search([("name", "=", 'Material tacos')])
         self.n_bulto_lines = len(self.embalaje_bom.bom_line_ids)
 
         self.bulto = 'BULTO ' + str(self.largo) + 'X' + str(self.ancho) + 'X' + \
@@ -56,13 +57,13 @@ class CreatePackagingWiz(models.TransientModel):
                        str(self.espesor_general) + 'mm'
         self.l_corto = 'PIEZA EMBALAJE ' + str(self.alto) + 'X' + str(self.ancho) + 'X' + \
                        str(self.espesor_general) + 'mm'
-        self.taco = 'TACO ' + '80X80mm'
+        self.taco = self.env["product.template"].search([("default_code", "=", taco_material.code)]).name
 
         self.tapa_id = self.env["product.template"].search([("name", "=", self.tapa)])
         self.base_id = self.env["product.template"].search([("name", "=", self.base)])
         self.l_largo_id = self.env["product.template"].search([("name", "=", self.l_largo)])
         self.l_corto_id = self.env["product.template"].search([("name", "=", self.l_corto)])
-        self.taco_id = self.env["product.template"].search([("name", "=", self.taco)])
+        self.taco_id = self.env["product.template"].search([("default_code", "=", taco_material.code)])
 
     def create_bom(self):
         self.onchange_values()
@@ -98,7 +99,7 @@ class CreatePackagingWiz(models.TransientModel):
         new_bom_id = mrp_bom_obj.sudo().create({'product_tmpl_id': new_id,
                                                 'product_id': product_obj.id,
                                                 'product_qty': 1,
-                                                'type': 'normal',
+                                                'type': 'phantom',
                                                 'routing_id': 44,  # SEC-EMB
                                                 })
         # Crear bulto como línea de LdM
@@ -214,12 +215,12 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.taco_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.taco,
-                                                               'default_code': 'EM05.' + self.embalaje_id.default_code[
-                                                                                         4:],
+                                                               'default_code': taco_material.code,
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
                                                                'purchase_ok': False,
+
                                                                }).id,
                                 'qty': self.n_tacos,
                                 })
@@ -236,6 +237,24 @@ class CreatePackagingWiz(models.TransientModel):
                                                         'product_qty': rec['qty']})
             else:
                 exist.update({'product_qty': exist['product_qty'] + rec['qty']})
+
+        # Crear las LdM de los materiales y su consumo de material prima
+        for record in product_ids:
+            product_id = self.env['product.product'].search([('product_tmpl_id', '=', record['id'])]).id
+            product_tmpl = self.env['product.template'].search([('id', '=', record['id'])])
+            raw_material = self.env['product.product'].search(
+                [('default_code', '=', product_tmpl['vault_material_code'])])
+            if not product_tmpl.bom_ids:
+                new2_bom_id = mrp_bom_obj.sudo().create({'product_tmpl_id': record['id'],
+                                                         'product_id': product_id,
+                                                         'product_qty': 1,
+                                                         'type': 'normal',
+                                                         'routing_id': 44,  # SEC-EMB
+                                                         })
+                if len(raw_material) == 1:
+                    self.env['mrp.bom.line'].sudo().create({'bom_id': new2_bom_id.id,
+                                                            'product_id': raw_material.id,
+                                                            'product_qty': 1})
 
         self.n_bultos = 1
         self.largo = 0

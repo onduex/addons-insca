@@ -24,12 +24,15 @@
                                     <div>
                                         <field name="embalaje_bom"/>
                                     </div>
-                                    <label for="n_bulto_lines" string="Nº de bulto"/>
+                                    <label for="n_bulto_lines" string="Nº de bultos existentes"/>
                                     <div>
                                         <field name="n_bulto_lines"/>
                                     </div>
                                 </group>
                             </group>
+                        </div>
+                        <div class="alert alert-info" role="alert">
+                            <p><span class="fa fa-info-circle"/> Las dimensiones a cumplimentar están referidas a la LUZ</p>
                         </div>
                         <div>
                             <group>
