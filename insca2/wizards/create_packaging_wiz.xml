@@ -43,10 +43,24 @@
                                     <field name="alto"/>
                                     <field name="espesor_general"/>
                                     <field name="espesor_base"/>
-                                    <field name="n_tacos"/>
+                                    <field name="tipo_palet"/>
                                 </group>
                                 <group>
-                                    <label for="tapa" string="Tapa"/>
+                                    <field name="largo_taco"/>
+                                    <field name="largo_taco_lateral"/>
+                                    <field name="largo_taco_costado"/>
+                                    <field name="n_tacos"/>
+                                    <field name="n_tacos_lateral"/>
+                                    <field name="n_tacos_costado"/>
+                                </group>
+                            </group>
+                        </div>
+                        <div class="alert alert-info" role="alert">
+                            <p><span class="fa fa-info-circle"/> Referencias a buscar</p>
+                        </div>
+                        <div>
+                            <group>
+                                <label for="tapa" string="Tapa"/>
                                     <div>
                                         <field name="tapa" style="width:80%"/>
                                         <field name="tapa_id" style="width:20%"/>
@@ -71,22 +85,16 @@
                                         <field name="taco" style="width:80%"/>
                                         <field name="taco_id" style="width:20%"/>
                                     </div>
-                                </group>
-                            </group>
-                        </div>
-                        <div class="alert alert-info" role="alert">
-                            <p><span class="fa fa-info-circle"/> Valores calculados</p>
-                        </div>
-                        <div>
-                            <group>
-                                <group>
-                                    <field name="largo_taco"/>
-                                    <field name="n_tacos_lateral"/>
-                                    <field name="n_tacos_costado"/>
-                                </group>
-                                <group>
-
-                                </group>
+                                    <label for="taco_lateral" string="Taco lateral"/>
+                                    <div>
+                                        <field name="taco_lateral" style="width:80%"/>
+                                        <field name="taco_lateral_id" style="width:20%"/>
+                                    </div>
+                                    <label for="taco_costado" string="Taco costado"/>
+                                    <div>
+                                        <field name="taco_costado" style="width:80%"/>
+                                        <field name="taco_costado_id" style="width:20%"/>
+                                    </div>
                             </group>
                         </div>
 
