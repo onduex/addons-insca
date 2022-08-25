@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class CreatePackagingWiz(models.TransientModel):
@@ -26,7 +26,9 @@ class CreatePackagingWiz(models.TransientModel):
     espesor_general = fields.Selection(string='Espesor general', selection=[('16', '16'), ('19', '19'), ],
                                        required=False, )
     espesor_base = fields.Selection(string='Espesor base', selection=[('25', '25'), ('30', '30'), ], required=False, )
-    n_tacos = fields.Integer(string='Nº de tacos', required=False, default=4)
+    n_tacos = fields.Integer(string='Nº tacos', required=False, default=4)
+    n_tacos_lateral = fields.Integer(string='Nº tacos lateral', required=False, readonly=True)
+    n_tacos_costado = fields.Integer(string='Nº tacos costado', required=False, readonly=True)
     n_bultos = fields.Integer(string='Nº de bultos', required=False, default=1)
     largo_taco = fields.Integer(string='Largo taco', required=False, readonly=True)
 
@@ -43,38 +45,60 @@ class CreatePackagingWiz(models.TransientModel):
     l_corto_id = fields.Integer(string='Lateral corto Id', required=False, readonly=True)
     taco_id = fields.Integer(string='Taco Id', required=False, readonly=True)
 
-    @api.onchange('largo', 'espesor_general')
+    @api.onchange('largo', 'ancho', 'espesor_general')
     def onchange_largo_taco(self):
         sep_taco_lateral = self.env["res.packaging"].search([("name", "=", 'Separación taco lateral')]).value
         l_taco_lateral = self.env["res.packaging"].search([("name", "=", 'Largo taco lateral')]).value
         a = 2 * int(self.espesor_general)
         b = 2 * sep_taco_lateral
-        self.largo_taco = (int(a) + self.largo - b - l_taco_lateral) / 2
+
+        if 0 < self.largo < 750:
+            raise UserError(_('Largo minimo 750mm vs %smm' % self.largo))
+        elif 750 <= self.largo <= 1350:
+            self.largo_taco = l_taco_lateral
+        elif self.largo > 1350:
+            self.largo_taco = (a + self.largo - b - l_taco_lateral) / 2
+
+        if self.largo >= 800:
+            self.n_tacos_lateral = 2
+        else:
+            self.n_tacos_lateral = 0
+
+        if self.ancho >= 800:
+            self.n_tacos_costado = 2
+        else:
+            self.n_tacos_costado = 0
 
     @api.onchange('largo', 'ancho', 'alto', 'espesor_base', 'espesor_general', 'n_tacos', 'n_bultos')
     def onchange_values(self):
-        taco_material = self.env["res.packaging"].search([("name", "=", 'Material tacos')])
+        alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
+        ancho_tacos = self.env["res.packaging"].search([("name", "=", 'Ancho tacos')]).value
+
         self.n_bulto_lines = len(self.embalaje_bom.bom_line_ids)
 
-        self.bulto = 'BULTO ' + str(self.largo) + 'X' + str(self.ancho) + 'X' + \
-                     str(self.alto) + 'mm'
-        self.tapa = 'PIEZA EMBALAJE ' + str(self.largo) + 'X' + str(self.ancho) + 'X' + \
-                    str(self.espesor_general) + 'mm'
-        self.base = 'PIEZA EMBALAJE ' + str(self.largo) + 'X' + str(self.ancho) + 'X' + \
-                    str(self.espesor_base) + 'mm'
-        self.l_largo = 'PIEZA EMBALAJE ' + str(self.largo) + 'X' + str(self.alto) + 'X' + \
-                       str(self.espesor_general) + 'mm'
-        self.l_corto = 'PIEZA EMBALAJE ' + str(self.alto) + 'X' + str(self.ancho) + 'X' + \
-                       str(self.espesor_general) + 'mm'
-        self.taco = self.env["product.template"].search([("default_code", "=", taco_material.code)]).name
+        self.bulto = 'BULTO ' + str(self.largo).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
+                     str(self.alto).zfill(4) + 'mm'
+        self.tapa = 'PIEZA EMBALAJE ' + str(self.largo).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
+                    str(self.espesor_general).zfill(3) + 'mm'
+        self.base = 'PIEZA EMBALAJE ' + str(self.largo).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
+                    str(self.espesor_base).zfill(3) + 'mm'
+        self.l_largo = 'PIEZA EMBALAJE ' + str(self.largo).zfill(4) + 'x' + str(self.alto).zfill(4) + 'x' + \
+                       str(self.espesor_general).zfill(3) + 'mm'
+        self.l_corto = 'PIEZA EMBALAJE ' + str(self.alto).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
+                       str(self.espesor_general).zfill(3) + 'mm'
+        self.taco = 'TACO PINO PAIS ' + str(alto_tacos).zfill(3) + 'x' + str(ancho_tacos).zfill(3) + 'x' + \
+                    str(self.largo_taco).zfill(4) + 'mm'
 
         self.tapa_id = self.env["product.template"].search([("name", "=", self.tapa)])
         self.base_id = self.env["product.template"].search([("name", "=", self.base)])
         self.l_largo_id = self.env["product.template"].search([("name", "=", self.l_largo)])
         self.l_corto_id = self.env["product.template"].search([("name", "=", self.l_corto)])
-        self.taco_id = self.env["product.template"].search([("default_code", "=", taco_material.code)])
+        self.taco_id = self.env["product.template"].search([("name", "=", self.taco)])
 
     def create_bom(self):
+        alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
+        ancho_tacos = self.env["res.packaging"].search([("name", "=", 'Ancho tacos')]).value
+        self.onchange_largo_taco()
         self.onchange_values()
         product_ids = []
         product_tmpl_obj = self.env['product.template']
@@ -137,6 +161,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                'vault_length': str(self.largo),
                                                                'vault_width': str(self.ancho),
                                                                'vault_thinkness': str(self.espesor_general),
+                                                               'vault_sup_madera': str(float(self.largo) *
+                                                                                       float(self.ancho) / 1000000),
                                                                }).id,
                                 'qty': 1,
                                 })
@@ -161,6 +187,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                'vault_length': str(self.largo),
                                                                'vault_width': str(self.ancho),
                                                                'vault_thinkness': str(self.espesor_base),
+                                                               'vault_sup_madera': str(float(self.largo) *
+                                                                                       float(self.ancho) / 1000000)
                                                                }).id,
                                 'qty': 1,
                                 })
@@ -186,6 +214,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                'vault_length': str(self.largo),
                                                                'vault_width': str(self.alto),
                                                                'vault_thinkness': str(self.espesor_general),
+                                                               'vault_sup_madera': str(float(self.largo) *
+                                                                                       float(self.alto) / 1000000)
                                                                }).id,
                                 'qty': 2,
                                 })
@@ -211,25 +241,34 @@ class CreatePackagingWiz(models.TransientModel):
                                                                'vault_length': str(self.alto),
                                                                'vault_width': str(self.ancho),
                                                                'vault_thinkness': str(self.espesor_general),
+                                                               'vault_sup_madera': str(float(self.largo) *
+                                                                                       float(self.ancho) / 1000000)
                                                                }).id,
                                 'qty': 2,
                                 })
 
         # Taco
-        taco_material = self.env["res.packaging"].search([("name", "=", 'Material tacos')])
-        self.taco_id = self.env["product.template"].search([("default_code", "=", taco_material.code)])
+        taco_material = self.env["res.packaging"].search([("name", "=", 'Material tacos')]).code
+        self.taco_id = self.env["product.template"].search([("name", "=", self.taco)])
         if self.taco_id:
             product_ids.append({'id': self.taco_id,
                                 'qty': self.n_tacos,
                                 })
         if not self.taco_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.taco,
-                                                               'default_code': taco_material.code,
+                                                               'default_code': 'TC.' +
+                                                                               str(alto_tacos).zfill(3) +
+                                                                               str(ancho_tacos).zfill(3) +
+                                                                               str(self.largo_taco).zfill(4),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
                                                                'purchase_ok': False,
-
+                                                               'vault_material_code': taco_material,
+                                                               'vault_sup_madera': str(float(alto_tacos) *
+                                                                                       float(ancho_tacos) *
+                                                                                       float(self.largo_taco)
+                                                                                       / 1000000000),
                                                                }).id,
                                 'qty': self.n_tacos,
                                 })
@@ -263,7 +302,9 @@ class CreatePackagingWiz(models.TransientModel):
                 if len(raw_material) == 1:
                     self.env['mrp.bom.line'].sudo().create({'bom_id': new2_bom_id.id,
                                                             'product_id': raw_material.id,
-                                                            'product_qty': 1})
+                                                            'product_qty':
+                                                                float(new2_bom_id.product_tmpl_id.vault_sup_madera)
+                                                            })
 
         self.n_bultos = 1
         self.largo = 0
