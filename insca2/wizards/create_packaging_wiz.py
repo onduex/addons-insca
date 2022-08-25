@@ -26,11 +26,16 @@ class CreatePackagingWiz(models.TransientModel):
     espesor_general = fields.Selection(string='Espesor general', selection=[('16', '16'), ('19', '19'), ],
                                        required=False, )
     espesor_base = fields.Selection(string='Espesor base', selection=[('25', '25'), ('30', '30'), ], required=False, )
-    n_tacos = fields.Integer(string='Nº tacos', required=False, default=4)
+    tipo_palet = fields.Selection(string='Tipo palet', selection=[('0', 'Sin mordida'), ('1', 'Con mordida'), ],
+                                  required=False, )
+
+    n_tacos = fields.Integer(string='Nº tacos', required=False, readonly=True)
     n_tacos_lateral = fields.Integer(string='Nº tacos lateral', required=False, readonly=True)
     n_tacos_costado = fields.Integer(string='Nº tacos costado', required=False, readonly=True)
     n_bultos = fields.Integer(string='Nº de bultos', required=False, default=1)
     largo_taco = fields.Integer(string='Largo taco', required=False, readonly=True)
+    largo_taco_lateral = fields.Integer(string='Largo taco lateral', required=False, readonly=True)
+    largo_taco_costado = fields.Integer(string='Largo taco costado', required=False, readonly=True)
 
     bulto = fields.Char(string='Bulto', required=False, readonly=True)
     tapa = fields.Char(string='Tapa', required=False, readonly=True)
@@ -38,12 +43,16 @@ class CreatePackagingWiz(models.TransientModel):
     l_largo = fields.Char(string='Lateral largo', required=False, readonly=True)
     l_corto = fields.Char(string='Lateral corto', required=False, readonly=True)
     taco = fields.Char(string='Taco', required=False, readonly=True)
+    taco_lateral = fields.Char(string='Taco lateral', required=False, readonly=True)
+    taco_costado = fields.Char(string='Taco costado', required=False, readonly=True)
 
     tapa_id = fields.Integer(string='Tapa Id', required=False, readonly=True)
     base_id = fields.Integer(string='Base Id', required=False, readonly=True)
     l_largo_id = fields.Integer(string='Lateral largo Id', required=False, readonly=True)
     l_corto_id = fields.Integer(string='Lateral corto Id', required=False, readonly=True)
     taco_id = fields.Integer(string='Taco Id', required=False, readonly=True)
+    taco_lateral_id = fields.Integer(string='Taco lateral Id', required=False, readonly=True)
+    taco_costado_id = fields.Integer(string='Taco costado Id', required=False, readonly=True)
 
     @api.onchange('largo', 'ancho', 'espesor_general')
     def onchange_largo_taco(self):
@@ -52,6 +61,7 @@ class CreatePackagingWiz(models.TransientModel):
         a = 2 * int(self.espesor_general)
         b = 2 * sep_taco_lateral
 
+        # Cálculo taco principal
         if 0 < self.largo < 750:
             raise UserError(_('Largo minimo 750mm vs %smm' % self.largo))
         elif 750 <= self.largo <= 1350:
@@ -59,20 +69,27 @@ class CreatePackagingWiz(models.TransientModel):
         elif self.largo > 1350:
             self.largo_taco = (a + self.largo - b - l_taco_lateral) / 2
 
+        # Cálculo taco lateral
         if self.largo >= 800:
             self.n_tacos_lateral = 2
+            self.largo_taco_lateral = l_taco_lateral
         else:
             self.n_tacos_lateral = 0
+            self.largo_taco_lateral = 0
 
+        # Cálculo taco costado
         if self.ancho >= 800:
             self.n_tacos_costado = 2
+            self.largo_taco_costado = self.largo_taco - 100
         else:
             self.n_tacos_costado = 0
+            self.largo_taco_costado = 0
 
     @api.onchange('largo', 'ancho', 'alto', 'espesor_base', 'espesor_general', 'n_tacos', 'n_bultos')
     def onchange_values(self):
         alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
         ancho_tacos = self.env["res.packaging"].search([("name", "=", 'Ancho tacos')]).value
+        self.n_tacos = self.env["res.packaging"].search([("name", "=", 'Número de tacos')]).value
 
         self.n_bulto_lines = len(self.embalaje_bom.bom_line_ids)
 
@@ -88,12 +105,18 @@ class CreatePackagingWiz(models.TransientModel):
                        str(self.espesor_general).zfill(3) + 'mm'
         self.taco = 'TACO PINO PAIS ' + str(alto_tacos).zfill(3) + 'x' + str(ancho_tacos).zfill(3) + 'x' + \
                     str(self.largo_taco).zfill(4) + 'mm'
+        self.taco_lateral = 'TACO PINO PAIS ' + str(alto_tacos).zfill(3) + 'x' + str(ancho_tacos).zfill(3) + 'x' + \
+                            str(self.largo_taco_lateral).zfill(4) + 'mm'
+        self.taco_costado = 'TACO PINO PAIS ' + str(alto_tacos).zfill(3) + 'x' + str(ancho_tacos).zfill(3) + 'x' + \
+                            str(self.largo_taco_costado).zfill(4) + 'mm'
 
         self.tapa_id = self.env["product.template"].search([("name", "=", self.tapa)])
         self.base_id = self.env["product.template"].search([("name", "=", self.base)])
         self.l_largo_id = self.env["product.template"].search([("name", "=", self.l_largo)])
         self.l_corto_id = self.env["product.template"].search([("name", "=", self.l_corto)])
         self.taco_id = self.env["product.template"].search([("name", "=", self.taco)])
+        self.taco_lateral_id = self.env["product.template"].search([("name", "=", self.taco_lateral)])
+        self.taco_costado_id = self.env["product.template"].search([("name", "=", self.taco_costado)])
 
     def create_bom(self):
         alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
@@ -103,11 +126,13 @@ class CreatePackagingWiz(models.TransientModel):
         product_ids = []
         product_tmpl_obj = self.env['product.template']
         mrp_bom_obj = self.env['mrp.bom']
+
         if self.largo == 0 or \
                 self.ancho == 0 or \
                 self.alto == 0 or \
                 self.espesor_base == 0 or \
-                self.n_tacos == 0:
+                self.n_tacos == 0 or \
+                not self.tipo_palet:
             raise ValidationError(_('¡Obligatorio todas las dimensiones distintas de cero!'))
 
         # Crear primer nivel de embalaje
@@ -271,6 +296,58 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                        / 1000000000),
                                                                }).id,
                                 'qty': self.n_tacos,
+                                })
+
+        # Taco lateral
+        self.taco_lateral_id = self.env["product.template"].search([("name", "=", self.taco_lateral)])
+        if self.taco_lateral_id:
+            product_ids.append({'id': self.taco_lateral_id,
+                                'qty': self.n_tacos_lateral,
+                                })
+        if not self.taco_lateral_id:
+            product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_lateral,
+                                                               'default_code': 'TC.' +
+                                                                               str(alto_tacos).zfill(3) +
+                                                                               str(ancho_tacos).zfill(3) +
+                                                                               str(self.largo_taco_lateral).zfill(4),
+                                                               'type': "product",
+                                                               'categ_id': self.embalaje_id.categ_id.id,
+                                                               'sale_ok': False,
+                                                               'purchase_ok': False,
+                                                               'vault_material_code': taco_material,
+                                                               'vault_sup_madera': str(float(alto_tacos) *
+                                                                                       float(ancho_tacos) *
+                                                                                       float(self.largo_taco_lateral)
+                                                                                       / 1000000000),
+                                                               }).id,
+                                'qty': self.n_tacos_lateral,
+                                })
+
+        # Taco costado
+        self.taco_costado_id = self.env["product.template"].search([("name", "=", self.taco_costado)])
+        if self.taco_costado_id:
+            product_ids.append({'id': self.taco_costado_id,
+                                'qty': self.n_tacos_costado,
+                                })
+        if not self.taco_costado_id:
+            product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_costado,
+                                                               'default_code': 'TC.' +
+                                                                               str(alto_tacos).zfill(3) +
+                                                                               str(ancho_tacos).zfill(3) +
+                                                                               str(self.largo_taco_costado).zfill(
+                                                                                   4),
+                                                               'type': "product",
+                                                               'categ_id': self.embalaje_id.categ_id.id,
+                                                               'sale_ok': False,
+                                                               'purchase_ok': False,
+                                                               'vault_material_code': taco_material,
+                                                               'vault_sup_madera': str(float(alto_tacos) *
+                                                                                       float(ancho_tacos) *
+                                                                                       float(
+                                                                                           self.largo_taco_costado)
+                                                                                       / 1000000000),
+                                                               }).id,
+                                'qty': self.n_tacos_costado,
                                 })
 
         # Crear las líneas de la LdM del bulto
