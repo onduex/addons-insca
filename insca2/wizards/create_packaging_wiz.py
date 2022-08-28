@@ -85,24 +85,24 @@ class CreatePackagingWiz(models.TransientModel):
             self.n_tacos_costado = 0
             self.largo_taco_costado = 0
 
-    @api.onchange('largo', 'ancho', 'alto', 'espesor_base', 'espesor_general', 'n_tacos', 'n_bultos')
+    @api.onchange('largo', 'ancho', 'alto', 'espesor_base', 'espesor_general', 'n_tacos', 'n_bultos', 'tipo_palet')
     def onchange_values(self):
+
         alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
         ancho_tacos = self.env["res.packaging"].search([("name", "=", 'Ancho tacos')]).value
+        distancia_suelo = self.env["res.packaging"].search([("name", "=", 'Distancia al suelo del lateral')]).value
+
         self.n_tacos = self.env["res.packaging"].search([("name", "=", 'Número de tacos')]).value
 
         self.n_bulto_lines = len(self.embalaje_bom.bom_line_ids)
 
         self.bulto = 'BULTO ' + str(self.largo).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
                      str(self.alto).zfill(4) + 'mm'
-        self.tapa = 'PIEZA EMBALAJE ' + str(self.largo).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
-                    str(self.espesor_general).zfill(3) + 'mm'
-        self.base = 'PIEZA EMBALAJE ' + str(self.largo).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
-                    str(self.espesor_base).zfill(3) + 'mm'
-        self.l_largo = 'PIEZA EMBALAJE ' + str(self.largo).zfill(4) + 'x' + str(self.alto).zfill(4) + 'x' + \
-                       str(self.espesor_general).zfill(3) + 'mm'
-        self.l_corto = 'PIEZA EMBALAJE ' + str(self.alto).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
-                       str(self.espesor_general).zfill(3) + 'mm'
+        self.tapa = self.get_major_dimension_type_one(self.largo, self.ancho, self.espesor_general)
+        self.base = self.get_major_dimension_type_two(self.largo, self.ancho, self.espesor_base)
+        self.l_largo = self.get_major_dimension_type_three(self.largo, self.alto, self.espesor_general, alto_tacos,
+                                                           self.espesor_base, distancia_suelo, self.tipo_palet)
+        self.l_corto = self.get_major_dimension_type_four(self.alto, self.ancho, self.espesor_general)
         self.taco = 'TACO PINO PAIS ' + str(alto_tacos).zfill(3) + 'x' + str(ancho_tacos).zfill(3) + 'x' + \
                     str(self.largo_taco).zfill(4) + 'mm'
         self.taco_lateral = 'TACO PINO PAIS ' + str(alto_tacos).zfill(3) + 'x' + str(ancho_tacos).zfill(3) + 'x' + \
@@ -121,6 +121,7 @@ class CreatePackagingWiz(models.TransientModel):
     def create_bom(self):
         alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
         ancho_tacos = self.env["res.packaging"].search([("name", "=", 'Ancho tacos')]).value
+        distancia_suelo = self.env["res.packaging"].search([("name", "=", 'Distancia al suelo del lateral')]).value
         self.onchange_largo_taco()
         self.onchange_values()
         product_ids = []
@@ -133,7 +134,7 @@ class CreatePackagingWiz(models.TransientModel):
                 self.espesor_base == 0 or \
                 self.n_tacos == 0 or \
                 not self.tipo_palet:
-            raise ValidationError(_('¡Obligatorio todas las dimensiones distintas de cero!'))
+            raise ValidationError(_('¡Obligatorio todas las dimensiones distintas de cero! y/o Tipo de palet definido'))
 
         # Crear primer nivel de embalaje
         if len(self.embalaje_bom.bom_line_ids) < 10:
@@ -173,9 +174,8 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.tapa_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
-                                                               'default_code': str(self.largo).zfill(4) +
-                                                                               str(self.ancho).zfill(4) +
-                                                                               str(self.espesor_general).zfill(3),
+                                                               'default_code': self.get_major_code_type_one(
+                                                                   self.largo, self.ancho, self.espesor_general),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
@@ -200,9 +200,8 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.base_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.base,
-                                                               'default_code': str(self.largo).zfill(4) +
-                                                                               str(self.ancho).zfill(4) +
-                                                                               str(self.espesor_base).zfill(3),
+                                                               'default_code': self.get_major_code_type_two(
+                                                                   self.largo, self.ancho, self.espesor_base),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
@@ -226,9 +225,10 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.l_largo_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.l_largo,
-                                                               'default_code': str(self.largo).zfill(4) +
-                                                                               str(self.alto).zfill(4) +
-                                                                               str(self.espesor_general).zfill(3),
+                                                               'default_code': self.get_major_code_type_three(
+                                                                   self.largo, self.alto, self.espesor_general,
+                                                                   alto_tacos, self.espesor_base, distancia_suelo,
+                                                                   self.tipo_palet),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
@@ -253,9 +253,8 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.l_corto_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
-                                                               'default_code': str(self.alto).zfill(4) +
-                                                                               str(self.ancho).zfill(4) +
-                                                                               str(self.espesor_general).zfill(3),
+                                                               'default_code': self.get_major_code_type_four(
+                                                                   self.alto, self.ancho, self.espesor_general),
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
