@@ -28,6 +28,7 @@
         'wizards/create_packaging_wiz.xml',
         'views/product_inherit_views.xml',
         'views/wood_config.xml',
+        'data/packaging_data.xml'
     ],
 
     'installable': True,

@@ -37,13 +37,13 @@
                         <div>
                             <group>
                                 <group>
+                                    <field name="tipo_palet"/>
                                     <field name="n_bultos"/>
                                     <field name="largo" placeholder="Valor mínimo 750mm" widget="char"/>
                                     <field name="ancho" placeholder="Valor mínimo 750mm" widget="char"/>
                                     <field name="alto"/>
                                     <field name="espesor_general"/>
                                     <field name="espesor_base"/>
-                                    <field name="tipo_palet"/>
                                 </group>
                                 <group>
                                     <field name="largo_taco"/>

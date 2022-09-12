@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="packaging_param_1" model="res.packaging">
+            <field name="name">Alto tacos</field>
+            <field name="code">Ht</field>
+            <field name="value">90</field>
+        </record>
+        <record id="packaging_param_2" model="res.packaging">
+            <field name="name">Ancho palas</field>
+            <field name="code">Ap</field>
+            <field name="value">600</field>
+        </record>
+        <record id="packaging_param_3" model="res.packaging">
+            <field name="name">Ancho tacos</field>
+            <field name="code">At</field>
+            <field name="value">60</field>
+        </record>
+        <record id="packaging_param_4" model="res.packaging">
+            <field name="name">Distancia al suelo del lateral</field>
+            <field name="code">DsLt</field>
+            <field name="value">10</field>
+        </record>
+        <record id="packaging_param_5" model="res.packaging">
+            <field name="name">Largo taco lateral</field>
+            <field name="code">LtLt</field>
+            <field name="value">160</field>
+        </record>
+        <record id="packaging_param_6" model="res.packaging">
+            <field name="name">Material tacos</field>
+            <field name="code">MP.000229</field>
+            <field name="value">0</field>
+        </record>
+        <record id="packaging_param_7" model="res.packaging">
+            <field name="name">Número de base</field>
+            <field name="code">Nb</field>
+            <field name="value">1</field>
+        </record>
+        <record id="packaging_param_8" model="res.packaging">
+            <field name="name">Número de costados</field>
+            <field name="code">Nc</field>
+            <field name="value">2</field>
+        </record>
+        <record id="packaging_param_9" model="res.packaging">
+            <field name="name">Número de laterales</field>
+            <field name="code">Nl</field>
+            <field name="value">2</field>
+        </record>
+        <record id="packaging_param_10" model="res.packaging">
+            <field name="name">Número de tacos</field>
+            <field name="code">Nt</field>
+            <field name="value">4</field>
+        </record>
+        <record id="packaging_param_11" model="res.packaging">
+            <field name="name">Número de tapas</field>
+            <field name="code">Ntp</field>
+            <field name="value">1</field>
+        </record>
+        <record id="packaging_param_12" model="res.packaging">
+            <field name="name">Separación taco lateral</field>
+            <field name="code">StLt</field>
+            <field name="value">450</field>
+        </record>
+    </data>
+</odoo>

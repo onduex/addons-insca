@@ -26,7 +26,8 @@ class CreatePackagingWiz(models.TransientModel):
     espesor_general = fields.Selection(string='Espesor general', selection=[('16', '16'), ('19', '19'), ],
                                        required=False, )
     espesor_base = fields.Selection(string='Espesor base', selection=[('25', '25'), ('30', '30'), ], required=False, )
-    tipo_palet = fields.Selection(string='Tipo palet', selection=[('0', 'Sin mordida'), ('1', 'Con mordida'), ],
+    tipo_palet = fields.Selection(string='Tipo palet', selection=[('0', 'Sin mordida'), ('1', 'Con mordida'),
+                                                                  ('2', 'Sólo base')],
                                   required=False, )
 
     n_tacos = fields.Integer(string='Nº tacos', required=False, readonly=True)
@@ -78,6 +79,8 @@ class CreatePackagingWiz(models.TransientModel):
             self.largo_taco_lateral = 0
 
         # Cálculo taco costado
+        if 0 < self.ancho < 750:
+            raise UserError(_('Ancho minimo 750mm vs %smm' % self.ancho))
         if self.ancho >= 800:
             self.n_tacos_costado = 2
             self.largo_taco_costado = self.largo_taco - 100
@@ -166,32 +169,6 @@ class CreatePackagingWiz(models.TransientModel):
                                                 'product_id': product_obj.id,
                                                 'product_qty': self.n_bultos})
 
-        # Tapa
-        self.tapa_id = self.env["product.template"].search([("name", "=", self.tapa)])
-        if self.tapa_id:
-            product_ids.append({'id': self.tapa_id,
-                                'qty': 1,
-                                })
-        if not self.tapa_id:
-            product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
-                                                               'default_code': self.get_major_code_type_one(
-                                                                   self.largo, self.ancho, self.espesor_general),
-                                                               'type': "product",
-                                                               'categ_id': self.embalaje_id.categ_id.id,
-                                                               'sale_ok': False,
-                                                               'purchase_ok': False,
-                                                               'vault_material_code': 'VT.00AAM0'
-                                                                                      + str(
-                                                                   self.espesor_general) + 'mm',
-                                                               'vault_length': str(self.largo),
-                                                               'vault_width': str(self.ancho),
-                                                               'vault_thinkness': str(self.espesor_general),
-                                                               'vault_sup_madera': str(float(self.largo) *
-                                                                                       float(self.ancho) / 1000000),
-                                                               }).id,
-                                'qty': 1,
-                                })
-
         # Base
         self.base_id = self.env["product.template"].search([("name", "=", self.base)])
         if self.base_id:
@@ -215,60 +192,6 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                        float(self.ancho) / 1000000)
                                                                }).id,
                                 'qty': 1,
-                                })
-
-        # Lateral largo
-        self.l_largo_id = self.env["product.template"].search([("name", "=", self.l_largo)])
-        if self.l_largo_id:
-            product_ids.append({'id': self.l_largo_id,
-                                'qty': 2,
-                                })
-        if not self.l_largo_id:
-            product_ids.append({'id': product_tmpl_obj.create({'name': self.l_largo,
-                                                               'default_code': self.get_major_code_type_three(
-                                                                   self.largo, self.alto, self.espesor_general,
-                                                                   alto_tacos, self.espesor_base, distancia_suelo,
-                                                                   self.tipo_palet),
-                                                               'type': "product",
-                                                               'categ_id': self.embalaje_id.categ_id.id,
-                                                               'sale_ok': False,
-                                                               'purchase_ok': False,
-                                                               'vault_material_code': 'VT.00AAM0'
-                                                                                      + str(
-                                                                   self.espesor_general) + 'mm',
-                                                               'vault_length': str(self.largo),
-                                                               'vault_width': str(self.alto),
-                                                               'vault_thinkness': str(self.espesor_general),
-                                                               'vault_sup_madera': str(float(self.largo) *
-                                                                                       float(self.alto) / 1000000)
-                                                               }).id,
-                                'qty': 2,
-                                })
-
-        # Lateral corto
-        self.l_corto_id = self.env["product.template"].search([("name", "=", self.l_corto)])
-        if self.l_corto_id:
-            product_ids.append({'id': self.l_corto_id,
-                                'qty': 2,
-                                })
-        if not self.l_corto_id:
-            product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
-                                                               'default_code': self.get_major_code_type_four(
-                                                                   self.alto, self.ancho, self.espesor_general),
-                                                               'type': "product",
-                                                               'categ_id': self.embalaje_id.categ_id.id,
-                                                               'sale_ok': False,
-                                                               'purchase_ok': False,
-                                                               'vault_material_code': 'VT.00AAM0'
-                                                                                      + str(
-                                                                   self.espesor_general) + 'mm',
-                                                               'vault_length': str(self.alto),
-                                                               'vault_width': str(self.ancho),
-                                                               'vault_thinkness': str(self.espesor_general),
-                                                               'vault_sup_madera': str(float(self.largo) *
-                                                                                       float(self.ancho) / 1000000)
-                                                               }).id,
-                                'qty': 2,
                                 })
 
         # Taco
@@ -298,56 +221,143 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
 
         # Taco lateral
-        self.taco_lateral_id = self.env["product.template"].search([("name", "=", self.taco_lateral)])
-        if self.taco_lateral_id:
-            product_ids.append({'id': self.taco_lateral_id,
-                                'qty': self.n_tacos_lateral,
-                                })
-        if not self.taco_lateral_id:
-            product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_lateral,
-                                                               'default_code': 'TC.' +
-                                                                               str(alto_tacos).zfill(3) +
-                                                                               str(ancho_tacos).zfill(3) +
-                                                                               str(self.largo_taco_lateral).zfill(4),
-                                                               'type': "product",
-                                                               'categ_id': self.embalaje_id.categ_id.id,
-                                                               'sale_ok': False,
-                                                               'purchase_ok': False,
-                                                               'vault_material_code': taco_material,
-                                                               'vault_sup_madera': str(float(alto_tacos) *
-                                                                                       float(ancho_tacos) *
-                                                                                       float(self.largo_taco_lateral)
-                                                                                       / 1000000000),
-                                                               }).id,
-                                'qty': self.n_tacos_lateral,
-                                })
+        if self.n_tacos_lateral:
+            self.taco_lateral_id = self.env["product.template"].search([("name", "=", self.taco_lateral)])
+            if self.taco_lateral_id:
+                product_ids.append({'id': self.taco_lateral_id,
+                                    'qty': self.n_tacos_lateral,
+                                    })
+            if not self.taco_lateral_id:
+                product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_lateral,
+                                                                   'default_code': 'TC.' +
+                                                                                   str(alto_tacos).zfill(3) +
+                                                                                   str(ancho_tacos).zfill(3) +
+                                                                                   str(self.largo_taco_lateral).zfill(
+                                                                                       4),
+                                                                   'type': "product",
+                                                                   'categ_id': self.embalaje_id.categ_id.id,
+                                                                   'sale_ok': False,
+                                                                   'purchase_ok': False,
+                                                                   'vault_material_code': taco_material,
+                                                                   'vault_sup_madera': str(float(alto_tacos) *
+                                                                                           float(ancho_tacos) *
+                                                                                           float(
+                                                                                               self.largo_taco_lateral)
+                                                                                           / 1000000000),
+                                                                   }).id,
+                                    'qty': self.n_tacos_lateral,
+                                    })
 
         # Taco costado
-        self.taco_costado_id = self.env["product.template"].search([("name", "=", self.taco_costado)])
-        if self.taco_costado_id:
-            product_ids.append({'id': self.taco_costado_id,
-                                'qty': self.n_tacos_costado,
-                                })
-        if not self.taco_costado_id:
-            product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_costado,
-                                                               'default_code': 'TC.' +
-                                                                               str(alto_tacos).zfill(3) +
-                                                                               str(ancho_tacos).zfill(3) +
-                                                                               str(self.largo_taco_costado).zfill(
-                                                                                   4),
-                                                               'type': "product",
-                                                               'categ_id': self.embalaje_id.categ_id.id,
-                                                               'sale_ok': False,
-                                                               'purchase_ok': False,
-                                                               'vault_material_code': taco_material,
-                                                               'vault_sup_madera': str(float(alto_tacos) *
-                                                                                       float(ancho_tacos) *
-                                                                                       float(
-                                                                                           self.largo_taco_costado)
-                                                                                       / 1000000000),
-                                                               }).id,
-                                'qty': self.n_tacos_costado,
-                                })
+        if self.n_tacos_costado:
+            self.taco_costado_id = self.env["product.template"].search([("name", "=", self.taco_costado)])
+            if self.taco_costado_id:
+                product_ids.append({'id': self.taco_costado_id,
+                                    'qty': self.n_tacos_costado,
+                                    })
+            if not self.taco_costado_id:
+                product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_costado,
+                                                                   'default_code': 'TC.' +
+                                                                                   str(alto_tacos).zfill(3) +
+                                                                                   str(ancho_tacos).zfill(3) +
+                                                                                   str(self.largo_taco_costado).zfill(
+                                                                                       4),
+                                                                   'type': "product",
+                                                                   'categ_id': self.embalaje_id.categ_id.id,
+                                                                   'sale_ok': False,
+                                                                   'purchase_ok': False,
+                                                                   'vault_material_code': taco_material,
+                                                                   'vault_sup_madera': str(float(alto_tacos) *
+                                                                                           float(ancho_tacos) *
+                                                                                           float(
+                                                                                               self.largo_taco_costado)
+                                                                                           / 1000000000),
+                                                                   }).id,
+                                    'qty': self.n_tacos_costado,
+                                    })
+
+        # Si el tipo palet != solo base
+        if self.tipo_palet != "2":
+
+            # Tapa
+            self.tapa_id = self.env["product.template"].search([("name", "=", self.tapa)])
+            if self.tapa_id:
+                product_ids.append({'id': self.tapa_id,
+                                    'qty': 1,
+                                    })
+            if not self.tapa_id:
+                product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
+                                                                   'default_code': self.get_major_code_type_one(
+                                                                       self.largo, self.ancho, self.espesor_general),
+                                                                   'type': "product",
+                                                                   'categ_id': self.embalaje_id.categ_id.id,
+                                                                   'sale_ok': False,
+                                                                   'purchase_ok': False,
+                                                                   'vault_material_code': 'VT.00AAM0'
+                                                                                          + str(
+                                                                       self.espesor_general) + 'mm',
+                                                                   'vault_length': str(self.largo),
+                                                                   'vault_width': str(self.ancho),
+                                                                   'vault_thinkness': str(self.espesor_general),
+                                                                   'vault_sup_madera': str(float(self.largo) *
+                                                                                           float(self.ancho) / 1000000),
+                                                                   }).id,
+                                    'qty': 1,
+                                    })
+
+            # Lateral largo
+            self.l_largo_id = self.env["product.template"].search([("name", "=", self.l_largo)])
+            if self.l_largo_id:
+                product_ids.append({'id': self.l_largo_id,
+                                    'qty': 2,
+                                    })
+            if not self.l_largo_id:
+                product_ids.append({'id': product_tmpl_obj.create({'name': self.l_largo,
+                                                                   'default_code': self.get_major_code_type_three(
+                                                                       self.largo, self.alto, self.espesor_general,
+                                                                       alto_tacos, self.espesor_base, distancia_suelo,
+                                                                       self.tipo_palet),
+                                                                   'type': "product",
+                                                                   'categ_id': self.embalaje_id.categ_id.id,
+                                                                   'sale_ok': False,
+                                                                   'purchase_ok': False,
+                                                                   'vault_material_code': 'VT.00AAM0'
+                                                                                          + str(
+                                                                       self.espesor_general) + 'mm',
+                                                                   'vault_length': str(self.largo),
+                                                                   'vault_width': str(self.alto),
+                                                                   'vault_thinkness': str(self.espesor_general),
+                                                                   'vault_sup_madera': str(float(self.largo) *
+                                                                                           float(self.alto) / 1000000)
+                                                                   }).id,
+                                    'qty': 2,
+                                    })
+
+            # Lateral corto
+            self.l_corto_id = self.env["product.template"].search([("name", "=", self.l_corto)])
+            if self.l_corto_id:
+                product_ids.append({'id': self.l_corto_id,
+                                    'qty': 2,
+                                    })
+            if not self.l_corto_id:
+                product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
+                                                                   'default_code': self.get_major_code_type_four(
+                                                                       self.alto, self.ancho, self.espesor_general),
+                                                                   'type': "product",
+                                                                   'categ_id': self.embalaje_id.categ_id.id,
+                                                                   'sale_ok': False,
+                                                                   'purchase_ok': False,
+                                                                   'vault_material_code': 'VT.00AAM0'
+                                                                                          + str(
+                                                                       self.espesor_general) + 'mm',
+                                                                   'vault_length': str(self.alto),
+                                                                   'vault_width': str(self.ancho),
+                                                                   'vault_thinkness': str(self.espesor_general),
+                                                                   'vault_sup_madera': str(float(self.largo) *
+                                                                                           float(self.ancho) / 1000000)
+                                                                   }).id,
+                                    'qty': 2,
+                                    })
 
         # Crear las líneas de la LdM del bulto
         for rec in product_ids:
