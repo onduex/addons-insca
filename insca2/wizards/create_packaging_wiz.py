@@ -131,13 +131,25 @@ class CreatePackagingWiz(models.TransientModel):
         product_tmpl_obj = self.env['product.template']
         mrp_bom_obj = self.env['mrp.bom']
 
-        if self.largo == 0 or \
-                self.ancho == 0 or \
-                self.alto == 0 or \
-                self.espesor_base == 0 or \
-                self.n_tacos == 0 or \
-                not self.tipo_palet:
-            raise ValidationError(_('¡Obligatorio todas las dimensiones distintas de cero! y/o Tipo de palet definido'))
+        if not self.tipo_palet:
+            raise ValidationError(
+                _('¡Obligatorio Tipo de palet definido'))
+        else:
+            if self.tipo_palet != "2":
+                if self.largo == 0 or \
+                        self.ancho == 0 or \
+                        self.alto == 0 or \
+                        self.espesor_base == 0 or \
+                        self.espesor_general == 0 or \
+                        self.n_bultos == 0:
+                    raise ValidationError(
+                        _('¡Obligatorio todas las dimensiones distintas de cero!'))
+            else:
+                if self.largo == 0 or \
+                        self.ancho == 0 or \
+                        self.espesor_base == 0:
+                    raise ValidationError(
+                        _('¡Obligatorio todas las dimensiones activas distintas de cero!'))
 
         # Crear primer nivel de embalaje
         if len(self.embalaje_bom.bom_line_ids) < 10:

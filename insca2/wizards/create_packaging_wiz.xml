@@ -41,8 +41,8 @@
                                     <field name="n_bultos"/>
                                     <field name="largo" placeholder="Valor mínimo 750mm" widget="char"/>
                                     <field name="ancho" placeholder="Valor mínimo 750mm" widget="char"/>
-                                    <field name="alto"/>
-                                    <field name="espesor_general"/>
+                                    <field name="alto" attrs="{'readonly':[('tipo_palet','=','2')]}"/>
+                                    <field name="espesor_general" attrs="{'readonly':[('tipo_palet','=','2')]}"/>
                                     <field name="espesor_base"/>
                                 </group>
                                 <group>
