@@ -6,7 +6,7 @@ from odoo import fields, models, api, _
 class Supplierlist(models.Model):
     _name = 'supplier.list'
     _description = "Lista para proveedores de las piezas/ensamblajes requeridos de los pedidos activos"
-    _order = "id asc"
+    _order = "type_model_id, id asc"
 
     manufacturing_origin = fields.Char(string='Fabricación origen', required=False, readonly=True)
     product_origin = fields.Char(string='Producto origen', required=True, readonly=True)
@@ -50,9 +50,9 @@ class Supplierlist(models.Model):
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
 
         for orden_principal in po_origin_list:
-            sm_ids = self.env['stock.move'].search([('name', '=', 'OP/00516')])  # orden_principal
-            po_id = self.env['purchase.order'].search([('origin', 'ilike', 'OP/00516'),
-                                                       ('sale_order_id', '!=', False)])  # orden_principal
+            sm_ids = self.env['stock.move'].search([('name', '=', orden_principal)])  # OP/00516 testing
+            po_id = self.env['purchase.order'].search([('origin', 'ilike', orden_principal),
+                                                       ('sale_order_id', '!=', False)])  #
             if len(po_id):
                 saleName = po_id[0].name
             else:

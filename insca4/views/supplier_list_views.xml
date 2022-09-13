@@ -6,7 +6,7 @@
         <field name="name">Componentes</field>
         <field name="model">supplier.list</field>
         <field name="arch" type="xml">
-            <tree editable="top" string="Componentes" default_order="id asc">
+            <tree editable="top" string="Componentes" default_order="type_model_id, id asc">
                 <!--<field name="checked"/>-->
                 <field name="id"/>
                 <field name="sale_origin"/>
