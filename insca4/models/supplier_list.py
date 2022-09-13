@@ -6,7 +6,7 @@ from odoo import fields, models, api, _
 class Supplierlist(models.Model):
     _name = 'supplier.list'
     _description = "Lista para proveedores de las piezas/ensamblajes requeridos de los pedidos activos"
-    _order = "sale_name desc"
+    _order = "id asc"
 
     manufacturing_origin = fields.Char(string='Fabricación origen', required=False, readonly=True)
     product_origin = fields.Char(string='Producto origen', required=True, readonly=True)
@@ -43,18 +43,21 @@ class Supplierlist(models.Model):
         route_list = []
         po_origin_list = []
         po_ids = self.env['purchase.order'].search([])
-        mo_ids = self.env['mrp.production'].search([])
 
         for po in po_ids:
-            po_origin_list += po['origin'].split(", ", -1)
+            if po['origin']:
+                po_origin_list += po['origin'].split(", ", -1)
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
-        # print(po_origin_list)
 
         for orden_principal in po_origin_list:
-            sm_ids = self.env['stock.move'].search([('name', '=', orden_principal)])
-            po_id = self.env['purchase.order'].search([('origin', 'ilike', orden_principal),
-                                                       ('sale_order_id', '!=', False)])
-            # print(po_id.name)
+            sm_ids = self.env['stock.move'].search([('name', '=', 'OP/00516')])  # orden_principal
+            po_id = self.env['purchase.order'].search([('origin', 'ilike', 'OP/00516'),
+                                                       ('sale_order_id', '!=', False)])  # orden_principal
+            if len(po_id):
+                saleName = po_id[0].name
+            else:
+                saleName = 'NA'
+
             for sm in sm_ids:
                 if sm.product_id.default_code[0:3] in ('A30', 'A31') and \
                         sm['id'] not in self._get_supplier_list_ids_for_sm():
@@ -68,7 +71,7 @@ class Supplierlist(models.Model):
                                  'product_origin': '[' + mo_id.product_id.default_code + ']' + ' ' +
                                                    mo_id.product_id.name,
                                  'manufacturing_origin': sm.origin,
-                                 'sale_name': po_id.name,
+                                 'sale_name': saleName,
                                  'product_code': sm.product_id.default_code,
                                  'product_name': sm.product_id.name,
                                  'product_quantity': sm.product_qty,
@@ -85,7 +88,7 @@ class Supplierlist(models.Model):
                                  'cmz': '1' if 'CMZ' in route_list else '',
                                  'emb': '1' if 'EMB' in route_list else '',
                                  })
-        self.your_function2()
+                    self.your_function2()
         res = 'Good Job'
         return res
 
@@ -112,7 +115,7 @@ class Supplierlist(models.Model):
                                      'product_origin': record.product_origin,
                                      'manufacturing_origin': record.manufacturing_origin,
                                      'sale_name': '',
-                                     'product_code': bom.product_tmpl_id.default_code,
+                                     'product_code': '__ ' + bom.product_tmpl_id.default_code,
                                      'product_name': bom.product_tmpl_id.name,
                                      'product_quantity': record.product_quantity * bom.product_qty,
                                      'model_id': '',
@@ -134,47 +137,48 @@ class Supplierlist(models.Model):
                         code = bom_line2.product_id.default_code
                         bom_ids_max3 = self._get_bom(code)
                         for bom in bom_ids_max3:
-                            # print('    N3', bom.product_tmpl_id.default_code, bom.vault_route)
-                            route_list2 += bom['vault_route'].split("-", -1)
-                            self.create({'checked': True,
-                                         'sale_origin': record.sale_origin,
-                                         'product_origin': record.product_origin,
-                                         'manufacturing_origin': record.manufacturing_origin,
-                                         'sale_name': '',
-                                         'product_code': bom.product_tmpl_id.default_code,
-                                         'product_name': bom.product_tmpl_id.name,
-                                         'product_quantity': record.product_quantity * bom_line2.bom_id.product_qty * bom.product_qty,
-                                         'model_id': '',
-                                         'type': '',
-                                         'type_model_id': record.type_model_id,
-                                         'pin': '1' if 'PIN' in route_list2 else '',
-                                         'sol': '1' if 'SOL' in route_list2 else '',
-                                         'man': '1' if 'MAN' in route_list2 else '',
-                                         'lst': '1' if 'LST' in route_list2 else '',
-                                         'lsc': '1' if 'LSC' in route_list2 else '',
-                                         'plg': '1' if 'PLG' in route_list2 else '',
-                                         'sec': '1' if 'SEC' in route_list2 else '',
-                                         'cmz': '1' if 'CMZ' in route_list2 else '',
-                                         'emb': '1' if 'EMB' in route_list2 else '',
-                                         })
-                            route_list2 = []
+                            if bom['vault_route']:
+                                # print('    N3', bom.product_tmpl_id.default_code, bom.vault_route)
+                                route_list2 += bom['vault_route'].split("-", -1)
+                                self.create({'checked': True,
+                                             'sale_origin': record.sale_origin,
+                                             'product_origin': record.product_origin,
+                                             'manufacturing_origin': record.manufacturing_origin,
+                                             'sale_name': '',
+                                             'product_code': '____ ' + bom.product_tmpl_id.default_code,
+                                             'product_name': bom.product_tmpl_id.name,
+                                             'product_quantity': record.product_quantity * bom_line2.bom_id.product_qty * bom.product_qty,
+                                             'model_id': '',
+                                             'type': '',
+                                             'type_model_id': record.type_model_id,
+                                             'pin': '1' if 'PIN' in route_list2 else '',
+                                             'sol': '1' if 'SOL' in route_list2 else '',
+                                             'man': '1' if 'MAN' in route_list2 else '',
+                                             'lst': '1' if 'LST' in route_list2 else '',
+                                             'lsc': '1' if 'LSC' in route_list2 else '',
+                                             'plg': '1' if 'PLG' in route_list2 else '',
+                                             'sec': '1' if 'SEC' in route_list2 else '',
+                                             'cmz': '1' if 'CMZ' in route_list2 else '',
+                                             'emb': '1' if 'EMB' in route_list2 else '',
+                                             })
+                                route_list2 = []
 
-                        for bom_line3 in bom_ids_max3.bom_line_ids:
-                            code = bom_line3.product_id.default_code
-                            bom_ids_max4 = self._get_bom(code)
-                            # print('      N4', code)
-                            self.create({'checked': True,
-                                         'sale_origin': record.sale_origin,
-                                         'product_origin': record.product_origin,
-                                         'manufacturing_origin': record.manufacturing_origin,
-                                         'sale_name': '',
-                                         'product_code': bom_line3.product_id.default_code,
-                                         'product_name': bom_line3.product_id.name,
-                                         'product_quantity': record.product_quantity * bom_line3.bom_id.product_qty * bom_line2.bom_id.product_qty * bom_line3.product_qty,
-                                         'model_id': '',
-                                         'type': '',
-                                         'type_model_id': record.type_model_id,
-                                         })
+                            for bom_line3 in bom_ids_max3.bom_line_ids:
+                                code = bom_line3.product_id.default_code
+                                bom_ids_max4 = self._get_bom(code)
+                                # print('      N4', code)
+                                self.create({'checked': True,
+                                             'sale_origin': record.sale_origin,
+                                             'product_origin': record.product_origin,
+                                             'manufacturing_origin': record.manufacturing_origin,
+                                             'sale_name': '',
+                                             'product_code': '______ ' + bom_line3.product_id.default_code,
+                                             'product_name': bom_line3.product_id.name,
+                                             'product_quantity': record.product_quantity * bom_line3.bom_id.product_qty * bom_line2.bom_id.product_qty * bom_line3.product_qty,
+                                             'model_id': '',
+                                             'type': '',
+                                             'type_model_id': record.type_model_id,
+                                             })
         res = 'Obtener BoM'
         return res
 
