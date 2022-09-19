@@ -39,9 +39,9 @@
             <tree editable="top" string="Componentes" default_order="type_model_id, id asc">
                 <!--<field name="checked"/>-->
                 <!--<field name="id"/>-->
-                <field name="partner_name" optional="show" class="light_border_right"/>
                 <field name="commitment_date" widget="date" optional="show"/>
-                <field name="sale_origin" optional="show" class="light_border_right_left"/>
+                <field name="partner_name" class="light_border_right_left"/>
+                <field name="sale_origin" optional="show" class="light_border_right"/>
                 <field name="product_origin" optional="show" class="light_border_right"/>
                 <field name="manufacturing_origin" optional="show" class="light_border_right"/>
                 <field name="sale_name" optional="show" class="light_border_right"/>
@@ -60,7 +60,7 @@
                 <field name="cmz" class="light_border_right"/>
                 <field name="man" class="light_border_right"/>
                 <field name="sol" class="light_border_right"/>
-                <field name="pin" class="light_border_right_left"/>
+                <field name="pin" class="light_border_right"/>
 
                 <!--<field name="sec"/>-->
                 <!--<field name="emb"/>-->
