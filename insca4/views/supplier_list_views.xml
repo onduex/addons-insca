@@ -36,9 +36,12 @@
         <field name="name">Componentes</field>
         <field name="model">supplier.list</field>
         <field name="arch" type="xml">
-            <tree editable="top" string="Componentes" default_order="type_model_id, id asc">
+            <tree editable="top" string="Componentes" default_order="type_model_id, id asc"
+                  decoration-success="is_finished_line == True"
+                  decoration-danger="is_finished_line == False">
                 <!--<field name="checked"/>-->
                 <!--<field name="id"/>-->
+
                 <field name="commitment_date" widget="date" optional="show"/>
                 <field name="partner_name" class="light_border_right_left"/>
                 <field name="sale_origin" optional="show" class="light_border_right"/>
@@ -50,7 +53,9 @@
                 <field name="product_name" optional="show" class="light_border_right"/>
                 <field name="product_quantity" optional="show" class="light_border_right"/>
                 <field name="product_uom_name" optional="show" class="light_border_right"/>
+                <field name="color_code" optional="show" class="light_border_right"/>
                 <field name="product_color" optional="show" class="light_border_right"/>
+                <field name="material_code" optional="show" class="light_border_right"/>
                 <field name="product_material" optional="show" class="light_border_right"/>
                 <field name="type" invisible="1" class="light_border_right"/>
                 <field name="model_id" invisible="1" class="light_border_right"/>
@@ -61,6 +66,7 @@
                 <field name="man" class="light_border_right"/>
                 <field name="sol" class="light_border_right"/>
                 <field name="pin" class="light_border_right"/>
+                <field name='is_finished_line' invisible="1"/>
 
                 <!--<field name="sec"/>-->
                 <!--<field name="emb"/>-->

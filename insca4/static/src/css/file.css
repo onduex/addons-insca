@@ -8,3 +8,10 @@
 	border-right: 0.1px solid #000;
 	border-left: 0.1px solid #000;
 }
+
+.light_border_right_left_bg
+{
+	border-right: 0.1px solid #000;
+	border-left: 0.1px solid #000;
+	background-color: #52CC7A;
+}
