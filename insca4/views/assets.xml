@@ -6,6 +6,7 @@
                     type="text/javascript"
                     src="/insca4/static/src/js/check_sales.js"
             />
+            <link rel="stylesheet" href="/insca4/static/src/css/file.css" />
         </xpath>
     </template>
 </odoo>

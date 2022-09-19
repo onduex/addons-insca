@@ -16,6 +16,7 @@
     'depends': [
         'sale',
         'purchase',
+        'utm',
     ],
 
     # always loaded

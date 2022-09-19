@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="view_search_componentes" model="ir.ui.view">
+       <field name="name">Componentes</field>
+       <field name="model">supplier.list</field>
+        <field name="arch" type="xml">
+            <search string="Search Components">
+                <field name="product_name"/>
+                <field name="product_code"/>
+                <field name="manufacturing_origin"/>
+                <field name="sale_origin"/>
+                <field name="type_model_id"/>
+                <field name="partner_name"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Fecha prevista" name="order_month" domain="[]"
+                            context="{'group_by': 'commitment_date'}"/>
+                </group>
+           </search>
+       </field>
+    </record>
+
+    <record id="view_pivot_componentes" model="ir.ui.view">
+       <field name="name">Componentes</field>
+       <field name="model">supplier.list</field>
+        <field name="arch" type="xml">
+            <pivot string="Components" default_order="type_model_id, id asc">
+                <field name="id"/>
+           </pivot>
+       </field>
+    </record>
+
     <!--Tree View-->
     <record id="view_tree_componentes" model="ir.ui.view">
         <field name="name">Componentes</field>
@@ -8,26 +38,32 @@
         <field name="arch" type="xml">
             <tree editable="top" string="Componentes" default_order="type_model_id, id asc">
                 <!--<field name="checked"/>-->
-                <field name="id"/>
-                <field name="sale_origin"/>
-                <field name="product_origin"/>
-                <field name="manufacturing_origin"/>
-                <field name="sale_name"/>
-                <field name="product_code"/>
-                <field name="product_name"/>
-                <field name="product_quantity"/>
-                <field name="type" invisible="1"/>
-                <field name="model_id" invisible="1"/>
-                <field name="type_model_id"/>
-                <field name="pin"/>
-                <field name="sol"/>
-                <field name="man"/>
-                <field name="lst"/>
-                <field name="lsc"/>
-                <field name="plg"/>
-                <field name="sec"/>
-                <field name="cmz"/>
-                <field name="emb"/>
+                <!--<field name="id"/>-->
+                <field name="partner_name" optional="show" class="light_border_right"/>
+                <field name="commitment_date" widget="date" optional="show"/>
+                <field name="sale_origin" optional="show" class="light_border_right_left"/>
+                <field name="product_origin" optional="show" class="light_border_right"/>
+                <field name="manufacturing_origin" optional="show" class="light_border_right"/>
+                <field name="sale_name" optional="show" class="light_border_right"/>
+                <field name="type_model_id" optional="show" class="light_border_right"/>
+                <field name="product_code" optional="show" class="light_border_right"/>
+                <field name="product_name" optional="show" class="light_border_right"/>
+                <field name="product_quantity" optional="show" class="light_border_right"/>
+                <field name="product_uom_name" optional="show" class="light_border_right"/>
+                <field name="product_color" optional="show" class="light_border_right"/>
+                <field name="product_material" optional="show" class="light_border_right"/>
+                <field name="type" invisible="1" class="light_border_right"/>
+                <field name="model_id" invisible="1" class="light_border_right"/>
+                <field name="lst" class="light_border_right"/>
+                <field name="lsc" class="light_border_right"/>
+                <field name="plg" class="light_border_right"/>
+                <field name="cmz" class="light_border_right"/>
+                <field name="man" class="light_border_right"/>
+                <field name="sol" class="light_border_right"/>
+                <field name="pin" class="light_border_right_left"/>
+
+                <!--<field name="sec"/>-->
+                <!--<field name="emb"/>-->
             </tree>
         </field>
     </record>
@@ -37,7 +73,7 @@
         <field name="name">Componentes</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">supplier.list</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,pivot</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">Add Text Here</p>
             <p>More details about what a user can do with this object will be OK</p>

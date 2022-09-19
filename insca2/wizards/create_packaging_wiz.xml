@@ -32,7 +32,8 @@
                             </group>
                         </div>
                         <div class="alert alert-info" role="alert">
-                            <p><span class="fa fa-info-circle"/> Las dimensiones a cumplimentar están referidas a la LUZ</p>
+                            <p><span class="fa fa-info-circle"/> Las dimensiones a cumplimentar están referidas
+                                a las medidas interires</p>
                         </div>
                         <div>
                             <group>

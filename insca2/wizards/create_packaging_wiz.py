@@ -33,7 +33,7 @@ class CreatePackagingWiz(models.TransientModel):
     n_tacos = fields.Integer(string='Nº tacos', required=False, readonly=True)
     n_tacos_lateral = fields.Integer(string='Nº tacos lateral', required=False, readonly=True)
     n_tacos_costado = fields.Integer(string='Nº tacos costado', required=False, readonly=True)
-    n_bultos = fields.Integer(string='Nº de bultos', required=False, default=1)
+    n_bultos = fields.Integer(string='Nº de bultos iguales', required=False, default=1)
     largo_taco = fields.Integer(string='Largo taco', required=False, readonly=True)
     largo_taco_lateral = fields.Integer(string='Largo taco lateral', required=False, readonly=True)
     largo_taco_costado = fields.Integer(string='Largo taco costado', required=False, readonly=True)

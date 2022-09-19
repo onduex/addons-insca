@@ -1,0 +1,10 @@
+.light_border_right
+{
+	border-right: 0.1px solid #000;
+}
+
+.light_border_right_left
+{
+	border-right: 0.1px solid #000;
+	border-left: 0.1px solid #000;
+}
