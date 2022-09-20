@@ -216,13 +216,13 @@ class Supplierlist(models.Model):
                                              'model_id': '',
                                              'type': '',
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
-                                             'lst': '1' if 'LST' in route_list else '',
-                                             'lsc': '1' if 'LSC' in route_list else '',
-                                             'plg': '1' if 'PLG' in route_list else '',
-                                             'cmz': '1' if 'CMZ' in route_list else '',
-                                             'man': '1' if 'MAN' in route_list else '',
-                                             'sol': '1' if 'SOL' in route_list else '',
-                                             'pin': '1' if 'PIN' in route_list else '',
+                                             'lst': '1' if 'LST' in route_list2 else '',
+                                             'lsc': '1' if 'LSC' in route_list2 else '',
+                                             'plg': '1' if 'PLG' in route_list2 else '',
+                                             'cmz': '1' if 'CMZ' in route_list2 else '',
+                                             'man': '1' if 'MAN' in route_list2 else '',
+                                             'sol': '1' if 'SOL' in route_list2 else '',
+                                             'pin': '1' if 'PIN' in route_list2 else '',
                                              })
                                 route_list2 = []
 
