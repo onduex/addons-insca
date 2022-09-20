@@ -77,7 +77,7 @@ class Supplierlist(models.Model):
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
 
         for orden_principal in po_origin_list:
-            orden_principal = 'OP/00600'  # Sólo testing
+            # orden_principal = 'OP/00600'  # Sólo testing
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
                                                     ('created_purchase_line_id', '!=', False)])
 
@@ -141,56 +141,56 @@ class Supplierlist(models.Model):
         route_list2 = []
         supplier_list_ids = self.env['supplier.list'].search([('checked', '=', False)])
         for record in supplier_list_ids:
-            if not record['checked']:
-                record.write({'checked': True})
-                code = record.product_template.default_code
-                bom_ids_max = self._get_bom(code)
-                x = 0
-                for bom_line in bom_ids_max.bom_line_ids:
-                    code = bom_line.product_id.default_code
-                    bom_ids_max2 = self._get_bom(code)
-                    for bom in bom_ids_max2:
-                        route_list += bom['vault_route'].split("-", -1)
-                        purchaseorder = self.env['purchase.order.line'].search([
-                            ('product_template_id.default_code', '=', bom.product_tmpl_id.default_code),
-                            ('order_id.origin', 'ilike', orden_principal)
-                        ]).order_id,
-                        x = x + 1
-                        self.create({'checked': True,
-                                     'partner_name': self.env['sale.order'].
-                                    search([('name', '=', record.sale_order.name)]).partner_id.name,
-                                     'commitment_date': self.env['sale.order'].
-                                    search([('name', '=', record.sale_order.name)]).commitment_date,
-                                     'sale_order': record.sale_order.id,
-                                     'product_origin': record.product_origin,
-                                     'mrp_production': record.mrp_production.id,
-                                     'purchase_order': purchaseorder[0].id,
-                                     'purchase_partner': purchaseorder[0].partner_id.name,
-                                     'product_template': bom.product_tmpl_id.id,
-                                     'vault_web_link': bom.product_tmpl_id.vault_web_link,
-                                     'product_code': '-- ' + bom.product_tmpl_id.default_code,
-                                     'product_name': bom.product_tmpl_id.name,
-                                     'product_quantity': record.product_quantity * bom.product_qty,
-                                     'product_uom_name': bom.product_uom_id.name,
-                                     'material_code': materialcode,
-                                     'product_material': materialname,
-                                     'model_id': '',
-                                     'type': '',
-                                     'type_model_id': record.type_model_id[:-4] + '1' + str(x) + '00',
-                                     'lst': '1' if 'LST' in route_list else '',
-                                     'lsc': '1' if 'LSC' in route_list else '',
-                                     'plg': '1' if 'PLG' in route_list else '',
-                                     'cmz': '1' if 'CMZ' in route_list else '',
-                                     'man': '1' if 'MAN' in route_list else '',
-                                     'sol': '1' if 'SOL' in route_list else '',
-                                     'pin': '1' if 'PIN' in route_list else '',
-                                     })
-                        route_list = []
+            record.write({'checked': True})
+            code = record.product_template.default_code
+            bom_ids_max = self._get_bom(code)
+            x = 0
+            for bom_line in bom_ids_max.bom_line_ids:
+                code = bom_line.product_id.default_code
+                bom_ids_max2 = self._get_bom(code)
+                for bom in bom_ids_max2:
+                    route_list += bom['vault_route'].split("-", -1)
+                    purchaseorder = self.env['purchase.order.line'].search([
+                        ('product_template_id.default_code', '=', bom.product_tmpl_id.default_code),
+                        ('order_id.origin', 'ilike', orden_principal)
+                    ]).order_id,
+                    x = x + 1
+                    self.create({'checked': True,
+                                 'partner_name': self.env['sale.order'].
+                                search([('name', '=', record.sale_order.name)]).partner_id.name,
+                                 'commitment_date': self.env['sale.order'].
+                                search([('name', '=', record.sale_order.name)]).commitment_date,
+                                 'sale_order': record.sale_order.id,
+                                 'product_origin': record.product_origin,
+                                 'mrp_production': record.mrp_production.id,
+                                 'purchase_order': purchaseorder[0].id,
+                                 'purchase_partner': purchaseorder[0].partner_id.name,
+                                 'product_template': bom.product_tmpl_id.id,
+                                 'vault_web_link': bom.product_tmpl_id.vault_web_link,
+                                 'product_code': '-- ' + bom.product_tmpl_id.default_code,
+                                 'product_name': bom.product_tmpl_id.name,
+                                 'product_quantity': record.product_quantity * bom.product_qty,
+                                 'product_uom_name': bom.product_uom_id.name,
+                                 'material_code': materialcode,
+                                 'product_material': materialname,
+                                 'model_id': '',
+                                 'type': '',
+                                 'type_model_id': record.type_model_id[:-4] + '1' + str(x) + '00',
+                                 'lst': '1' if 'LST' in route_list else '',
+                                 'lsc': '1' if 'LSC' in route_list else '',
+                                 'plg': '1' if 'PLG' in route_list else '',
+                                 'cmz': '1' if 'CMZ' in route_list else '',
+                                 'man': '1' if 'MAN' in route_list else '',
+                                 'sol': '1' if 'SOL' in route_list else '',
+                                 'pin': '1' if 'PIN' in route_list else '',
+                                 })
+                    route_list = []
 
-                    y = 0
-                    for bom_line2 in bom_ids_max2.bom_line_ids:
-                        code = bom_line2.product_id.default_code
-                        bom_ids_max3 = self._get_bom(code)
+                y = 0
+                for bom_line2 in bom_ids_max2.bom_line_ids:
+                    code = bom_line2.product_id.default_code
+                    bom_ids_max3 = self._get_bom(code)
+                    if len(bom_ids_max3):
                         for bom in bom_ids_max3:
                             if bom['vault_route']:
                                 route_list2 += bom['vault_route'].split("-", -1)
@@ -252,6 +252,34 @@ class Supplierlist(models.Model):
                                              'type': '',
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + str(z),
                                              })
+                    else:
+                        y = 0
+                        for bom_line22 in bom_ids_max2.bom_line_ids:
+                            code = bom_line22.product_id.default_code
+                            y = y + 1
+                            self.create({'checked': True,
+                                         'partner_name': self.env['sale.order'].
+                                        search([('name', '=', record.sale_order.name)]).partner_id.name,
+                                         'commitment_date': self.env['sale.order'].
+                                        search([('name', '=', record.sale_order.name)]).commitment_date,
+                                         'sale_order': record.sale_order.id,
+                                         'product_origin': record.product_origin,
+                                         'mrp_production': record.mrp_production.id,
+                                         'purchase_order': purchaseorder[0].id,
+                                         'purchase_partner': purchaseorder[0].partner_id.name,
+                                         'product_template': bom_line22.product_tmpl_id.id,
+                                         'product_code': '---------- ' + bom_line22.product_tmpl_id.default_code,
+                                         'product_name': bom_line22.product_id.name,
+                                         'product_quantity': record.product_quantity * bom_line22.bom_id.product_qty *
+                                                             bom_line2.bom_id.product_qty * bom_line22.product_qty,
+                                         'product_uom_name': bom_line22.product_uom_id.name,
+                                         'material_code': materialcode,
+                                         'product_material': materialname,
+                                         'model_id': '',
+                                         'type': '',
+                                         'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
+                                         })
+
         res = 'Obtener BoM'
         return res
 
