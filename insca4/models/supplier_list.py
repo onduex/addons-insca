@@ -242,7 +242,7 @@ class Supplierlist(models.Model):
                                              'purchase_order': purchaseorder[0].id,
                                              'purchase_partner': purchaseorder[0].partner_id.name,
                                              'product_template': bom_line3.product_tmpl_id.id,
-                                             'product_code': '---------- ' + bom.product_tmpl_id.default_code,
+                                             'product_code': '---------- ' + bom_line3.product_tmpl_id.default_code,
                                              'product_name': bom_line3.product_id.name,
                                              'product_quantity': record.product_quantity * bom_line3.bom_id.product_qty * bom_line2.bom_id.product_qty * bom_line3.product_qty,
                                              'product_uom_name': bom_line3.product_uom_id.name,

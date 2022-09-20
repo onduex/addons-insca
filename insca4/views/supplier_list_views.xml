@@ -39,9 +39,6 @@
             <tree editable="top" string="Componentes" default_order="type_model_id, id asc"
                   decoration-success="is_finished_line == True"
                   decoration-danger="is_finished_line == False">
-                <!--<field name="checked"/>-->
-                <!--<field name="id"/>-->
-
                 <field name="commitment_date" widget="date" optional="show"/>
                 <field name="partner_name" class="light_border_right_left"/>
                 <field name="product_origin" optional="hide" class="light_border_right_left"/>
@@ -70,9 +67,6 @@
                 <field name="sol" class="light_border_right"/>
                 <field name="pin" class="light_border_right"/>
                 <field name='is_finished_line' invisible="1"/>
-
-                <!--<field name="sec"/>-->
-                <!--<field name="emb"/>-->
             </tree>
         </field>
     </record>
