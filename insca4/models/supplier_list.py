@@ -17,9 +17,10 @@ class Supplierlist(models.Model):
     _description = "Lista para proveedores de las piezas/ensamblajes requeridos de los pedidos activos"
     _order = "type_model_id, id asc"
 
-    sale_order = fields.Many2one(comodel_name='sale.order', string='Venta', required=False, readonly=True)
-    purchase_order = fields.Many2one(comodel_name='purchase.order', string='Compra ', required=False, readonly=True)
-    mrp_production = fields.Many2one(comodel_name='mrp.production', string='Fabricación', required=False, readonly=True)
+    sale_order = fields.Many2one(comodel_name='sale.order', string='Venta ref.', required=False, readonly=True)
+    purchase_order = fields.Many2one(comodel_name='purchase.order', string='Compra ref.', required=False, readonly=True)
+    mrp_production = fields.Many2one(comodel_name='mrp.production', string='Fabricación ref.', required=False,
+                                     readonly=True)
     product_template = fields.Many2one(comodel_name='product.template', string='Código + Nombre', required=False,
                                        readonly=True)
     vault_web_link = fields.Char(string='Vault Link', required=False, readonly=True)
@@ -110,6 +111,7 @@ class Supplierlist(models.Model):
                                  'purchase_order': purchaseorder,
                                  'purchase_partner': purchasepartner,
                                  'product_template': sm.product_tmpl_id.id,
+                                 'vault_web_link': sm.product_tmpl_id.vault_web_link,
                                  'product_code': sm.product_tmpl_id.default_code,
                                  'product_name': sm.product_id.name,
                                  'product_quantity': sm.product_qty,
@@ -165,6 +167,7 @@ class Supplierlist(models.Model):
                                      'purchase_order': purchaseorder[0].id,
                                      'purchase_partner': purchaseorder[0].partner_id.name,
                                      'product_template': bom.product_tmpl_id.id,
+                                     'vault_web_link': bom.product_tmpl_id.vault_web_link,
                                      'product_code': '-- ' + bom.product_tmpl_id.default_code,
                                      'product_name': bom.product_tmpl_id.name,
                                      'product_quantity': record.product_quantity * bom.product_qty,
@@ -200,8 +203,10 @@ class Supplierlist(models.Model):
                                              'sale_order': record.sale_order.id,
                                              'product_origin': record.product_origin,
                                              'mrp_production': record.mrp_production.id,
-                                             'purchase_order': '',
+                                             'purchase_order': purchaseorder[0].id,
+                                             'purchase_partner': purchaseorder[0].partner_id.name,
                                              'product_template': bom.product_tmpl_id.id,
+                                             'vault_web_link': bom.product_tmpl_id.vault_web_link,
                                              'product_code': '------ ' + bom.product_tmpl_id.default_code,
                                              'product_name': bom.product_tmpl_id.name,
                                              'product_quantity': record.product_quantity * bom_line2.bom_id.product_qty * bom.product_qty,
@@ -234,7 +239,8 @@ class Supplierlist(models.Model):
                                              'sale_order': record.sale_order.id,
                                              'product_origin': record.product_origin,
                                              'mrp_production': record.mrp_production.id,
-                                             'purchase_order': '',
+                                             'purchase_order': purchaseorder[0].id,
+                                             'purchase_partner': purchaseorder[0].partner_id.name,
                                              'product_template': bom_line3.product_tmpl_id.id,
                                              'product_code': '---------- ' + bom.product_tmpl_id.default_code,
                                              'product_name': bom_line3.product_id.name,
