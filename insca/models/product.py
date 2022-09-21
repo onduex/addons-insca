@@ -44,7 +44,7 @@ class ProductTemplate(models.Model):
     vault_sup_pintada = fields.Float(string='SUP. PINTURA', required=False)  # Float
 
     def write(self, vals):
-        if self.env.context('bypass_vault'):
+        if self.env.context.get('bypass_vault'):
             return super(ProductTemplate, self).write(vals)
         mrp_bom_object = self.env['mrp.bom']
         for record in self:
