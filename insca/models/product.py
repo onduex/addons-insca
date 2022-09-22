@@ -44,6 +44,8 @@ class ProductTemplate(models.Model):
     vault_sup_pintada = fields.Float(string='SUP. PINTURA', required=False)  # Float
 
     def write(self, vals):
+        if self.env.context.get('bypass_vault'):
+            return super(ProductTemplate, self).write(vals)
         mrp_bom_object = self.env['mrp.bom']
         for record in self:
             if record.is_vault_product and not record.is_old_revision:
@@ -208,15 +210,16 @@ class ProductTemplate(models.Model):
                                     product_ids = self.env['product.product'].search([('default_code', '=',
                                                                                        vals['vault_material_code'])])
                                 for product in product_ids:
-                                    if vals['name'][0:3] == 'CPF' or vals['name'][0:3] == 'CPC':
-                                        qty = vals['vault_sup_madera']
-                                    if vals['name'][0:2] == 'TR' or \
-                                            vals['name'][0:2] == 'TC' or \
-                                            vals['name'][0:2] == 'TO' or \
-                                            vals['name'][0:2] == 'MZ':
-                                        qty = vals['vault_length_tub']
-                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-                                    qty = None
+                                    if vals.get('name'):
+                                        if vals['name'][0:3] == 'CPF' or vals['name'][0:3] == 'CPC':
+                                            qty = vals['vault_sup_madera']
+                                        if vals['name'][0:2] == 'TR' or \
+                                                vals['name'][0:2] == 'TC' or \
+                                                vals['name'][0:2] == 'TO' or \
+                                                vals['name'][0:2] == 'MZ':
+                                            qty = vals['vault_length_tub']
+                                        lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                        qty = None
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
                                                               'code': self.vault_revision,
                                                               'product_qty': 1,
