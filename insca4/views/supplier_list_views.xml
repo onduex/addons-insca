@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <search string="Search Components">
                 <field name="product_name"/>
+                <field name="product_name"/>
                 <field name="product_template"/>
                 <field name="mrp_production"/>
                 <field name="sale_order"/>
@@ -46,7 +47,9 @@
                 <field name="mrp_production" optional="show"/>
                 <field name="purchase_order" optional="show"/>
                 <field name="purchase_partner" optional="show" class="light_border_right_left"/>
-                <field name="type_model_id" optional="show" class="light_border_right_left"/>
+                <field name="type_model_id" optional="hide" class="light_border_right_left"/>
+                <field name="lmat" optional="hide" class="light_border_right_left"/>
+                <field name="lmat_level" optional="hide" class="light_border_right_left"/>
                 <field name="product_template" optional="show"/>
                 <field name="product_code" optional="hide" class="light_border_right_left"/>
                 <field name="product_name" optional="hide" class="light_border_right_left"/>

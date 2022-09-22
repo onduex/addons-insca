@@ -41,6 +41,9 @@ class Supplierlist(models.Model):
     type_model_id = fields.Char(string='Ref. Interna', required=True, readonly=True)
     checked = fields.Boolean(string='Procesada', required=False)
     is_finished_line = fields.Boolean(string='Fabricado', compute='compute_is_finished_line', store=True)
+    lmat = fields.Integer(string='LdM ID', required=False, readonly=True)
+    lmat_level = fields.Integer(string='LdM Nivel', required=False, readonly=True)
+
     lst = fields.Selection(string='01-LST',
                            selection=lambda self: dynamic_selection(), required=False, readonly=False)
     lsc = fields.Selection(string='02-LSC',
@@ -77,7 +80,7 @@ class Supplierlist(models.Model):
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
 
         for orden_principal in po_origin_list:
-            # orden_principal = 'OP/00600'  # Sólo testing
+            orden_principal = 'OP/00600'  # Sólo testing
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
                                                     ('created_purchase_line_id', '!=', False)])
 
@@ -101,6 +104,9 @@ class Supplierlist(models.Model):
 
                     for bom in bom_ids_max:
                         route_list += bom['vault_route'].split("-", -1)
+
+                    lmatid = mo_id.bom_id.id
+
                     self.create({'checked': False,
                                  'partner_name': mo_id.sale_id.partner_id.name,
                                  'commitment_date': mo_id.sale_id.commitment_date,
@@ -123,6 +129,8 @@ class Supplierlist(models.Model):
                                  'model_id': sm['id'],
                                  'type': 'SML',
                                  'type_model_id': str(sm['id']) + '-' + '1000',
+                                 'lmat': lmatid,
+                                 'lmat_level': '1000',
                                  'lst': '1' if 'LST' in route_list else '',
                                  'lsc': '1' if 'LSC' in route_list else '',
                                  'plg': '1' if 'PLG' in route_list else '',
@@ -131,12 +139,12 @@ class Supplierlist(models.Model):
                                  'sol': '1' if 'SOL' in route_list else '',
                                  'pin': '1' if 'PIN' in route_list else '',
                                  })
-                    self.your_function2(materialname, materialcode, orden_principal)
+                    self.your_function2(materialname, materialcode, orden_principal, lmatid)
         res = 'Good Job'
         return res
 
     @api.model
-    def your_function2(self, materialname, materialcode, orden_principal):
+    def your_function2(self, materialname, materialcode, orden_principal, lmatid):
         route_list = []
         route_list2 = []
         supplier_list_ids = self.env['supplier.list'].search([('checked', '=', False)])
@@ -176,6 +184,8 @@ class Supplierlist(models.Model):
                                  'model_id': '',
                                  'type': '',
                                  'type_model_id': record.type_model_id[:-4] + '1' + str(x) + '00',
+                                 'lmat': lmatid,
+                                 'lmat_level': '1' + str(x) + '00',
                                  'lst': '1' if 'LST' in route_list else '',
                                  'lsc': '1' if 'LSC' in route_list else '',
                                  'plg': '1' if 'PLG' in route_list else '',
@@ -216,6 +226,8 @@ class Supplierlist(models.Model):
                                              'model_id': '',
                                              'type': '',
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
+                                             'lmat': lmatid,
+                                             'lmat_level': '1' + str(x) + str(y) + '0',
                                              'lst': '1' if 'LST' in route_list2 else '',
                                              'lsc': '1' if 'LSC' in route_list2 else '',
                                              'plg': '1' if 'PLG' in route_list2 else '',
@@ -251,6 +263,8 @@ class Supplierlist(models.Model):
                                              'model_id': '',
                                              'type': '',
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + str(z),
+                                             'lmat': lmatid,
+                                             'lmat_level': '1' + str(x) + str(y) + str(z),
                                              })
                     else:
                         y = 0
@@ -278,6 +292,8 @@ class Supplierlist(models.Model):
                                          'model_id': '',
                                          'type': '',
                                          'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
+                                         'lmat': lmatid,
+                                         'lmat_level': '1' + str(x) + str(y) + '0',
                                          })
 
         res = 'Obtener BoM'
