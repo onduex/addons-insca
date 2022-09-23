@@ -43,6 +43,11 @@ class Supplierlist(models.Model):
     is_finished_line = fields.Boolean(string='Fabricado', compute='compute_is_finished_line', store=True)
     lmat = fields.Integer(string='LdM ID', required=False, readonly=True)
     lmat_level = fields.Integer(string='LdM Nivel', required=False, readonly=True)
+    n1 = fields.Char(string='Nivel 1', required=False, readonly=True)
+    n2 = fields.Char(string='Nivel 2', required=False, readonly=True)
+    n3 = fields.Char(string='Nivel 3', required=False, readonly=True)
+    n4 = fields.Char(string='Nivel 4', required=False, readonly=True)
+    n5 = fields.Char(string='Nivel 5', required=False, readonly=True)
 
     lst = fields.Selection(string='01-LST',
                            selection=lambda self: dynamic_selection(), required=False, readonly=False)
@@ -106,6 +111,8 @@ class Supplierlist(models.Model):
                         route_list += bom['vault_route'].split("-", -1)
 
                     lmatid = mo_id.bom_id.id
+                    n1 = mo_id.product_id.default_code
+                    n2 = sm.product_tmpl_id.default_code
 
                     self.create({'checked': False,
                                  'partner_name': mo_id.sale_id.partner_id.name,
@@ -131,6 +138,7 @@ class Supplierlist(models.Model):
                                  'type_model_id': str(sm['id']) + '-' + '1000',
                                  'lmat': lmatid,
                                  'lmat_level': '1000',
+                                 'n1': n1,
                                  'lst': '1' if 'LST' in route_list else '',
                                  'lsc': '1' if 'LSC' in route_list else '',
                                  'plg': '1' if 'PLG' in route_list else '',
@@ -139,12 +147,12 @@ class Supplierlist(models.Model):
                                  'sol': '1' if 'SOL' in route_list else '',
                                  'pin': '1' if 'PIN' in route_list else '',
                                  })
-                    self.your_function2(materialname, materialcode, orden_principal, lmatid)
+                    self.your_function2(materialname, materialcode, orden_principal, lmatid, n1, n2)
         res = 'Good Job'
         return res
 
     @api.model
-    def your_function2(self, materialname, materialcode, orden_principal, lmatid):
+    def your_function2(self, materialname, materialcode, orden_principal, lmatid, n1, n2):
         route_list = []
         route_list2 = []
         supplier_list_ids = self.env['supplier.list'].search([('checked', '=', False)])
@@ -157,6 +165,7 @@ class Supplierlist(models.Model):
                 code = bom_line.product_id.default_code
                 bom_ids_max2 = self._get_bom(code)
                 for bom in bom_ids_max2:
+                    n3 = bom.product_tmpl_id.default_code
                     route_list += bom['vault_route'].split("-", -1)
                     purchaseorder = self.env['purchase.order.line'].search([
                         ('product_template_id.default_code', '=', bom.product_tmpl_id.default_code),
@@ -186,6 +195,8 @@ class Supplierlist(models.Model):
                                  'type_model_id': record.type_model_id[:-4] + '1' + str(x) + '00',
                                  'lmat': lmatid,
                                  'lmat_level': '1' + str(x) + '00',
+                                 'n1': n1,
+                                 'n2': n2,
                                  'lst': '1' if 'LST' in route_list else '',
                                  'lsc': '1' if 'LSC' in route_list else '',
                                  'plg': '1' if 'PLG' in route_list else '',
@@ -202,6 +213,7 @@ class Supplierlist(models.Model):
                     bom_ids_max3 = self._get_bom(code)
                     if len(bom_ids_max3):
                         for bom in bom_ids_max3:
+                            n4 = bom.product_tmpl_id.default_code
                             if bom['vault_route']:
                                 route_list2 += bom['vault_route'].split("-", -1)
                                 y = y + 1
@@ -228,6 +240,10 @@ class Supplierlist(models.Model):
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
                                              'lmat': lmatid,
                                              'lmat_level': '1' + str(x) + str(y) + '0',
+                                             'n1': n1,
+                                             'n2': n2,
+                                             'n3': n3,
+                                             'n4': bom.product_tmpl_id.default_code,
                                              'lst': '1' if 'LST' in route_list2 else '',
                                              'lsc': '1' if 'LSC' in route_list2 else '',
                                              'plg': '1' if 'PLG' in route_list2 else '',
@@ -265,6 +281,11 @@ class Supplierlist(models.Model):
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + str(z),
                                              'lmat': lmatid,
                                              'lmat_level': '1' + str(x) + str(y) + str(z),
+                                             'n1': n1,
+                                             'n2': n2,
+                                             'n3': n3,
+                                             'n4': n4,
+                                             'n5': bom_line3.product_tmpl_id.default_code,
                                              })
                     else:
                         y = 0
@@ -294,6 +315,10 @@ class Supplierlist(models.Model):
                                          'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
                                          'lmat': lmatid,
                                          'lmat_level': '1' + str(x) + str(y) + '0',
+                                         'n1': n1,
+                                         'n2': n2,
+                                         'n3': n3,
+                                         'n4': bom_line22.product_tmpl_id.default_code,
                                          })
 
         res = 'Obtener BoM'

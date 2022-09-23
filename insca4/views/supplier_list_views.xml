@@ -43,6 +43,11 @@
                 <field name="commitment_date" widget="date" optional="show"/>
                 <field name="partner_name" class="light_border_right_left"/>
                 <field name="product_origin" optional="hide" class="light_border_right_left"/>
+                <field name="n1" optional="hide" class="light_border_right_left"/>
+                <field name="n2" optional="hide" class="light_border_right_left"/>
+                <field name="n3" optional="hide" class="light_border_right_left"/>
+                <field name="n4" optional="hide" class="light_border_right_left"/>
+                <field name="n5" optional="hide" class="light_border_right_left"/>
                 <field name="sale_order" optional="show"/>
                 <field name="mrp_production" optional="show"/>
                 <field name="purchase_order" optional="show"/>
