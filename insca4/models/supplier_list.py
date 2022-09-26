@@ -99,13 +99,14 @@ class Supplierlist(models.Model):
                     code = sm.product_id.default_code
                     bom_ids_max = self._get_bom(code)
 
-                    if sm.product_id.vault_material_code:
-                        materialname = self.env['product.template'].search([('default_code', '=',
-                                                                             sm.product_id.vault_material_code)]).name
+                    if sm.product_id.vault_material:
                         materialcode = sm.product_id.vault_material
+                        materialname = self.env['product.category.inventor'].search([
+                            ('code', '=', materialcode)])[0].categ_material_id.name
+
                     else:
-                        materialname = 'NA'
                         materialcode = 'NA'
+                        materialname = 'NA'
 
                     for bom in bom_ids_max:
                         route_list += bom['vault_route'].split("-", -1)
@@ -216,6 +217,9 @@ class Supplierlist(models.Model):
                             n4 = bom.product_tmpl_id.default_code
                             if bom['vault_route']:
                                 route_list2 += bom['vault_route'].split("-", -1)
+                                materialcode = bom.product_tmpl_id.vault_material_code
+                                materialname = self.env['product.template'].search([
+                                                 ('default_code', '=', bom.product_tmpl_id.vault_material_code)]).name
                                 y = y + 1
                                 self.create({'checked': True,
                                              'partner_name': self.env['sale.order'].
@@ -231,7 +235,8 @@ class Supplierlist(models.Model):
                                              'vault_web_link': bom.product_tmpl_id.vault_web_link,
                                              'product_code': '------ ' + bom.product_tmpl_id.default_code,
                                              'product_name': bom.product_tmpl_id.name,
-                                             'product_quantity': record.product_quantity * bom_line2.bom_id.product_qty * bom.product_qty,
+                                             'product_quantity': record.product_quantity *
+                                                                 bom_line2.bom_id.product_qty * bom.product_qty,
                                              'product_uom_name': bom.product_uom_id.name,
                                              'material_code': materialcode,
                                              'product_material': materialname,
@@ -308,8 +313,8 @@ class Supplierlist(models.Model):
                                          'product_quantity': record.product_quantity * bom_line22.bom_id.product_qty *
                                                              bom_line2.bom_id.product_qty * bom_line22.product_qty,
                                          'product_uom_name': bom_line22.product_uom_id.name,
-                                         'material_code': materialcode,
-                                         'product_material': materialname,
+                                         'material_code': bom_line22.product_tmpl_id.default_code,
+                                         'product_material': bom_line22.product_tmpl_id.name,
                                          'model_id': '',
                                          'type': '',
                                          'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
