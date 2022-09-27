@@ -15,3 +15,8 @@
 	border-left: 0.1px solid #000;
 	background-color: #52CC7A;
 }
+
+.full_border
+{
+	border: 0.1px solid #000;
+}

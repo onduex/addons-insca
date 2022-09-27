@@ -17,28 +17,28 @@ class Supplierlist(models.Model):
     _description = "Lista para proveedores de las piezas/ensamblajes requeridos de los pedidos activos"
     _order = "type_model_id, id asc"
 
-    sale_order = fields.Many2one(comodel_name='sale.order', string='Venta ref.', required=False, readonly=True)
+    sale_order = fields.Many2one(comodel_name='sale.order', string='Venta ref. ', required=False, readonly=True)
     purchase_order = fields.Many2one(comodel_name='purchase.order', string='Compra ref.', required=False, readonly=True)
     mrp_production = fields.Many2one(comodel_name='mrp.production', string='Fabricación ref.', required=False,
                                      readonly=True)
     product_template = fields.Many2one(comodel_name='product.template', string='Código + Nombre', required=False,
                                        readonly=True)
-    vault_web_link = fields.Char(string='Vault Link', required=False, readonly=True)
-    commitment_date = fields.Datetime(string='Fecha prevista', required=False)
+    vault_web_link = fields.Char(string='Web', required=False, readonly=True)
+    commitment_date = fields.Datetime(string='Fecha prevista', required=False, readonly=True)
     partner_name = fields.Char(string='Cliente', required=False, readonly=True)
-    product_origin = fields.Char(string='Producto origen', required=True, readonly=True)
+    product_origin = fields.Char(string='Producto origen', required=False, readonly=True)
     purchase_partner = fields.Char(string='Proveedor', required=False, readonly=True)
-    product_code = fields.Char(string='Código', required=True, readonly=True)
+    product_code = fields.Char(string='Código', required=False, readonly=True)
     product_color = fields.Char(string='Color', required=False, readonly=True)
     product_material = fields.Char(string='Material', required=False, readonly=True)
     material_code = fields.Char(string='CM', required=False, readonly=True)
     color_code = fields.Char(string='CC', required=False, readonly=True)
-    product_name = fields.Char(string='Nombre', required=True, readonly=True)
+    product_name = fields.Char(string='Nombre', required=False, readonly=True)
     product_quantity = fields.Float(string='Cantidad', required=False, readonly=True, store=True)
-    product_uom_name = fields.Char(string='UoM', required=True, readonly=True)
-    model_id = fields.Integer(string='Id del Modelo', required=True, readonly=True)
-    type = fields.Char(string='Tipo', required=True, readonly=True)
-    type_model_id = fields.Char(string='Ref. Interna', required=True, readonly=True)
+    product_uom_name = fields.Char(string='UoM', required=False, readonly=True)
+    model_id = fields.Integer(string='Id del Modelo', required=False, readonly=True)
+    type = fields.Char(string='Tipo', required=False, readonly=True)
+    type_model_id = fields.Char(string='Ref. Interna', required=False, readonly=True)
     checked = fields.Boolean(string='Procesada', required=False)
     is_finished_line = fields.Boolean(string='Fabricado', compute='compute_is_finished_line', store=True)
     lmat = fields.Integer(string='LdM ID', required=False, readonly=True)
@@ -63,12 +63,14 @@ class Supplierlist(models.Model):
                            selection=lambda self: dynamic_selection(), required=False, readonly=False)
     pin = fields.Selection(string='07-PIN',
                            selection=lambda self: dynamic_selection(), required=False, readonly=False)
+    sal = fields.Selection(string='99-SAL',
+                           selection=lambda self: dynamic_selection(), required=False, readonly=False)
 
-    @api.depends('lst', 'lsc', 'plg', 'cmz', 'man', 'sol', 'pin')
+    @api.depends('lst', 'lsc', 'plg', 'cmz', 'man', 'sol', 'pin', 'sal')
     def compute_is_finished_line(self):
         for rec in self:
             if rec.lst != '1' and rec.lsc != '1' and rec.plg != '1' and \
-               rec.cmz != '1' and rec.man != '1' and rec.sol != '1' and rec.pin != '1':
+               rec.cmz != '1' and rec.man != '1' and rec.sol != '1' and rec.pin != '1' and rec.sal != '1':
                 rec.is_finished_line = True
             else:
                 rec.is_finished_line = False
@@ -85,7 +87,8 @@ class Supplierlist(models.Model):
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
 
         for orden_principal in po_origin_list:
-            orden_principal = 'OP/00600'  # Sólo testing
+            # orden_principal = 'OP/00600'  # Sólo testing
+            # orden_principal_obj = self.env['mrp.production'].search([('name', '=', orden_principal)])
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
                                                     ('created_purchase_line_id', '!=', False)])
 
@@ -115,6 +118,7 @@ class Supplierlist(models.Model):
                     n1 = mo_id.product_id.default_code
                     n2 = sm.product_tmpl_id.default_code
 
+                    # Crear los productos en las líneas de compra con MO
                     self.create({'checked': False,
                                  'partner_name': mo_id.sale_id.partner_id.name,
                                  'commitment_date': mo_id.sale_id.commitment_date,
@@ -236,7 +240,7 @@ class Supplierlist(models.Model):
                                              'product_code': '------ ' + bom.product_tmpl_id.default_code,
                                              'product_name': bom.product_tmpl_id.name,
                                              'product_quantity': record.product_quantity *
-                                                                 bom_line2.bom_id.product_qty * bom.product_qty,
+                                            bom_line2.bom_id.product_qty * bom.product_qty,
                                              'product_uom_name': bom.product_uom_id.name,
                                              'material_code': materialcode,
                                              'product_material': materialname,
@@ -277,7 +281,9 @@ class Supplierlist(models.Model):
                                              'product_template': bom_line3.product_tmpl_id.id,
                                              'product_code': '---------- ' + bom_line3.product_tmpl_id.default_code,
                                              'product_name': bom_line3.product_id.name,
-                                             'product_quantity': record.product_quantity * bom_line3.bom_id.product_qty * bom_line2.bom_id.product_qty * bom_line3.product_qty,
+                                             'product_quantity': record.product_quantity *
+                                            bom_line3.bom_id.product_qty * bom_line2.bom_id.product_qty *
+                                            bom_line3.product_qty,
                                              'product_uom_name': bom_line3.product_uom_id.name,
                                              'material_code': materialcode,
                                              'product_material': materialname,
@@ -291,6 +297,7 @@ class Supplierlist(models.Model):
                                              'n3': n3,
                                              'n4': n4,
                                              'n5': bom_line3.product_tmpl_id.default_code,
+                                             'sal': '1',
                                              })
                     else:
                         y = 0
@@ -311,7 +318,7 @@ class Supplierlist(models.Model):
                                          'product_code': '---------- ' + bom_line22.product_tmpl_id.default_code,
                                          'product_name': bom_line22.product_id.name,
                                          'product_quantity': record.product_quantity * bom_line22.bom_id.product_qty *
-                                                             bom_line2.bom_id.product_qty * bom_line22.product_qty,
+                                        bom_line2.bom_id.product_qty * bom_line22.product_qty,
                                          'product_uom_name': bom_line22.product_uom_id.name,
                                          'material_code': bom_line22.product_tmpl_id.default_code,
                                          'product_material': bom_line22.product_tmpl_id.name,
@@ -324,6 +331,7 @@ class Supplierlist(models.Model):
                                          'n2': n2,
                                          'n3': n3,
                                          'n4': bom_line22.product_tmpl_id.default_code,
+                                         'sal': '1',
                                          })
 
         res = 'Obtener BoM'
