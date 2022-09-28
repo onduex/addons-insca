@@ -82,12 +82,33 @@
         </field>
     </record>
 
-    <!--Actions-->
+    <record id="init_view_tree_category_test" model="ir.ui.view">
+        <field name="name">init.view.tree.category.test</field>
+        <field name="model">library.book.category</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <init_tree String="Init Tree">
+                <field name="name"/>
+            </init_tree>
+        </field>
+    </record>
+
     <record id="action_componentes" model="ir.actions.act_window">
         <field name="name">Componentes</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">supplier.list</field>
         <field name="view_mode">tree,pivot</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+
+    <record id="action_category_test" model="ir.actions.act_window">
+        <field name="name">Categorías Test</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">library.book.category</field>
+        <field name="view_mode">init_tree</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">Add Text Here</p>
             <p>More details about what a user can do with this object will be OK</p>
@@ -100,4 +121,6 @@
     <menuitem id="datos_principales" name="Datos principales" parent="supplier_list_root_menu" sequence="117"/>
     <menuitem id="res_componentes" name="Componentes" parent="datos_principales"
               action="action_componentes" sequence="117"/>
+    <menuitem id="res_category_test" name="Categorías_test" parent="datos_principales"
+              action="action_category_test" sequence="117"/>
 </odoo>

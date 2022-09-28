@@ -31,7 +31,7 @@ class Supplierlist(models.Model):
     _order = "id asc"
 
     # Definir jerarquía
-
+    category_id = fields.Many2one('library.book.category')
     sale_order = fields.Many2one(comodel_name='sale.order', string='Venta ref. ', required=False, readonly=True)
     purchase_order = fields.Many2one(comodel_name='purchase.order', string='Compra ref.', required=False, readonly=True)
     mrp_production = fields.Many2one(comodel_name='mrp.production', string='Fabricación ref.', required=False,
@@ -115,8 +115,8 @@ class Supplierlist(models.Model):
                              'partner_name': orden_principal_obj.sale_id.partner_id.name,
                              'commitment_date': orden_principal_obj.sale_id.commitment_date,
                              'sale_order': orden_principal_obj.sale_id.id,
-                             # 'product_origin': '[' + orden_principal_obj.product_id.default_code + ']' + ' ' +
-                             #                  orden_principal_obj.product_id.name,
+                             'product_origin': '[' + str(orden_principal_obj.product_id.default_code) + ']' + ' ' +
+                            str(orden_principal_obj.product_id.name),
                              'mrp_production': orden_principal_obj.id,
                              'purchase_order': '',
                              'purchase_partner': '',
@@ -135,7 +135,7 @@ class Supplierlist(models.Model):
                              # 'type_model_id': str(sm['id']) + '-' + '1000',
                              'lmat': orden_principal_obj.bom_id.id,
                              'lmat_level': '0000',
-                             'n0': 'Nivel 0',
+                             'n0': orden_principal_obj.product_id.default_code,
                              'sal': '1',
                              })
 
@@ -190,6 +190,7 @@ class Supplierlist(models.Model):
                                  'type_model_id': str(sm['id']) + '-' + '1000',
                                  'lmat': lmatid,
                                  'lmat_level': '1000',
+                                 'n0': n1,
                                  'n1': n1,
                                  'lst': '1' if 'LST' in route_list else '',
                                  'lsc': '1' if 'LSC' in route_list else '',
@@ -249,6 +250,7 @@ class Supplierlist(models.Model):
                                      'type_model_id': record.type_model_id[:-4] + '1' + str(x) + '00',
                                      'lmat': lmatid,
                                      'lmat_level': '1' + str(x) + '00',
+                                     'n0': n1,
                                      'n1': n1,
                                      'n2': n2,
                                      'lst': '1' if 'LST' in route_list else '',
@@ -298,6 +300,7 @@ class Supplierlist(models.Model):
                                                  'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + '0',
+                                                 'n0': n1,
                                                  'n1': n1,
                                                  'n2': n2,
                                                  'n3': n3,
@@ -341,6 +344,7 @@ class Supplierlist(models.Model):
                                                  'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + str(z),
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + str(z),
+                                                 'n0': n1,
                                                  'n1': n1,
                                                  'n2': n2,
                                                  'n3': n3,
@@ -376,6 +380,7 @@ class Supplierlist(models.Model):
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
                                              'lmat': lmatid,
                                              'lmat_level': '1' + str(x) + str(y) + '0',
+                                             'n0': n1,
                                              'n1': n1,
                                              'n2': n2,
                                              'n3': n3,
