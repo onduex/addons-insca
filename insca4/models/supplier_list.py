@@ -103,7 +103,7 @@ class Supplierlist(models.Model):
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
 
         for orden_principal in po_origin_list:
-            # orden_principal = 'OP/00600'  # Sólo testing
+            # orden_principal = 'OP/00547'  # Sólo testing
             orden_principal_obj = self.env['mrp.production'].search([('name', '=', orden_principal)])
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
                                                     ('created_purchase_line_id', '!=', False)])
@@ -135,7 +135,7 @@ class Supplierlist(models.Model):
                              # 'type_model_id': str(sm['id']) + '-' + '1000',
                              'lmat': orden_principal_obj.bom_id.id,
                              'lmat_level': '0001',
-                             'n0': 'Nivel 0',
+                             'n0': orden_principal_obj.product_id.default_code,
                              'n1': '',
                              'n2': '',
                              'n3': '',
@@ -169,6 +169,8 @@ class Supplierlist(models.Model):
                     lmatid = mo_id.bom_id.id
                     n1 = mo_id.product_id.default_code
                     n2 = sm.product_tmpl_id.default_code
+                    colorcode = sm.product_id.vault_color
+                    productcolor = sm.product_id.product_color
 
                     # Crear los productos en las líneas de compra con MO
                     self.create({'checked': False,
@@ -186,8 +188,8 @@ class Supplierlist(models.Model):
                                  'product_name': sm.product_id.name,
                                  'product_quantity': sm.product_qty,
                                  'product_uom_name': sm.product_uom.name,
-                                 'color_code':sm.product_id.vault_color,
-                                 'product_color': sm.product_id.product_color,
+                                 'color_code': colorcode,
+                                 'product_color': productcolor,
                                  'material_code': materialcode,
                                  'product_material': materialname,
                                  'model_id': sm['id'],
@@ -209,12 +211,13 @@ class Supplierlist(models.Model):
                                  'sol': '1' if 'SOL' in route_list else '',
                                  'pin': '1' if 'PIN' in route_list else '',
                                  })
-                    self.your_function2(materialname, materialcode, orden_principal, lmatid, n1, n2)
+                    self.your_function2(materialname, materialcode, orden_principal, lmatid, n1, n2,
+                                        colorcode, productcolor)
         res = 'Good Job'
         return res
 
     @api.model
-    def your_function2(self, materialname, materialcode, orden_principal, lmatid, n1, n2):
+    def your_function2(self, materialname, materialcode, orden_principal, lmatid, n1, n2, colorcode, productcolor):
         route_list = []
         route_list2 = []
         supplier_list_ids = self.env['supplier.list'].search([('checked', '=', False),
@@ -252,6 +255,8 @@ class Supplierlist(models.Model):
                                      'product_name': bom.product_tmpl_id.name,
                                      'product_quantity': record.product_quantity * bom.product_qty,
                                      'product_uom_name': bom.product_uom_id.name,
+                                     'color_code': colorcode,
+                                     'product_color': productcolor,
                                      'material_code': materialcode,
                                      'product_material': materialname,
                                      'model_id': '',
@@ -305,6 +310,8 @@ class Supplierlist(models.Model):
                                                  'product_quantity': record.product_quantity *
                                                 bom_line2.bom_id.product_qty * bom.product_qty,
                                                  'product_uom_name': bom.product_uom_id.name,
+                                                 'color_code': colorcode,
+                                                 'product_color': productcolor,
                                                  'material_code': materialcode,
                                                  'product_material': materialname,
                                                  'model_id': '',
@@ -350,6 +357,8 @@ class Supplierlist(models.Model):
                                                 bom_line3.bom_id.product_qty * bom_line2.bom_id.product_qty *
                                                 bom_line3.product_qty,
                                                  'product_uom_name': bom_line3.product_uom_id.name,
+                                                 'color_code': colorcode,
+                                                 'product_color': productcolor,
                                                  'material_code': materialcode,
                                                  'product_material': materialname,
                                                  'model_id': '',
@@ -386,6 +395,8 @@ class Supplierlist(models.Model):
                                              'product_quantity': record.product_quantity * bom_line22.bom_id.product_qty *
                                             bom_line2.bom_id.product_qty * bom_line22.product_qty,
                                              'product_uom_name': bom_line22.product_uom_id.name,
+                                             'color_code': colorcode,
+                                             'product_color': productcolor,
                                              'material_code': bom_line22.product_tmpl_id.default_code,
                                              'product_material': bom_line22.product_tmpl_id.name,
                                              'model_id': '',
