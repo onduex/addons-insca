@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="init_view_tree_category_test" model="ir.ui.view">
+            <field name="name">Categories Init</field>
+            <field name="model">library.book.category</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <init_tree String="Init Tree">
+                    <field name="name"/>
+                </init_tree>
+            </field>
+        </record>
+
+        <record id="category_view_form" model="ir.ui.view">
+            <field name="name">category_view_form</field>
+            <field name="model">library.book.category</field>
+            <field name="arch" type="xml">
+                <form string="category_form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="category_view_tree" model="ir.ui.view">
+            <field name="name">category_view_tree</field>
+            <field name="model">library.book.category</field>
+            <field name="arch" type="xml">
+                <tree string="category_tree">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_category_test" model="ir.actions.act_window">
+            <field name="name">Categorías Test</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">library.book.category</field>
+            <field name="view_mode">tree,form,init_tree</field>
+            <field name="context">{}</field>
+            <!--<field name="domain">[('parent_id', '=', False)]</field>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add Text Here</p>
+                <p>More details about what a user can do with this object will be OK</p>
+            </field>
+        </record>
+
+        <menuitem id="res_category_test" name="Categorías_test" parent="datos_principales"
+                  action="action_category_test" sequence="117"/>
+
+
+</odoo>
