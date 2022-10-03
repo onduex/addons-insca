@@ -203,7 +203,7 @@ class Supplierlist(models.Model):
                                  'purchase_partner': purchasepartner,
                                  'product_template': sm.product_tmpl_id.id,
                                  'vault_web_link': sm.product_tmpl_id.vault_web_link,
-                                 'product_code': '-- ' + sm.product_tmpl_id.default_code,
+                                 'product_code': sm.product_tmpl_id.default_code,
                                  'product_name': sm.product_id.name,
                                  'product_quantity': sm.product_qty,
                                  'product_uom_name': sm.product_uom.name,
@@ -279,7 +279,7 @@ class Supplierlist(models.Model):
                                      'purchase_partner': purchaseorder[0].partner_id.name,
                                      'product_template': bom.product_tmpl_id.id,
                                      'vault_web_link': bom.product_tmpl_id.vault_web_link,
-                                     'product_code': '---- ' + bom.product_tmpl_id.default_code,
+                                     'product_code': bom.product_tmpl_id.default_code,
                                      'product_name': bom.product_tmpl_id.name,
                                      'product_quantity': record.product_quantity * bom.product_qty,
                                      'product_uom_name': bom.product_uom_id.name,
@@ -339,7 +339,7 @@ class Supplierlist(models.Model):
                                                  'purchase_partner': purchaseorder[0].partner_id.name,
                                                  'product_template': bom.product_tmpl_id.id,
                                                  'vault_web_link': bom.product_tmpl_id.vault_web_link,
-                                                 'product_code': '------ ' + bom.product_tmpl_id.default_code,
+                                                 'product_code': bom.product_tmpl_id.default_code,
                                                  'product_name': bom.product_tmpl_id.name,
                                                  'product_quantity': record.product_quantity *
                                                 bom_line2.bom_id.product_qty * bom.product_qty,
@@ -390,7 +390,7 @@ class Supplierlist(models.Model):
                                                  'purchase_order': purchaseorder[0].id,
                                                  'purchase_partner': purchaseorder[0].partner_id.name,
                                                  'product_template': bom_line3.product_tmpl_id.id,
-                                                 'product_code': '---------- ' + bom_line3.product_tmpl_id.default_code,
+                                                 'product_code': bom_line3.product_tmpl_id.default_code,
                                                  'product_name': bom_line3.product_id.name,
                                                  'product_quantity': record.product_quantity *
                                                 bom_line3.bom_id.product_qty * bom_line2.bom_id.product_qty *
@@ -434,7 +434,7 @@ class Supplierlist(models.Model):
                                              'purchase_order': purchaseorder[0].id,
                                              'purchase_partner': purchaseorder[0].partner_id.name,
                                              'product_template': bom_line22.product_tmpl_id.id,
-                                             'product_code': '------ ' + bom_line22.product_tmpl_id.default_code,
+                                             'product_code': bom_line22.product_tmpl_id.default_code,
                                              'product_name': bom_line22.product_id.name,
                                              'product_quantity': record.product_quantity * bom_line22.bom_id.product_qty *
                                             bom_line2.bom_id.product_qty * bom_line22.product_qty,
