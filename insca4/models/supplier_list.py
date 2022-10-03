@@ -70,6 +70,8 @@ class Supplierlist(models.Model):
     n03 = fields.Char(string='Nivel 03', required=False, readonly=True)
     n04 = fields.Char(string='Nivel 04', required=False, readonly=True)
     n05 = fields.Char(string='Nivel 05', required=False, readonly=True)
+    notas = fields.Text(string="Notas", required=False)
+
     product_parent = fields.Char(string='Código Sup.', required=False, readonly=True)
     product_parent_name = fields.Char(string='Nombre Sup.', required=False, readonly=True)
 
@@ -116,6 +118,7 @@ class Supplierlist(models.Model):
             orden_principal_obj = self.env['mrp.production'].search([('name', '=', orden_principal)])
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
                                                     ('created_purchase_line_id', '!=', False)])
+            n0 = orden_principal_obj.product_id.default_code
 
             # Check si existe y Crear el producto principal
             supplier_list_check = self.env['supplier.list'].search([('mrp_production.name', '=', orden_principal)])
@@ -144,7 +147,7 @@ class Supplierlist(models.Model):
                              # 'type_model_id': str(sm['id']) + '-' + '1000',
                              'lmat': orden_principal_obj.bom_id.id,
                              'lmat_level': '0001',
-                             'n0': orden_principal_obj.product_id.default_code,
+                             'n0': n0,
                              'n00': orden_principal_obj.product_id.default_code,
                              'n1': '',
                              'n2': '',
@@ -213,7 +216,7 @@ class Supplierlist(models.Model):
                                  'type_model_id': str(sm['id']) + '-' + '1000',
                                  'lmat': lmatid,
                                  'lmat_level': '1000',
-                                 'n0': '',
+                                 'n0': n0,
                                  'n1': n1,
                                  'n01': sm.product_tmpl_id.default_code,
                                  'n2': '',
@@ -232,13 +235,13 @@ class Supplierlist(models.Model):
                                  'product_parent_name': n1_name,
 
                                  })
-                    self.your_function2(materialname, materialcode, orden_principal, lmatid, n1, n2, n1_name, n2_name,
-                                        colorcode, productcolor)
+                    self.your_function2(materialname, materialcode, orden_principal, lmatid, n0, n1, n2,
+                                        n1_name, n2_name, colorcode, productcolor)
         res = 'Good Job'
         return res
 
     @api.model
-    def your_function2(self, materialname, materialcode, orden_principal, lmatid, n1, n2, n1_name, n2_name,
+    def your_function2(self, materialname, materialcode, orden_principal, lmatid, n0, n1, n2, n1_name, n2_name,
                        colorcode, productcolor):
         route_list = []
         route_list2 = []
@@ -289,8 +292,8 @@ class Supplierlist(models.Model):
                                      'type_model_id': record.type_model_id[:-4] + '1' + str(x) + '00',
                                      'lmat': lmatid,
                                      'lmat_level': '1' + str(x) + '00',
-                                     'n0': '',
-                                     'n1': '',
+                                     'n0': n0,
+                                     'n1': n1,
                                      'n2': n2,
                                      'n02': bom.product_tmpl_id.default_code,
                                      'n3': '',
@@ -350,9 +353,9 @@ class Supplierlist(models.Model):
                                                  'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + '0',
-                                                 'n0': '',
-                                                 'n1': '',
-                                                 'n2': '',
+                                                 'n0': n0,
+                                                 'n1': n1,
+                                                 'n2': n2,
                                                  'n3': n3,
                                                  'n03': bom.product_tmpl_id.default_code,
                                                  'n4': '',
@@ -402,10 +405,10 @@ class Supplierlist(models.Model):
                                                  'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + str(z),
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + str(z),
-                                                 'n0': '',
-                                                 'n1': '',
-                                                 'n2': '',
-                                                 'n3': '',
+                                                 'n0': n0,
+                                                 'n1': n1,
+                                                 'n2': n2,
+                                                 'n3': n3,
                                                  'n4': n4,
                                                  'n04': bom_line3.product_tmpl_id.default_code,
                                                  'n5': bom_line3.product_tmpl_id.default_code,
@@ -445,9 +448,9 @@ class Supplierlist(models.Model):
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
                                              'lmat': lmatid,
                                              'lmat_level': '1' + str(x) + str(y) + '0',
-                                             'n0': '',
-                                             'n1': '',
-                                             'n2': '',
+                                             'n0': n0,
+                                             'n1': n1,
+                                             'n2': n2,
                                              'n3': n3,
                                              'n03': bom_line22.product_tmpl_id.default_code,
                                              'n4': bom_line22.product_tmpl_id.default_code,

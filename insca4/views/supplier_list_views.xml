@@ -39,7 +39,8 @@
         <field name="arch" type="xml">
             <tree editable="top" string="Componentes" default_order="id asc"
                   decoration-success="is_finished_line == True"
-                  decoration-danger="is_finished_line == False">
+                  decoration-danger="is_finished_line == False"
+                  class="uom_width">
                 <field name="commitment_date" optional="hide" widget="date"/>
                 <field name="partner_name" optional="hide" class="full_border"/>
                 <field name="product_origin" optional="hide" class="full_border"/>
@@ -86,6 +87,8 @@
                 <field name="sol" optional="hide" class="full_border"/>
                 <field name="pin" optional="hide" class="full_border"/>
                 <field name="sal" optional="hide" class="full_border"/>
+                <field name="notas" optional="show" class="full_border"/>
+
                 <field name='is_finished_line' optional="hide" class="full_border"/>
                 <field name="id" optional="show" class="full_border"/>
             </tree>
