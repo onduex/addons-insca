@@ -49,6 +49,12 @@
                 <field name="n3" optional="hide" class="full_border"/>
                 <field name="n4" optional="hide" class="full_border"/>
                 <field name="n5" optional="hide" class="full_border"/>
+                <field name="n00" optional="hide" class="full_border"/>
+                <field name="n01" optional="hide" class="full_border"/>
+                <field name="n02" optional="hide" class="full_border"/>
+                <field name="n03" optional="hide" class="full_border"/>
+                <field name="n04" optional="hide" class="full_border"/>
+                <field name="n05" optional="hide" class="full_border"/>
                 <field name="sale_order" optional="show"/>
                 <field name="mrp_production" optional="show"/>
                 <field name="purchase_order" optional="show"/>

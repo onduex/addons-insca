@@ -64,6 +64,12 @@ class Supplierlist(models.Model):
     n3 = fields.Char(string='Nivel 3', required=False, readonly=True)
     n4 = fields.Char(string='Nivel 4', required=False, readonly=True)
     n5 = fields.Char(string='Nivel 5', required=False, readonly=True)
+    n00 = fields.Char(string='Nivel 00', required=False, readonly=True)
+    n01 = fields.Char(string='Nivel 01', required=False, readonly=True)
+    n02 = fields.Char(string='Nivel 02', required=False, readonly=True)
+    n03 = fields.Char(string='Nivel 03', required=False, readonly=True)
+    n04 = fields.Char(string='Nivel 04', required=False, readonly=True)
+    n05 = fields.Char(string='Nivel 05', required=False, readonly=True)
     product_parent = fields.Char(string='Código Sup.', required=False, readonly=True)
     product_parent_name = fields.Char(string='Nombre Sup.', required=False, readonly=True)
 
@@ -139,6 +145,7 @@ class Supplierlist(models.Model):
                              'lmat': orden_principal_obj.bom_id.id,
                              'lmat_level': '0001',
                              'n0': orden_principal_obj.product_id.default_code,
+                             'n00': orden_principal_obj.product_id.default_code,
                              'n1': '',
                              'n2': '',
                              'n3': '',
@@ -208,6 +215,7 @@ class Supplierlist(models.Model):
                                  'lmat_level': '1000',
                                  'n0': '',
                                  'n1': n1,
+                                 'n01': sm.product_tmpl_id.default_code,
                                  'n2': '',
                                  'n3': '',
                                  'n4': '',
@@ -284,6 +292,7 @@ class Supplierlist(models.Model):
                                      'n0': '',
                                      'n1': '',
                                      'n2': n2,
+                                     'n02': bom.product_tmpl_id.default_code,
                                      'n3': '',
                                      'n4': '',
                                      'n5': '',
@@ -345,6 +354,7 @@ class Supplierlist(models.Model):
                                                  'n1': '',
                                                  'n2': '',
                                                  'n3': n3,
+                                                 'n03': bom.product_tmpl_id.default_code,
                                                  'n4': '',
                                                  'n5': '',
                                                  'lst': '1' if 'LST' in route_list2 else '',
@@ -397,6 +407,7 @@ class Supplierlist(models.Model):
                                                  'n2': '',
                                                  'n3': '',
                                                  'n4': n4,
+                                                 'n04': bom_line3.product_tmpl_id.default_code,
                                                  'n5': bom_line3.product_tmpl_id.default_code,
                                                  'sal': '1',
 
@@ -438,6 +449,7 @@ class Supplierlist(models.Model):
                                              'n1': '',
                                              'n2': '',
                                              'n3': n3,
+                                             'n03': bom_line22.product_tmpl_id.default_code,
                                              'n4': bom_line22.product_tmpl_id.default_code,
                                              'n5': '',
                                              'sal': '1',
