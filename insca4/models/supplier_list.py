@@ -64,6 +64,8 @@ class Supplierlist(models.Model):
     n3 = fields.Char(string='Nivel 3', required=False, readonly=True)
     n4 = fields.Char(string='Nivel 4', required=False, readonly=True)
     n5 = fields.Char(string='Nivel 5', required=False, readonly=True)
+    product_parent = fields.Char(string='Código Sup.', required=False, readonly=True)
+    product_parent_name = fields.Char(string='Nombre Sup.', required=False, readonly=True)
 
     lst = fields.Selection(string='01-LST',
                            selection=lambda self: dynamic_selection(), required=False, readonly=False)
@@ -104,6 +106,7 @@ class Supplierlist(models.Model):
 
         for orden_principal in po_origin_list:
             # orden_principal = 'OP/00547'  # Sólo testing
+            orden_principal = 'OP/00600'
             orden_principal_obj = self.env['mrp.production'].search([('name', '=', orden_principal)])
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
                                                     ('created_purchase_line_id', '!=', False)])
@@ -142,6 +145,10 @@ class Supplierlist(models.Model):
                              'n4': '',
                              'n5': '',
                              'sal': '1',
+
+                             'product_parent': orden_principal_obj.product_id.default_code,
+                             'product_parent_name': orden_principal_obj.product_id.name,
+
                              })
 
             for sm in sm_ids:
@@ -168,7 +175,9 @@ class Supplierlist(models.Model):
 
                     lmatid = mo_id.bom_id.id
                     n1 = mo_id.product_id.default_code
+                    n1_name = mo_id.product_id.name
                     n2 = sm.product_tmpl_id.default_code
+                    n2_name = sm.product_tmpl_id.name
                     colorcode = sm.product_id.vault_color
                     productcolor = sm.product_id.product_color
 
@@ -210,19 +219,26 @@ class Supplierlist(models.Model):
                                  'man': '1' if 'MAN' in route_list else '',
                                  'sol': '1' if 'SOL' in route_list else '',
                                  'pin': '1' if 'PIN' in route_list else '',
+
+                                 'product_parent': n1,
+                                 'product_parent_name': n1_name,
+
                                  })
-                    self.your_function2(materialname, materialcode, orden_principal, lmatid, n1, n2,
+                    self.your_function2(materialname, materialcode, orden_principal, lmatid, n1, n2, n1_name, n2_name,
                                         colorcode, productcolor)
         res = 'Good Job'
         return res
 
     @api.model
-    def your_function2(self, materialname, materialcode, orden_principal, lmatid, n1, n2, colorcode, productcolor):
+    def your_function2(self, materialname, materialcode, orden_principal, lmatid, n1, n2, n1_name, n2_name,
+                       colorcode, productcolor):
         route_list = []
         route_list2 = []
         supplier_list_ids = self.env['supplier.list'].search([('checked', '=', False),
                                                               ('product_code', 'not ilike', 'A00.')])
         for record in supplier_list_ids:
+            n3 = ''
+            n3_name = ''
             record.write({'checked': True})
             code = record.product_template.default_code
             bom_ids_max = self._get_bom(code)
@@ -233,6 +249,7 @@ class Supplierlist(models.Model):
                     bom_ids_max2 = self._get_bom(code)
                     for bom in bom_ids_max2:
                         n3 = bom.product_tmpl_id.default_code
+                        n3_name = bom.product_tmpl_id.name
                         route_list += bom['vault_route'].split("-", -1)
                         purchaseorder = self.env['purchase.order.line'].search([
                             ('product_template_id.default_code', '=', bom.product_tmpl_id.default_code),
@@ -277,6 +294,10 @@ class Supplierlist(models.Model):
                                      'man': '1' if 'MAN' in route_list else '',
                                      'sol': '1' if 'SOL' in route_list else '',
                                      'pin': '1' if 'PIN' in route_list else '',
+
+                                     'product_parent': n2,
+                                     'product_parent_name': n2_name,
+
                                      })
                         route_list = []
 
@@ -287,6 +308,7 @@ class Supplierlist(models.Model):
                         if len(bom_ids_max3):
                             for bom in bom_ids_max3:
                                 n4 = bom.product_tmpl_id.default_code
+                                n4_name = bom.product_tmpl_id.name
                                 if bom['vault_route']:
                                     route_list2 += bom['vault_route'].split("-", -1)
                                     materialcode = bom.product_tmpl_id.vault_material_code
@@ -332,6 +354,10 @@ class Supplierlist(models.Model):
                                                  'man': '1' if 'MAN' in route_list2 else '',
                                                  'sol': '1' if 'SOL' in route_list2 else '',
                                                  'pin': '1' if 'PIN' in route_list2 else '',
+
+                                                 'product_parent': n3,
+                                                 'product_parent_name': n3_name,
+
                                                  })
                                     route_list2 = []
 
@@ -373,6 +399,10 @@ class Supplierlist(models.Model):
                                                  'n4': n4,
                                                  'n5': bom_line3.product_tmpl_id.default_code,
                                                  'sal': '1',
+
+                                                 'product_parent': n4,
+                                                 'product_parent_name': n4_name,
+
                                                  })
                         else:
                             y = 0
@@ -411,6 +441,10 @@ class Supplierlist(models.Model):
                                              'n4': bom_line22.product_tmpl_id.default_code,
                                              'n5': '',
                                              'sal': '1',
+
+                                             'product_parent': n3,
+                                             'product_parent_name': n3_name,
+
                                              })
 
         res = 'Obtener BoM'
