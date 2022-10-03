@@ -114,7 +114,7 @@ class Supplierlist(models.Model):
 
         for orden_principal in po_origin_list:
             # orden_principal = 'OP/00547'  # Sólo testing
-            orden_principal = 'OP/00600'
+            # orden_principal = 'OP/00600'  # Sólo testing
             orden_principal_obj = self.env['mrp.production'].search([('name', '=', orden_principal)])
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
                                                     ('created_purchase_line_id', '!=', False)])
@@ -123,6 +123,8 @@ class Supplierlist(models.Model):
             # Check si existe y Crear el producto principal
             supplier_list_check = self.env['supplier.list'].search([('mrp_production.name', '=', orden_principal)])
             if not len(supplier_list_check):
+                self.create({'n1': ''
+                             })
                 self.create({'checked': False,
                              'partner_name': orden_principal_obj.sale_id.partner_id.name,
                              'commitment_date': orden_principal_obj.sale_id.commitment_date,

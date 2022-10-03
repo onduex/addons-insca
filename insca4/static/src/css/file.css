@@ -1,10 +1,7 @@
+.full_border {
+    border: 0.1px solid #000;
+}
 
-.full_border
-{
-	border: 0.1px solid #000;
-	}
-
-.uom_width [data-id="product_uom_name"]
-{
-    width: 2px !important;
-    }
+.bg_color {
+    background-color: #99ccff;
+}

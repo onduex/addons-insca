@@ -17,6 +17,7 @@
         'sale',
         'purchase',
         'utm',
+        'web_tree_dynamic_colored_field'
     ],
 
     # always loaded
