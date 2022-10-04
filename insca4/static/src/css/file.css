@@ -5,3 +5,7 @@
 .bg_color {
     background-color: #99ccff;
 }
+
+.rotate_tree_header {
+    rotate: 90deg !important;
+}

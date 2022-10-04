@@ -123,8 +123,6 @@ class Supplierlist(models.Model):
             # Check si existe y Crear el producto principal
             supplier_list_check = self.env['supplier.list'].search([('mrp_production.name', '=', orden_principal)])
             if not len(supplier_list_check):
-                self.create({'n1': ''
-                             })
                 self.create({'checked': False,
                              'partner_name': orden_principal_obj.sale_id.partner_id.name,
                              'commitment_date': orden_principal_obj.sale_id.commitment_date,
