@@ -51,45 +51,45 @@
                 <field name="n5" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False"}'/>
                 <field name="n00" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False"}'/>
                 <field name="n01" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False"}'/>
-                <field name="n02" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False"}'/>
-                <field name="n03" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False"}'/>
-                <field name="n04" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False"}'/>
-                <field name="n05" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="sale_order" optional="show" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="mrp_production" optional="show" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="purchase_order" optional="show" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="purchase_partner" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="type_model_id" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="lmat" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="lmat_level" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_template" optional="hide" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_code" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_name" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_parent" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_parent_name" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="vault_web_link" optional="show" widget="url" text="O" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_quantity" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_uom_name" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="color_code" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_color" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="material_code" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="product_material" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="type" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="model_id" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
+                <field name="n02" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False"}'/>
+                <field name="n03" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False"}'/>
+                <field name="n04" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False"}'/>
+                <field name="n05" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="sale_order" optional="show" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="mrp_production" optional="show" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="purchase_order" optional="show" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="purchase_partner" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="type_model_id" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="lmat" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="lmat_level" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_template" optional="hide" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_code" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_name" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_parent" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_parent_name" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="vault_web_link" optional="show" widget="url" text="O" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_quantity" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_uom_name" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="color_code" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_color" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="material_code" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="product_material" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="type" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="model_id" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
 
 
-                <field name="lst" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="lsc" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="plg" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="cmz" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="man" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="sol" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="pin" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="sal" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="notas" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
+                <field name="lst" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="lsc" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="plg" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="cmz" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="man" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="sol" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="pin" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="sal" optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="notas" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
 
-                <field name='is_finished_line' optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
-                <field name="id" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #e1f1fd: n02 != False; #e1f1fd: n03 != False; #e1f1fd: n04 != False; #e1f1fd: n05 != False"}'/>
+                <field name='is_finished_line' optional="hide" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
+                <field name="id" optional="show" class="full_border" options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
             </tree>
         </field>
     </record>
