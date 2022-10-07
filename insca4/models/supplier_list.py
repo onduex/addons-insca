@@ -486,7 +486,8 @@ class Supplierlist(models.Model):
                                                  'product_parent_name': n4_name,
 
                                                  })
-                        # Crear la línea que no tiene lDm
+
+                        # Crear la línea que no tiene ldM
                         elif len(bom_ids_max3) == 0:
                             if bom_line2.product_id.default_code[0:3] in 'VM.':
                                 y = y + 1
