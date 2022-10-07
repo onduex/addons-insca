@@ -3,26 +3,81 @@
 from odoo import fields, models, api, _
 from datetime import date
 
-po_line_id_metal_list = []
-
-
-def dynamic_selection():
+def dynamic_selection_lst():
     today = str(date.today().strftime("%d/%m/%Y"))
-    select = [('1', 'SI'),
+    select = [('1', 'LST'),
               ('2', ('Pintecas ' + today)),
               ('3', ('Agricer ' + today)),
               ('4', ('Otros ' + today))]
     return select
 
 
-def dynamic_selection2():
+def dynamic_selection_lsc():
     today = str(date.today().strftime("%d/%m/%Y"))
-    select = [('1', 'SI'),
+    select = [('1', 'LSC'),
+              ('2', ('Pintecas ' + today)),
+              ('3', ('Agricer ' + today)),
+              ('4', ('Otros ' + today))]
+    return select
+
+
+def dynamic_selection_plg():
+    today = str(date.today().strftime("%d/%m/%Y"))
+    select = [('1', 'PLG'),
+              ('2', ('Pintecas ' + today)),
+              ('3', ('Agricer ' + today)),
+              ('4', ('Otros ' + today))]
+    return select
+
+
+def dynamic_selection_cmz():
+    today = str(date.today().strftime("%d/%m/%Y"))
+    select = [('1', 'CMZ'),
+              ('2', ('Pintecas ' + today)),
+              ('3', ('Agricer ' + today)),
+              ('4', ('Otros ' + today))]
+    return select
+
+
+def dynamic_selection_man():
+    today = str(date.today().strftime("%d/%m/%Y"))
+    select = [('1', 'MAN'),
+              ('2', ('Pintecas ' + today)),
+              ('3', ('Agricer ' + today)),
+              ('4', ('Otros ' + today))]
+    return select
+
+
+def dynamic_selection_sol():
+    today = str(date.today().strftime("%d/%m/%Y"))
+    select = [('1', 'SOL'),
+              ('2', ('Pintecas ' + today)),
+              ('3', ('Agricer ' + today)),
+              ('4', ('Otros ' + today))]
+    return select
+
+
+def dynamic_selection_pin():
+    today = str(date.today().strftime("%d/%m/%Y"))
+    select = [('1', 'PIN'),
+              ('2', ('Pintecas ' + today)),
+              ('3', ('Agricer ' + today)),
+              ('4', ('Otros ' + today))]
+    return select
+
+
+def dynamic_selection_sal():
+    today = str(date.today().strftime("%d/%m/%Y"))
+    select = [('1', 'SAL'),
               ('2', ('Insca ' + today)),
               ('3', ('Impeva ' + today)),
               ('4', ('Pintecas ' + today)),
-              ('5', ('Otros ' + today))]
+              ('5', ('Agricer ' + today)),
+              ('6', ('Otros ' + today))]
     return select
+
+
+po_line_id_metal_list = []
 
 
 class Supplierlist(models.Model):
@@ -76,21 +131,21 @@ class Supplierlist(models.Model):
     product_parent_name = fields.Char(string='Nombre Sup.', required=False, readonly=True)
 
     lst = fields.Selection(string='01-LST',
-                           selection=lambda self: dynamic_selection(), required=False, readonly=False)
+                           selection=lambda self: dynamic_selection_lst(), required=False, readonly=False)
     lsc = fields.Selection(string='02-LSC',
-                           selection=lambda self: dynamic_selection(), required=False, readonly=False)
+                           selection=lambda self: dynamic_selection_lsc(), required=False, readonly=False)
     plg = fields.Selection(string='03-PLG',
-                           selection=lambda self: dynamic_selection(), required=False, readonly=False)
+                           selection=lambda self: dynamic_selection_plg(), required=False, readonly=False)
     cmz = fields.Selection(string='04-CMZ',
-                           selection=lambda self: dynamic_selection(), required=False, readonly=False)
+                           selection=lambda self: dynamic_selection_cmz(), required=False, readonly=False)
     man = fields.Selection(string='05-MAN',
-                           selection=lambda self: dynamic_selection(), required=False, readonly=False)
+                           selection=lambda self: dynamic_selection_man(), required=False, readonly=False)
     sol = fields.Selection(string='06-SOL',
-                           selection=lambda self: dynamic_selection(), required=False, readonly=False)
+                           selection=lambda self: dynamic_selection_sol(), required=False, readonly=False)
     pin = fields.Selection(string='07-PIN',
-                           selection=lambda self: dynamic_selection(), required=False, readonly=False)
+                           selection=lambda self: dynamic_selection_pin(), required=False, readonly=False)
     sal = fields.Selection(string='99-SAL',
-                           selection=lambda self: dynamic_selection2(), required=False, readonly=False)
+                           selection=lambda self: dynamic_selection_sal(), required=False, readonly=False)
 
     @api.depends('lst', 'lsc', 'plg', 'cmz', 'man', 'sol', 'pin', 'sal')
     def compute_is_finished_line(self):
@@ -106,6 +161,17 @@ class Supplierlist(models.Model):
         route_list = []
         po_origin_list = []
         po_ids = self.env['purchase.order'].search([])
+        lmatid = ''
+        n0 = ''
+        n1 = ''
+        n1_name = ''
+        n2 = ''
+        n2_name = ''
+        colorcode = ''
+        productcolor = ''
+        materialname = ''
+        materialcode = ''
+        orden_principal = ''
 
         for po in po_ids:
             if po['origin']:
@@ -113,7 +179,7 @@ class Supplierlist(models.Model):
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
 
         for orden_principal in po_origin_list:
-            # orden_principal = 'OP/00547'  # Sólo testing
+            orden_principal = 'OP/00608'  # Sólo testing
             # orden_principal = 'OP/00600'  # Sólo testing
             orden_principal_obj = self.env['mrp.production'].search([('name', '=', orden_principal)])
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
@@ -158,7 +224,6 @@ class Supplierlist(models.Model):
 
                              'product_parent': orden_principal_obj.product_id.default_code,
                              'product_parent_name': orden_principal_obj.product_id.name,
-
                              })
 
             for sm in sm_ids:
@@ -198,7 +263,8 @@ class Supplierlist(models.Model):
                                  'sale_order': mo_id.sale_id.id,
                                  'product_origin': '[' + mo_id.product_id.default_code + ']' + ' ' +
                                                    mo_id.product_id.name,
-                                 'mrp_production': self.env['mrp.production'].search([('name', '=', sm.origin)]).id,
+                                 'mrp_production': self.env['mrp.production'].search([
+                                     ('name', '=', sm.origin)]).id,
                                  'purchase_order': purchaseorder,
                                  'purchase_partner': purchasepartner,
                                  'product_template': sm.product_tmpl_id.id,
@@ -219,10 +285,6 @@ class Supplierlist(models.Model):
                                  'n0': n0,
                                  'n1': n1,
                                  'n01': sm.product_tmpl_id.default_code,
-                                 'n2': '',
-                                 'n3': '',
-                                 'n4': '',
-                                 'n5': '',
                                  'lst': '1' if 'LST' in route_list else '',
                                  'lsc': '1' if 'LSC' in route_list else '',
                                  'plg': '1' if 'PLG' in route_list else '',
@@ -230,10 +292,8 @@ class Supplierlist(models.Model):
                                  'man': '1' if 'MAN' in route_list else '',
                                  'sol': '1' if 'SOL' in route_list else '',
                                  'pin': '1' if 'PIN' in route_list else '',
-
                                  'product_parent': n1,
-                                 'product_parent_name': n1_name,
-
+                                 'product_parent_name': n1_name
                                  })
                     self.your_function2(materialname, materialcode, orden_principal, lmatid, n0, n1, n2,
                                         n1_name, n2_name, colorcode, productcolor)
@@ -241,12 +301,19 @@ class Supplierlist(models.Model):
         return res
 
     @api.model
-    def your_function2(self, materialname, materialcode, orden_principal, lmatid, n0, n1, n2, n1_name, n2_name,
+    def your_function2(self,
+                       materialname,
+                       materialcode,
+                       orden_principal,
+                       lmatid,
+                       n0, n1, n2, n1_name, n2_name,
                        colorcode, productcolor):
         route_list = []
         route_list2 = []
+
         supplier_list_ids = self.env['supplier.list'].search([('checked', '=', False),
                                                               ('product_code', 'not ilike', 'A00.')])
+
         for record in supplier_list_ids:
             n3 = ''
             n3_name = ''
@@ -315,9 +382,9 @@ class Supplierlist(models.Model):
 
                     y = 0
                     for bom_line2 in bom_ids_max2.bom_line_ids:
-                        code = bom_line2.product_id.default_code
+                        code = bom_line2.product_tmpl_id.default_code
                         bom_ids_max3 = self._get_bom(code)
-                        if len(bom_ids_max3):
+                        if len(bom_ids_max3) != 0:
                             for bom in bom_ids_max3:
                                 n4 = bom.product_tmpl_id.default_code
                                 n4_name = bom.product_tmpl_id.name
@@ -376,7 +443,7 @@ class Supplierlist(models.Model):
 
                                 z = 0
                                 for bom_line3 in bom_ids_max3.bom_line_ids:
-                                    code = bom_line3.product_id.default_code
+                                    code = bom_line3.product_tmpl_id.default_code
                                     bom_ids_max4 = self._get_bom(code)
                                     z = z + 1
                                     self.create({'checked': True,
@@ -402,7 +469,8 @@ class Supplierlist(models.Model):
                                                  'product_material': materialname,
                                                  'model_id': '',
                                                  'type': '',
-                                                 'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + str(z),
+                                                 'type_model_id': record.type_model_id[:-4] + '1' + str(x) +
+                                                str(y) + str(z),
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + str(z),
                                                  'n0': n0,
@@ -418,10 +486,9 @@ class Supplierlist(models.Model):
                                                  'product_parent_name': n4_name,
 
                                                  })
-                        else:
-                            y = 0
-                            for bom_line22 in bom_ids_max2.bom_line_ids:
-                                code = bom_line22.product_id.default_code
+                        # Crear la línea que no tiene lDm
+                        elif len(bom_ids_max3) == 0:
+                            if bom_line2.product_id.default_code[0:3] in 'VM.':
                                 y = y + 1
                                 self.create({'checked': True,
                                              'partner_name': self.env['sale.order'].
@@ -433,16 +500,17 @@ class Supplierlist(models.Model):
                                              'mrp_production': record.mrp_production.id,
                                              'purchase_order': purchaseorder[0].id,
                                              'purchase_partner': purchaseorder[0].partner_id.name,
-                                             'product_template': bom_line22.product_tmpl_id.id,
-                                             'product_code': bom_line22.product_tmpl_id.default_code,
-                                             'product_name': bom_line22.product_id.name,
-                                             'product_quantity': record.product_quantity * bom_line22.bom_id.product_qty *
-                                            bom_line2.bom_id.product_qty * bom_line22.product_qty,
-                                             'product_uom_name': bom_line22.product_uom_id.name,
+                                             'product_template': bom_line2.product_tmpl_id.id,
+                                             'product_code': bom_line2.product_tmpl_id.default_code,
+                                             'product_name': bom_line2.product_id.name,
+                                             'product_quantity': record.product_quantity *
+                                            bom_line2.bom_id.product_qty * bom_line2.bom_id.product_qty *
+                                            bom_line2.product_qty,
+                                             'product_uom_name': bom_line2.product_uom_id.name,
                                              'color_code': colorcode,
                                              'product_color': productcolor,
-                                             'material_code': bom_line22.product_tmpl_id.default_code,
-                                             'product_material': bom_line22.product_tmpl_id.name,
+                                             'material_code': bom_line2.product_tmpl_id.default_code,
+                                             'product_material': bom_line2.product_tmpl_id.name,
                                              'model_id': '',
                                              'type': '',
                                              'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
@@ -452,14 +520,12 @@ class Supplierlist(models.Model):
                                              'n1': n1,
                                              'n2': n2,
                                              'n3': n3,
-                                             'n03': bom_line22.product_tmpl_id.default_code,
-                                             'n4': bom_line22.product_tmpl_id.default_code,
+                                             'n03': bom_line2.product_tmpl_id.default_code,
+                                             'n4': bom_line2.product_tmpl_id.default_code,
                                              'n5': '',
                                              'sal': '1',
-
                                              'product_parent': n3,
                                              'product_parent_name': n3_name,
-
                                              })
 
         res = 'Obtener BoM'
