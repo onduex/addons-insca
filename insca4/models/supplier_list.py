@@ -93,7 +93,8 @@ class Supplierlist(models.Model):
                                      readonly=True)
     product_template = fields.Many2one(comodel_name='product.template', string='Código + Nombre', required=False,
                                        readonly=True)
-    vault_web_link = fields.Char(string='Web', required=False, readonly=True)
+    vault_web_link = fields.Char(string='Lc', required=False, readonly=True)
+    parent_vault_web_link = fields.Char(string='Lpc', required=False, readonly=True)
     commitment_date = fields.Datetime(string='Fecha prevista', required=False, readonly=True)
     partner_name = fields.Char(string='Cliente', required=False, readonly=True)
     product_origin = fields.Char(string='Producto origen', required=False, readonly=True)
@@ -126,10 +127,8 @@ class Supplierlist(models.Model):
     n04 = fields.Char(string='Nivel 04', required=False, readonly=True)
     n05 = fields.Char(string='Nivel 05', required=False, readonly=True)
     notas = fields.Text(string="Notas", required=False)
-
     product_parent = fields.Char(string='Código Sup.', required=False, readonly=True)
     product_parent_name = fields.Char(string='Nombre Sup.', required=False, readonly=True)
-
     lst = fields.Selection(string='01-LST',
                            selection=lambda self: dynamic_selection_lst(), required=False, readonly=False)
     lsc = fields.Selection(string='02-LSC',
@@ -146,6 +145,14 @@ class Supplierlist(models.Model):
                            selection=lambda self: dynamic_selection_pin(), required=False, readonly=False)
     sal = fields.Selection(string='99-SAL',
                            selection=lambda self: dynamic_selection_sal(), required=False, readonly=False)
+    revision = fields.Selection(string='Rev.', selection=[('a', 'A'), ('b', 'B'), ('c', 'C'), ('c', 'C'), ('c', 'C'),
+                                                          ('d', 'D'), ('e', 'E'), ('f', 'F'), ('g', 'G'), ('h', 'H'),
+                                                          ('i', 'I'), ('j', 'J'), ('k', 'K'), ('l', 'L'), ('m', 'M'),
+                                                          ('n', 'N'), ('o', 'O'), ('p', 'P'), ('q', 'Q'), ('r', 'R'),
+                                                          ('s', 'S'), ('t', 'T'), ('u', 'U'), ('v', 'V'), ('w', 'W'),
+                                                          ('x', 'X'), ('y', 'Y'), ('z', 'Z')],
+                                required=False,
+                                default='a')
 
     @api.depends('lst', 'lsc', 'plg', 'cmz', 'man', 'sol', 'pin', 'sal')
     def compute_is_finished_line(self):
@@ -222,6 +229,7 @@ class Supplierlist(models.Model):
                              'n5': '',
                              'sal': '1',
 
+                             'parent_vault_web_link': orden_principal_obj.product_tmpl_id.vault_web_link,
                              'product_parent': orden_principal_obj.product_id.default_code,
                              'product_parent_name': orden_principal_obj.product_id.name,
                              })
@@ -251,8 +259,10 @@ class Supplierlist(models.Model):
                     lmatid = mo_id.bom_id.id
                     n1 = mo_id.product_id.default_code
                     n1_name = mo_id.product_id.name
+                    n1_vlink = mo_id.product_id.vault_web_link
                     n2 = sm.product_tmpl_id.default_code
                     n2_name = sm.product_tmpl_id.name
+                    n2_vlink = sm.product_tmpl_id.vault_web_link
                     colorcode = sm.product_id.vault_color
                     productcolor = sm.product_id.product_color
 
@@ -292,11 +302,13 @@ class Supplierlist(models.Model):
                                  'man': '1' if 'MAN' in route_list else '',
                                  'sol': '1' if 'SOL' in route_list else '',
                                  'pin': '1' if 'PIN' in route_list else '',
+
+                                 'parent_vault_web_link': n1_vlink,
                                  'product_parent': n1,
                                  'product_parent_name': n1_name
                                  })
                     self.your_function2(materialname, materialcode, orden_principal, lmatid, n0, n1, n2,
-                                        n1_name, n2_name, colorcode, productcolor)
+                                        n1_name, n2_name, n2_vlink, colorcode, productcolor)
         res = 'Good Job'
         return res
 
@@ -306,7 +318,7 @@ class Supplierlist(models.Model):
                        materialcode,
                        orden_principal,
                        lmatid,
-                       n0, n1, n2, n1_name, n2_name,
+                       n0, n1, n2, n1_name, n2_name, n2_vlink,
                        colorcode, productcolor):
         route_list = []
         route_list2 = []
@@ -315,8 +327,10 @@ class Supplierlist(models.Model):
                                                               ('product_code', 'not ilike', 'A00.')])
 
         for record in supplier_list_ids:
+            purchaseorder = {}
             n3 = ''
             n3_name = ''
+            n3_vlink = ''
             record.write({'checked': True})
             code = record.product_template.default_code
             bom_ids_max = self._get_bom(code)
@@ -328,6 +342,7 @@ class Supplierlist(models.Model):
                     for bom in bom_ids_max2:
                         n3 = bom.product_tmpl_id.default_code
                         n3_name = bom.product_tmpl_id.name
+                        n3_vlink = bom.product_tmpl_id.vault_web_link
                         route_list += bom['vault_route'].split("-", -1)
                         purchaseorder = self.env['purchase.order.line'].search([
                             ('product_template_id.default_code', '=', bom.product_tmpl_id.default_code),
@@ -374,6 +389,7 @@ class Supplierlist(models.Model):
                                      'sol': '1' if 'SOL' in route_list else '',
                                      'pin': '1' if 'PIN' in route_list else '',
 
+                                     'parent_vault_web_link': n2_vlink,
                                      'product_parent': n2,
                                      'product_parent_name': n2_name,
 
@@ -388,6 +404,7 @@ class Supplierlist(models.Model):
                             for bom in bom_ids_max3:
                                 n4 = bom.product_tmpl_id.default_code
                                 n4_name = bom.product_tmpl_id.name
+                                n4_vlink = bom.product_tmpl_id.vault_web_link
                                 if bom['vault_route']:
                                     route_list2 += bom['vault_route'].split("-", -1)
                                     materialcode = bom.product_tmpl_id.vault_material_code
@@ -434,7 +451,7 @@ class Supplierlist(models.Model):
                                                  'man': '1' if 'MAN' in route_list2 else '',
                                                  'sol': '1' if 'SOL' in route_list2 else '',
                                                  'pin': '1' if 'PIN' in route_list2 else '',
-
+                                                 'parent_vault_web_link': n3_vlink,
                                                  'product_parent': n3,
                                                  'product_parent_name': n3_name,
 
@@ -481,10 +498,9 @@ class Supplierlist(models.Model):
                                                  'n04': bom_line3.product_tmpl_id.default_code,
                                                  'n5': bom_line3.product_tmpl_id.default_code,
                                                  'sal': '1',
-
+                                                 'parent_vault_web_link': n4_vlink,
                                                  'product_parent': n4,
                                                  'product_parent_name': n4_name,
-
                                                  })
 
                         # Crear la línea que no tiene ldM
@@ -525,6 +541,7 @@ class Supplierlist(models.Model):
                                              'n4': bom_line2.product_tmpl_id.default_code,
                                              'n5': '',
                                              'sal': '1',
+                                             'parent_vault_web_link': n3_vlink,
                                              'product_parent': n3,
                                              'product_parent_name': n3_name,
                                              })
