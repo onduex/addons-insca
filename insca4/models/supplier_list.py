@@ -179,7 +179,7 @@ class Supplierlist(models.Model):
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
 
         for orden_principal in po_origin_list:
-            orden_principal = 'OP/00608'  # Sólo testing
+            # orden_principal = 'OP/00608'  # Sólo testing
             # orden_principal = 'OP/00600'  # Sólo testing
             orden_principal_obj = self.env['mrp.production'].search([('name', '=', orden_principal)])
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
