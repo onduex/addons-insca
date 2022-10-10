@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <record id="paperformat_supplier_list_labels" model="report.paperformat">
+        <record id="paperformat_supplier_list_material_labels" model="report.paperformat">
             <field name="name">Etiqueta Supplier List</field>
             <field name="default" eval="False"/>
             <field name="format">A4</field>
@@ -19,13 +19,13 @@
         </record>
 
         <report
-                id="report_supplier_list"
+                id="report_supplier_list_material"
                 model="supplier.list"
                 string="Etiquetas"
-                name="insca4.report_supplier_list_view"
-                file="insca4.report_supplier_list"
+                name="insca4.report_supplier_list_material_view"
+                file="insca4.report_supplier_list_material"
                 report_type="qweb-pdf"
-                paperformat="insca4.paperformat_supplier_list_labels"/>
+                paperformat="insca4.paperformat_supplier_list_material_labels"/>
         />
 
     </data>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <template id="report_supplier_list">
+    <template id="report_supplier_list_material">
         <div class="page">
             <div class="oe_structure"/>
             <h2 style="text-align: center; font-size: 16mm !important;">
@@ -41,10 +41,10 @@
 
     </template>
 
-    <template id="report_supplier_list_view">
+    <template id="report_supplier_list_material_view">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
-                <t t-call="insca4.report_supplier_list"/>
+                <t t-call="insca4.report_supplier_list_material"/>
             </t>
         </t>
     </template>
