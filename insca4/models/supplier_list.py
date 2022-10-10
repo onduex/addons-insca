@@ -3,6 +3,7 @@
 from odoo import fields, models, api, _
 from datetime import date
 
+
 def dynamic_selection_lst():
     today = str(date.today().strftime("%d/%m/%Y"))
     select = [('1', 'LST'),
@@ -93,13 +94,17 @@ class Supplierlist(models.Model):
                                      readonly=True)
     product_template = fields.Many2one(comodel_name='product.template', string='Código + Nombre', required=False,
                                        readonly=True)
+    product_code = fields.Many2one(comodel_name='product.template', string='Código', required=False,
+                                   readonly=True)
+    product_parent = fields.Many2one(comodel_name='product.template', string='Código Sup.', required=False,
+                                     readonly=True)
+
     vault_web_link = fields.Char(string='Lc', required=False, readonly=True)
     parent_vault_web_link = fields.Char(string='Lpc', required=False, readonly=True)
     commitment_date = fields.Datetime(string='Fecha prevista', required=False, readonly=True)
     partner_name = fields.Char(string='Cliente', required=False, readonly=True)
     product_origin = fields.Char(string='Producto origen', required=False, readonly=True)
     purchase_partner = fields.Char(string='Proveedor', required=False, readonly=True)
-    product_code = fields.Char(string='Código', required=False, readonly=True)
     product_color = fields.Char(string='Color', required=False, readonly=True)
     product_material = fields.Char(string='Material', required=False, readonly=True)
     material_code = fields.Char(string='CM', required=False, readonly=True)
@@ -127,7 +132,7 @@ class Supplierlist(models.Model):
     n04 = fields.Char(string='Nivel 04', required=False, readonly=True)
     n05 = fields.Char(string='Nivel 05', required=False, readonly=True)
     notas = fields.Text(string="Notas", required=False)
-    product_parent = fields.Char(string='Código Sup.', required=False, readonly=True)
+
     product_parent_name = fields.Char(string='Nombre Sup.', required=False, readonly=True)
     lst = fields.Selection(string='01-LST',
                            selection=lambda self: dynamic_selection_lst(), required=False, readonly=False)
@@ -151,8 +156,7 @@ class Supplierlist(models.Model):
                                                           ('n', 'N'), ('o', 'O'), ('p', 'P'), ('q', 'Q'), ('r', 'R'),
                                                           ('s', 'S'), ('t', 'T'), ('u', 'U'), ('v', 'V'), ('w', 'W'),
                                                           ('x', 'X'), ('y', 'Y'), ('z', 'Z')],
-                                required=False,
-                                default='a')
+                                required=False,)
 
     @api.depends('lst', 'lsc', 'plg', 'cmz', 'man', 'sol', 'pin', 'sal')
     def compute_is_finished_line(self):
@@ -186,7 +190,7 @@ class Supplierlist(models.Model):
         po_origin_list = list(set(filter(lambda x: x[0:2] == 'OP', po_origin_list)))
 
         for orden_principal in po_origin_list:
-            # orden_principal = 'OP/00608'  # Sólo testing
+            orden_principal = 'OP/00608'  # Sólo testing
             # orden_principal = 'OP/00600'  # Sólo testing
             orden_principal_obj = self.env['mrp.production'].search([('name', '=', orden_principal)])
             sm_ids = self.env['stock.move'].search([('name', '=', orden_principal),
@@ -207,7 +211,7 @@ class Supplierlist(models.Model):
                              'purchase_partner': '',
                              'product_template': orden_principal_obj.product_tmpl_id.id,
                              'vault_web_link': orden_principal_obj.product_tmpl_id.vault_web_link,
-                             'product_code': orden_principal_obj.product_tmpl_id.default_code,
+                             'product_code': orden_principal_obj.product_tmpl_id.id,
                              'product_name': orden_principal_obj.product_id.name,
                              'product_quantity': orden_principal_obj.product_qty,
                              'product_uom_name': 'Uds',
@@ -230,8 +234,8 @@ class Supplierlist(models.Model):
                              'sal': '1',
 
                              'parent_vault_web_link': orden_principal_obj.product_tmpl_id.vault_web_link,
-                             'product_parent': orden_principal_obj.product_id.default_code,
-                             'product_parent_name': orden_principal_obj.product_id.name,
+                             'product_parent': orden_principal_obj.product_tmpl_id.id,
+                             'product_parent_name': orden_principal_obj.product_tmpl_id.name,
                              })
 
             for sm in sm_ids:
@@ -279,7 +283,7 @@ class Supplierlist(models.Model):
                                  'purchase_partner': purchasepartner,
                                  'product_template': sm.product_tmpl_id.id,
                                  'vault_web_link': sm.product_tmpl_id.vault_web_link,
-                                 'product_code': sm.product_tmpl_id.default_code,
+                                 'product_code': sm.product_tmpl_id.id,
                                  'product_name': sm.product_id.name,
                                  'product_quantity': sm.product_qty,
                                  'product_uom_name': sm.product_uom.name,
@@ -304,7 +308,7 @@ class Supplierlist(models.Model):
                                  'pin': '1' if 'PIN' in route_list else '',
 
                                  'parent_vault_web_link': n1_vlink,
-                                 'product_parent': n1,
+                                 'product_parent': self.env['product.template'].search([('default_code', '=', n1)]).id,
                                  'product_parent_name': n1_name
                                  })
                     self.your_function2(materialname, materialcode, orden_principal, lmatid, n0, n1, n2,
@@ -361,7 +365,7 @@ class Supplierlist(models.Model):
                                      'purchase_partner': purchaseorder[0].partner_id.name,
                                      'product_template': bom.product_tmpl_id.id,
                                      'vault_web_link': bom.product_tmpl_id.vault_web_link,
-                                     'product_code': bom.product_tmpl_id.default_code,
+                                     'product_code': bom.product_tmpl_id.id,
                                      'product_name': bom.product_tmpl_id.name,
                                      'product_quantity': record.product_quantity * bom.product_qty,
                                      'product_uom_name': bom.product_uom_id.name,
@@ -390,7 +394,8 @@ class Supplierlist(models.Model):
                                      'pin': '1' if 'PIN' in route_list else '',
 
                                      'parent_vault_web_link': n2_vlink,
-                                     'product_parent': n2,
+                                     'product_parent': self.env['product.template'].search(
+                                         [('default_code', '=', n2)]).id,
                                      'product_parent_name': n2_name,
 
                                      })
@@ -423,7 +428,7 @@ class Supplierlist(models.Model):
                                                  'purchase_partner': purchaseorder[0].partner_id.name,
                                                  'product_template': bom.product_tmpl_id.id,
                                                  'vault_web_link': bom.product_tmpl_id.vault_web_link,
-                                                 'product_code': bom.product_tmpl_id.default_code,
+                                                 'product_code': bom.product_tmpl_id.id,
                                                  'product_name': bom.product_tmpl_id.name,
                                                  'product_quantity': record.product_quantity *
                                                 bom_line2.bom_id.product_qty * bom.product_qty,
@@ -452,7 +457,8 @@ class Supplierlist(models.Model):
                                                  'sol': '1' if 'SOL' in route_list2 else '',
                                                  'pin': '1' if 'PIN' in route_list2 else '',
                                                  'parent_vault_web_link': n3_vlink,
-                                                 'product_parent': n3,
+                                                 'product_parent': self.env['product.template'].search(
+                                                     [('default_code', '=', n3)]).id,
                                                  'product_parent_name': n3_name,
 
                                                  })
@@ -474,7 +480,7 @@ class Supplierlist(models.Model):
                                                  'purchase_order': purchaseorder[0].id,
                                                  'purchase_partner': purchaseorder[0].partner_id.name,
                                                  'product_template': bom_line3.product_tmpl_id.id,
-                                                 'product_code': bom_line3.product_tmpl_id.default_code,
+                                                 'product_code': bom_line3.product_tmpl_id.id,
                                                  'product_name': bom_line3.product_id.name,
                                                  'product_quantity': record.product_quantity *
                                                 bom_line3.bom_id.product_qty * bom_line2.bom_id.product_qty *
@@ -499,7 +505,8 @@ class Supplierlist(models.Model):
                                                  'n5': bom_line3.product_tmpl_id.default_code,
                                                  'sal': '1',
                                                  'parent_vault_web_link': n4_vlink,
-                                                 'product_parent': n4,
+                                                 'product_parent': self.env['product.template'].search(
+                                                     [('default_code', '=', n4)]).id,
                                                  'product_parent_name': n4_name,
                                                  })
 
@@ -518,7 +525,7 @@ class Supplierlist(models.Model):
                                              'purchase_order': purchaseorder[0].id,
                                              'purchase_partner': purchaseorder[0].partner_id.name,
                                              'product_template': bom_line2.product_tmpl_id.id,
-                                             'product_code': bom_line2.product_tmpl_id.default_code,
+                                             'product_code': bom_line2.product_tmpl_id.id,
                                              'product_name': bom_line2.product_id.name,
                                              'product_quantity': record.product_quantity *
                                             bom_line2.bom_id.product_qty * bom_line2.bom_id.product_qty *
@@ -542,7 +549,8 @@ class Supplierlist(models.Model):
                                              'n5': '',
                                              'sal': '1',
                                              'parent_vault_web_link': n3_vlink,
-                                             'product_parent': n3,
+                                             'product_parent': self.env['product.template'].search(
+                                                 [('default_code', '=', n3)]).id,
                                              'product_parent_name': n3_name,
                                              })
 

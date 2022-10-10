@@ -81,14 +81,14 @@
 
                 <field name="vault_web_link" widget="url" text="#"
                        options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
-                <field name="product_code" optional="show" class="full_border"
+                <field name="product_code" optional="show"
                        options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
                 <field name="product_name" optional="hide" class="full_border"
                        options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
 
                 <field name="parent_vault_web_link" widget="url" text="##"
                        options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
-                <field name="product_parent" optional="hide" class="full_border"
+                <field name="product_parent" optional="hide"
                        options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
                 <field name="product_parent_name" optional="hide" class="full_border"
                        options='{"bg_color": "#F7F1AF: n00 != False; #B0E0E6: n02 != False; #B0E0E6: n03 != False; #B0E0E6: n04 != False; #B0E0E6: n05 != False"}'/>
