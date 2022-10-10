@@ -2,16 +2,6 @@
 <odoo>
     <data>
 
-        <report
-                id="report_supplier_list"
-                model="supplier.list"
-                string="Etiquetas"
-                name="insca4.report_supplier_list_view"
-                file="insca4.report_supplier_list"
-                report_type="qweb-pdf"
-                paperformat="insca4.paperformat_supplier_list_labels"/>
-        />
-
         <record id="paperformat_supplier_list_labels" model="report.paperformat">
             <field name="name">Etiqueta Supplier List</field>
             <field name="default" eval="False"/>
@@ -27,6 +17,16 @@
             <field name="header_spacing">15</field>
             <field name="dpi">90</field>
         </record>
+
+        <report
+                id="report_supplier_list"
+                model="supplier.list"
+                string="Etiquetas"
+                name="insca4.report_supplier_list_view"
+                file="insca4.report_supplier_list"
+                report_type="qweb-pdf"
+                paperformat="insca4.paperformat_supplier_list_labels"/>
+        />
 
     </data>
 </odoo>
