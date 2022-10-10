@@ -25,6 +25,9 @@
         'security/ir.model.access.csv',
         'views/supplier_list_views.xml',
         'views/assets.xml',
+        'reports/declare_reports.xml',
+        'reports/etiquetas.xml',
+
     ],
 
     'qweb': [

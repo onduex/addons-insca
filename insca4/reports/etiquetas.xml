@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="report_supplier_list">
+        <div class="page">
+            <div class="oe_structure"/>
+            <h2 style="text-align: center; font-size: 16mm !important;">
+                <div>
+                    <span>INSCA TRADEMARK SL</span>
+                </div>
+            </h2>
+            <h2>
+                <div style="border-bottom: 1px solid black;
+                border-top: 1px solid black;
+                text-align: center;
+                font-size: 16mm !important;">
+                    <t t-if="doc.product_color">
+                        <span t-field="doc.product_color"/>
+                    </t>
+                </div>
+            </h2>
+
+            <h4>
+                <div>
+                    <span>Producto: </span>
+                    <span t-field="doc.product_code"/>
+                </div>
+                <br/>
+                <div>
+                    <span>Pedido: </span>
+                    <span t-field="doc.sale_order"/>
+                </div>
+                <br/>
+                <div>
+                    <span>Fabricación: </span>
+                    <span t-field="doc.mrp_production"/>
+                </div>
+            </h4>
+            <p style="page-break-before:always;"> </p>
+        </div>
+
+    </template>
+
+    <template id="report_supplier_list_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="insca4.report_supplier_list"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>
