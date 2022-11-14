@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="a80_sequence" model="ir.sequence">
+            <field name="name">Secuencia A80</field>
+            <field name="code">insca2.a80.seq</field>
+            <field name="prefix">CYM.</field>
+            <field name="padding">6</field>
+        </record>
+
+        <record id="a90_sequence" model="ir.sequence">
+            <field name="name">Secuencia A90</field>
+            <field name="code">insca2.a90.seq</field>
+            <field name="prefix">TXT.</field>
+            <field name="padding">6</field>
+        </record>
+
+    </data>
+</odoo>
