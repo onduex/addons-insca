@@ -7,6 +7,8 @@ class A90A90(models.Model):
 
     name = fields.Char(string='Descripción', required=True)
     code = fields.Char(string='Código', required=False, default='/', readonly=True)
+    thickness = fields.Many2one(comodel_name='a90.thickness', string='Thickness', required=False)
+    espesor = fields.Char(string='Espesor', required=False, compute='onchange_for_char')
 
     _sql_constraints = [
         ('a90_a90', 'UNIQUE (code)',
@@ -19,3 +21,9 @@ class A90A90(models.Model):
             if vals.get('code', '/'):
                 vals['code'] = self.env['ir.sequence'].next_by_code('insca2.a90.seq')
         return super(A90A90, self).create(vals_list)
+
+    @api.depends('thickness')
+    def onchange_for_char(self):
+        for rec in self:
+            rec.espesor = rec.thickness.name
+        return True

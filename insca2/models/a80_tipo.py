@@ -8,11 +8,11 @@ class A80Type(models.Model):
     name = fields.Char(string='Nombre', required=True)
 
 
-class A80Thikness(models.Model):
-    _name = 'a80.thikness'
+class A80Thickness(models.Model):
+    _name = 'a80.thickness'
     _description = 'Espesores para A80'
 
-    name = fields.Char(string='Nombre', required=True)
+    name = fields.Integer(string='Nombre', required=True)
 
 
 class A80Density(models.Model):
@@ -20,3 +20,10 @@ class A80Density(models.Model):
     _description = 'Densidades para A80'
 
     name = fields.Float(string='Densidad (Kg/cm3)', required=False)
+
+
+class A90Thickness(models.Model):
+    _name = 'a90.thickness'
+    _description = 'Espesores para A90'
+
+    name = fields.Integer(string='Nombre', required=True)
