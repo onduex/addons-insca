@@ -5,4 +5,7 @@ access_tipo_pieza,access_tipo_pieza,model_tipo_pieza,base.group_user,1,1,1,1
 access_a12_a15,access_a12_a15,model_a12_a15,base.group_user,1,1,1,1
 access_a32_a32,access_a32_a32,model_a32_a32,base.group_user,1,1,1,1
 access_a80_a80,access_a80_a80,model_a80_a80,base.group_user,1,1,1,1
+access_a80_type,access_a80_type,model_a80_type,base.group_user,1,1,1,1
+access_a80_thikness,access_a80_thikness,model_a80_thikness,base.group_user,1,1,1,1
+access_a80_density,access_a80_density,model_a80_density,base.group_user,1,1,1,1
 access_a90_a90,access_a90_a90,model_a90_a90,base.group_user,1,1,1,1

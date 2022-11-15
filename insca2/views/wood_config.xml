@@ -85,9 +85,10 @@
         <field name="arch" type="xml">
             <tree editable="top" string="Tabla A80" default_order="name asc">
                 <field name="code"/>
-                <field name="tipo"/>
+                <field name="type"/>
                 <field name="name"/>
-                <field name="espesor"/>
+                <field name="density"/>
+                <field name="thikness"/>
             </tree>
         </field>
     </record>
