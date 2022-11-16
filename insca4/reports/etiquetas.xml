@@ -9,16 +9,18 @@
                     <span>INSCA TRADEMARK SL</span>
                 </div>
             </h2>
-            <h2>
-                <div style="border-bottom: 1px solid black;
-                border-top: 1px solid black;
-                text-align: center;
-                font-size: 16mm !important;">
-                    <t t-if="doc.product_color">
-                        <span t-field="doc.product_color"/>
-                    </t>
-                </div>
-            </h2>
+
+            <table style="text-align:center; border: 1px solid black;">
+                <tr>
+                    <td style="font-size: 16mm !important;">
+                        <div>
+                            <t t-if="doc.product_color">
+                                <span t-field="doc.product_color"/>
+                            </t>
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
             <h4>
                 <div>
