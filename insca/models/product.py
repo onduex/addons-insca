@@ -82,6 +82,10 @@ class ProductTemplate(models.Model):
                         vals.update({'vault_categ_terminado': self.categ_id.name})
                     if not vals.get('vault_purchase_code'):
                         vals.update({'vault_purchase_code': self.vault_purchase_code})
+                    if not vals.get('vault_left_hand'):
+                        vals.update({'vault_left_hand': self.vault_left_hand})
+                    if not vals.get('vault_right_hand'):
+                        vals.update({'vault_right_hand': self.vault_right_hand})
                     if not vals.get('vault_length_cut'):
                         vals.update({'vault_length_cut': self.vault_length_cut})
 
@@ -352,6 +356,43 @@ class ProductTemplate(models.Model):
                                         qty = vals['vault_length_cut']
                                     else:
                                         qty = 1
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                              'code': self.vault_revision,
+                                                              'product_qty': 1,
+                                                              'type': 'normal',
+                                                              'routing_id': mrp_routing.id or None,
+                                                              'bom_line_ids': lines,
+                                                              })
+
+                    # Código A70
+                    elif vals['vault_code'] == 'A70':
+                        # Check si existe ruta
+                        mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                        if vals['vault_route'] and not len(mrp_routing):
+                            raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                    % (vals['vault_route'], vals['name'])))
+
+                        # Crear lista de materiales
+                        if len(self.bom_ids) == 0:
+
+                            if vals.get('vault_purchase_code') or vals['vault_left_hand'] or vals['vault_right_hand']:
+                                lines = []
+                                product_ids = []
+                                if vals['vault_purchase_code']:
+                                    product_ids = self.env['product.product'].search([('default_code', '=',
+                                                                                       vals[
+                                                                                           'vault_purchase_code'])])
+                                if vals['vault_left_hand']:
+                                    product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                       vals[
+                                                                                           'vault_left_hand'])])
+                                if vals['vault_right_hand']:
+                                    product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                       vals[
+                                                                                           'vault_right_hand'])])
+                                for product in product_ids:
+                                    qty = 1
                                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
                                                               'code': self.vault_revision,
