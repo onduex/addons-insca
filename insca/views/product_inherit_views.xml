@@ -24,11 +24,14 @@
                             <field name="vault_edge_pin_code" readonly="1"/>
                             <field name="vault_material" readonly="1"/>
                             <field name="vault_material_code" readonly="1"/>
-                            <field name="vault_diameter" readonly="1" invisible="0"/>
-                            <field name="vault_thinkness" readonly="1" invisible="0"/>
+                            <field name="vault_purchase_code" readonly="1" invisible="0"/>
+                            <field name="vault_left_hand" readonly="1" invisible="0"/>
+                            <field name="vault_right_hand" readonly="1" invisible="0"/>
                         </group>
 
                         <group string="Bloque B">
+                            <field name="vault_diameter" readonly="1" invisible="0"/>
+                            <field name="vault_thinkness" readonly="1" invisible="0"/>
                             <field name="vault_height" readonly="1" invisible="0"/>
                             <field name="vault_length" readonly="1" invisible="0"/>
                             <field name="vault_length_sheet" readonly="1"/>

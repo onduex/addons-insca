@@ -9,9 +9,8 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     vault_code = fields.Char(string='CODIGO TRUNCADO', required=False)
-
     vault_categ_terminado = fields.Char(string='00 CAT. PTERMINADO', required=False)  # Texto
-    # 01 NOTAS INTERNAS --> description                                                                  # Texto
+    # 01 NOTAS INTERNAS --> description                                               # Texto
     vault_program_assoc = fields.Boolean(string='02 P. ASOCIADO', required=False)  # Booleano
     vault_width = fields.Char(string='ANCHO', required=False)  # Texto
     vault_width_sheet = fields.Char(string='ANCHO CHAPA', required=False)  # Texto
@@ -23,7 +22,10 @@ class ProductTemplate(models.Model):
     vault_edge_pin_code = fields.Char(string='COD COLOR CANTOS', required=False)  # Texto
     vault_material = fields.Char(string='CODIGO MATERIAL', required=False)  # Texto
     vault_material_code = fields.Char(string='CODIGO VIRTUAL', required=False)  # Texto
-    # COLOR MATERIAL --> product_color                                                                   # Texto
+    # COLOR MATERIAL --> product_color                                          # Texto
+    vault_purchase_code = fields.Char(string='CODIGO COMPRA', required=False)  # Texto
+    vault_left_hand = fields.Char(string='CODIGO IZQ', required=False)  # Texto
+    vault_right_hand = fields.Char(string='CODIGO DER', required=False)  # Texto
     vault_diameter = fields.Char(string='DIAMETRO', required=False)  # Texto
     vault_thinkness = fields.Char(string='ESPESOR', required=False)  # Texto
     vault_height = fields.Char(string='HONDO', required=False)  # Texto
@@ -108,6 +110,7 @@ class ProductTemplate(models.Model):
                                                           'type': 'normal',
                                                           'routing_id': mrp_routing.id or None,
                                                           })
+
                     # Código PC0
                     if vals['vault_code'] == 'PC0':
                         parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
@@ -321,6 +324,38 @@ class ProductTemplate(models.Model):
                         if not len(product_zero):
                             raise ValidationError(_('Producto %s no encontrado. Revise Vault'
                                                     % (self.default_code[:-3] + '000')))
+
+                    # Código A50
+                    elif vals['vault_code'] == 'A50':
+                        # Check si existe ruta
+                        mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                        if vals['vault_route'] and not len(mrp_routing):
+                            raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                    % (vals['vault_route'], vals['name'])))
+
+                        # Crear lista de materiales
+                        if len(self.bom_ids) == 0:
+
+                            if vals.get('vault_purchase_code'):
+                                lines = []
+                                product_ids = []
+                                if vals['vault_purchase_code']:
+                                    product_ids = self.env['product.product'].search([('default_code', '=',
+                                                                                       vals[
+                                                                                           'vault_purchase_code'])])
+                                for product in product_ids:
+                                    if 'vault_lenght_cut' in vals:
+                                        qty = vals['vault_lenght_cut']
+                                    else:
+                                        qty = 1
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                              'code': self.vault_revision,
+                                                              'product_qty': 1,
+                                                              'type': 'normal',
+                                                              'routing_id': mrp_routing.id or None,
+                                                              'bom_line_ids': lines,
+                                                              })
 
                     # Para valores predeterminados
                     if res_code.route_mrp:
