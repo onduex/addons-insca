@@ -20,10 +20,3 @@ class A80Density(models.Model):
     _description = 'Densidades para A80'
 
     name = fields.Float(string='Densidad (Kg/cm3)', required=False)
-
-
-class A90Thickness(models.Model):
-    _name = 'a90.thickness'
-    _description = 'Espesores para A90'
-
-    name = fields.Integer(string='Nombre', required=True)

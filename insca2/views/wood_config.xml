@@ -102,7 +102,11 @@
         <field name="arch" type="xml">
             <tree editable="top" string="Tabla A90" default_order="name desc">
                 <field name="code"/>
+                <field name="type"/>
+                <field name="tipo"/>
                 <field name="name"/>
+                <field name="density"/>
+                <field name="densidad"/>
                 <field name="thickness"/>
                 <field name="espesor"/>
             </tree>

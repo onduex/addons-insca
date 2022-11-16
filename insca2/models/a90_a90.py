@@ -7,7 +7,13 @@ class A90A90(models.Model):
 
     name = fields.Char(string='Descripción', required=True)
     code = fields.Char(string='Código', required=False, default='/', readonly=True)
+
+    type = fields.Many2one(comodel_name='a90.type', string='Type', required=False)
+    density = fields.Many2one(comodel_name='a90.density', string='Density', required=False)
     thickness = fields.Many2one(comodel_name='a90.thickness', string='Thickness', required=False)
+
+    tipo = fields.Char(string='Tipo', required=False, compute='onchange_for_char')
+    densidad = fields.Char(string='Densidad', required=False, compute='onchange_for_char')
     espesor = fields.Char(string='Espesor', required=False, compute='onchange_for_char')
 
     _sql_constraints = [
@@ -25,5 +31,7 @@ class A90A90(models.Model):
     @api.depends('thickness')
     def onchange_for_char(self):
         for rec in self:
+            rec.tipo = rec.type.name
             rec.espesor = rec.thickness.name
+            rec.densidad = rec.density.name
         return True
