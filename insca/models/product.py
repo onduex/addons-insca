@@ -80,6 +80,10 @@ class ProductTemplate(models.Model):
                         vals.update({'vault_edge_code': self.vault_edge_code})
                     if not vals.get('vault_categ_terminado') and vals['vault_code'] == 'A00':
                         vals.update({'vault_categ_terminado': self.categ_id.name})
+                    if not vals.get('vault_purchase_code'):
+                        vals.update({'vault_purchase_code': self.vault_purchase_code})
+                    if not vals.get('vault_length_cut'):
+                        vals.update({'vault_length_cut': self.vault_length_cut})
 
                     # Escribe material code
                     if not vals.get('vault_material_code'):
@@ -344,8 +348,8 @@ class ProductTemplate(models.Model):
                                                                                        vals[
                                                                                            'vault_purchase_code'])])
                                 for product in product_ids:
-                                    if 'vault_lenght_cut' in vals:
-                                        qty = vals['vault_lenght_cut']
+                                    if 'vault_length_cut' in vals and vals['vault_length_cut'] != 0:
+                                        qty = vals['vault_length_cut']
                                     else:
                                         qty = 1
                                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
