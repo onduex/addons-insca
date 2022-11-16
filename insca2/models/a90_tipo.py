@@ -12,7 +12,7 @@ class A90Thickness(models.Model):
     _name = 'a90.thickness'
     _description = 'Espesores para A90'
 
-    name = fields.Integer(string='Nombre', required=True)
+    name = fields.Float(string='Nombre', required=True)
 
 
 class A90Density(models.Model):
