@@ -36,7 +36,7 @@ class WoodConfig(models.Model):
 
         new_string2compare = str(res.color_madera_id.id) + str(res.cantos_id.id) + str(res.color_cantos_id.id)
         print('New sting: ', new_string2compare)
-        if new_string2compare == '302262053022':
+        if new_string2compare == '273422732527342':
             res.update({'name': '000', })
         else:
             for record in wood_config_ids[:-1]:
