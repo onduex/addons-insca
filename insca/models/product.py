@@ -88,6 +88,8 @@ class ProductTemplate(models.Model):
                         vals.update({'vault_right_hand': self.vault_right_hand})
                     if not vals.get('vault_length_cut'):
                         vals.update({'vault_length_cut': self.vault_length_cut})
+                    if not vals.get('vault_sup_madera'):
+                        vals.update({'vault_sup_madera': self.vault_sup_madera})
 
                     # Escribe material code
                     if not vals.get('vault_material_code'):
@@ -131,13 +133,19 @@ class ProductTemplate(models.Model):
                                 _('La categoría (%s) no está en Odoo' % vals['vault_categ']))
 
                     # Código A00
-                    if vals['vault_code'] == 'A00':
+                    if vals['vault_code'] == 'A00' or vals['default_code'][0:3] == 'A00':
                         categ = self.env['product.category'].search([('name', '=', vals['vault_categ_terminado'])])
+                        mrpbom_to_archive = self.env['mrp.bom'].search([('product_tmpl_id', '=', self.id),
+                                                                        ('bom_line_ids', '=', False)])
+
                         if categ and vals['vault_categ_terminado'] != vals['vault_categ']:
                             vals.update({'categ_id': categ.id})
                         if not categ:
                             raise ValidationError(
                                 _('La categoría (%s) no está en Odoo' % vals['vault_categ_terminado']))
+                        if mrpbom_to_archive:
+                            mrpbom_to_archive.write({'active': False,
+                                                     'is_old_revision': True})
 
                     # Código A10
                     elif vals['vault_code'] == 'A10':
@@ -393,6 +401,38 @@ class ProductTemplate(models.Model):
                                                                                            'vault_right_hand'])])
                                 for product in product_ids:
                                     qty = 1
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                              'code': self.vault_revision,
+                                                              'product_qty': 1,
+                                                              'type': 'normal',
+                                                              'routing_id': mrp_routing.id or None,
+                                                              'bom_line_ids': lines,
+                                                              })
+
+                    # Código A90
+                    elif vals['vault_code'] == 'A90':
+                        # Check si existe ruta
+                        mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                        if vals['vault_route'] and not len(mrp_routing):
+                            raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                    % (vals['vault_route'], vals['name'])))
+
+                        # Crear lista de materiales
+                        if len(self.bom_ids) == 0:
+
+                            if vals.get('vault_purchase_code'):
+                                lines = []
+                                product_ids = []
+                                if vals['vault_purchase_code']:
+                                    product_ids = self.env['product.product'].search([('default_code', '=',
+                                                                                       vals[
+                                                                                           'vault_purchase_code'])])
+                                for product in product_ids:
+                                    if 'vault_sup_madera' in vals and vals['vault_sup_madera'] != 0:
+                                        qty = vals['vault_sup_madera']
+                                    else:
+                                        qty = 1
                                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
                                                               'code': self.vault_revision,
