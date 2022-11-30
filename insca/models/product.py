@@ -90,6 +90,8 @@ class ProductTemplate(models.Model):
                         vals.update({'vault_length_cut': self.vault_length_cut})
                     if not vals.get('vault_sup_madera'):
                         vals.update({'vault_sup_madera': self.vault_sup_madera})
+                    if not vals.get('default_code'):
+                        vals.update({'default_code': self.default_code})
 
                     # Escribe material code
                     if not vals.get('vault_material_code'):
@@ -188,7 +190,7 @@ class ProductTemplate(models.Model):
                                             qty = vals['vault_sup_madera']
                                     if product.categ_base == 'CANTO':
                                         if 'vault_edge_len' in vals:
-                                            qty = vals['vault_edge_len'] / 1000
+                                            qty = float(vals['vault_edge_len']) / 1000
                                     if product.categ_base == 'COLOR MADERA':
                                         if 'vault_sup_pintada' in vals:
                                             qty = str(vals['vault_sup_pintada'])
