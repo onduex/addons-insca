@@ -135,19 +135,14 @@ class ProductTemplate(models.Model):
                                 _('La categoría (%s) no está en Odoo' % vals['vault_categ']))
 
                     # Código A00
-                    if vals['vault_code'] == 'A00' or vals['default_code'][0:3] == 'A00':
+                    elif vals['vault_code'] == 'A00' or vals['default_code'][0:3] == 'A00':
                         categ = self.env['product.category'].search([('name', '=', vals['vault_categ_terminado'])])
-                        mrpbom_to_archive = self.env['mrp.bom'].search([('product_tmpl_id', '=', self.id),
-                                                                        ('bom_line_ids', '=', False)])
 
                         if categ and vals['vault_categ_terminado'] != vals['vault_categ']:
                             vals.update({'categ_id': categ.id})
                         if not categ:
                             raise ValidationError(
                                 _('La categoría (%s) no está en Odoo' % vals['vault_categ_terminado']))
-                        if mrpbom_to_archive:
-                            mrpbom_to_archive.write({'active': False,
-                                                     'is_old_revision': True})
 
                     # Código A10
                     elif vals['vault_code'] == 'A10':
@@ -452,6 +447,7 @@ class ProductTemplate(models.Model):
                     if res_code.uom_dimensions:
                         vals.update({'dimensional_uom_id': res_code.uom_dimensions.id})
 
+        print('merda')
         return super(ProductTemplate, self).write(vals)
 
     @api.model
