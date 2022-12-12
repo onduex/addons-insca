@@ -448,7 +448,7 @@ class ProductTemplate(models.Model):
                         vals.update({'categ_id': res_code.categ_fixed.id})
                     if res_code.uom_dimensions:
                         vals.update({'dimensional_uom_id': res_code.uom_dimensions.id})
-
+            # print(self.categ_id.name, record.categ_id.name, self.name, record.name)
         return super(ProductTemplate, self).write(vals)
 
     @api.model
