@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_res_packaging,access_res_packaging,model_res_packaging,base.group_user,1,1,1,1
+access_res_rotulacion,access_res_rotulacion,model_res_rotulacion,base.group_user,1,1,1,1
 access_wood_config,access_wood_config,model_wood_config,base.group_user,1,1,1,1
 access_tipo_pieza,access_tipo_pieza,model_tipo_pieza,base.group_user,1,1,1,1
 access_a12_a15,access_a12_a15,model_a12_a15,base.group_user,1,1,1,1

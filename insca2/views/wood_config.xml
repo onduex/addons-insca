@@ -108,6 +108,21 @@
         </field>
     </record>
 
+    <record id="view_tree_res_code8" model="ir.ui.view">
+        <field name="name">Tabla Rotulaciones</field>
+        <field name="model">res.rotulacion</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Tabla Rotulaciones" default_order="code desc">
+                <field name="type"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="dimensions"/>
+                <field name="color"/>
+                <field name="customer"/>
+            </tree>
+        </field>
+    </record>
+
     <!--Actions-->
     <record id="action_res_codes1" model="ir.actions.act_window">
         <field name="name">Tabla acabados madera</field>
@@ -186,14 +201,26 @@
         </field>
     </record>
 
+    <record id="action_res_codes8" model="ir.actions.act_window">
+        <field name="name">Tabla Rotulaciones</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.rotulacion</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+
     <!--Menu-->
     <menuitem id="codes0" name="Tablas Inventor" parent="base.menu_board_root" sequence="116"/>
     <menuitem id="codes5" name="Parámetros embalaje" parent="codes0" action="action_res_codes5" sequence="116"/>
     <menuitem id="codes1" name="Acabados de madera" parent="codes0" action="action_res_codes1" sequence="117"/>
     <menuitem id="codes2" name="Tipos de pieza" parent="codes0" action="action_res_codes2" sequence="118"/>
-    <menuitem id="codes3" name="A12-A15" parent="codes0" action="action_res_codes3" sequence="119"/>
-    <menuitem id="codes4" name="A32" parent="codes0" action="action_res_codes4" sequence="120"/>
-    <menuitem id="codes6" name="A80" parent="codes0" action="action_res_codes6" sequence="121"/>
-    <menuitem id="codes7" name="A90" parent="codes0" action="action_res_codes7" sequence="122"/>
+    <menuitem id="codes8" name="Rotulaciones" parent="codes0" action="action_res_codes8" sequence="119"/>
+    <menuitem id="codes3" name="A12-A15" parent="codes0" action="action_res_codes3" sequence="120"/>
+    <menuitem id="codes4" name="A32" parent="codes0" action="action_res_codes4" sequence="121"/>
+    <menuitem id="codes6" name="A80" parent="codes0" action="action_res_codes6" sequence="122"/>
+    <menuitem id="codes7" name="A90" parent="codes0" action="action_res_codes7" sequence="123"/>
 
 </odoo>

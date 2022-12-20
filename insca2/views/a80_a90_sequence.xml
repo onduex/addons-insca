@@ -15,5 +15,19 @@
             <field name="padding">6</field>
         </record>
 
+        <record id="vin_sequence" model="ir.sequence">
+            <field name="name">Secuencia Vinilos</field>
+            <field name="code">insca2.vin.seq</field>
+            <field name="prefix">VIN.</field>
+            <field name="padding">6</field>
+        </record>
+
+        <record id="ser_sequence" model="ir.sequence">
+            <field name="name">Secuencia Serigrafías</field>
+            <field name="code">insca2.ser.seq</field>
+            <field name="prefix">SER.</field>
+            <field name="padding">6</field>
+        </record>
+
     </data>
 </odoo>
