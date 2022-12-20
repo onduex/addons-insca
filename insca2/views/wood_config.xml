@@ -87,6 +87,7 @@
                 <field name="code"/>
                 <field name="type"/>
                 <field name="name"/>
+                <field name="finished"/>
                 <field name="density"/>
                 <field name="thickness"/>
             </tree>

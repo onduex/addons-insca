@@ -20,3 +20,10 @@ class A80Density(models.Model):
     _description = 'Densidades para A80'
 
     name = fields.Float(string='Densidad (Kg/cm3)', required=False)
+
+
+class A80Finished(models.Model):
+    _name = 'a80.finished'
+    _description = 'Acabados para A80'
+
+    name = fields.Char(string='Acabado', required=False)
