@@ -50,6 +50,17 @@ class ProductTemplate(models.Model):
             return super(ProductTemplate, self).write(vals)
         mrp_bom_object = self.env['mrp.bom']
         for record in self:
+
+            # Código A00
+            if str(record.default_code)[0:3] == 'A00' and 'categ_id' in vals:
+                vals.update({'categ_id': record.categ_id.id,
+                             'vault_route': 'EMB',
+                             })
+            elif str(record.default_code)[0:3] == 'A00' and 'categ_id' not in vals:
+                vals.update({'categ_id': record.categ_id.id,
+                             'vault_route': 'EMB',
+                             })
+
             if record.is_vault_product and not record.is_old_revision:
                 res_code = self.env['res.code'].search([('name', '=', self.vault_code)])
                 if res_code:
@@ -122,29 +133,6 @@ class ProductTemplate(models.Model):
                                                           'type': 'normal',
                                                           'routing_id': mrp_routing.id or None,
                                                           })
-
-                    # Código PC0
-                    # if vals['vault_code'] == 'PC0':
-                    #     parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
-                    #     categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
-                    #                                                  ('parent_id', '=', parent_categ.id)
-                    #                                                  ])
-                    #     vals.update({'categ_id': categ.id})
-                    #     if not categ:
-                    #         raise ValidationError(
-                    #             _('La categoría (%s) no está en Odoo' % vals['vault_categ']))
-
-                    # Código A00
-                    elif vals['vault_code'] == 'A00' or vals['default_code'][0:3] == 'A00':
-                        # print(self.categ_id.name, record.categ_id.name)
-                        # print(self.vault_categ, record.vault_categ)
-                        # print(self.vault_categ_terminado, record.vault_categ_terminado)
-                        categ = self.env['product.category'].search([('name', '=', record.vault_categ_terminado)])
-                        if categ:
-                            vals.update({'categ_id': categ.id})
-                        if not categ:
-                            raise ValidationError(
-                                _('La categoría (%s) no está en Odoo' % vals['vault_categ_terminado']))
 
                     # Código A10
                     elif vals['vault_code'] == 'A10':
