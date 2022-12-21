@@ -28,7 +28,8 @@ class MrpBomLine(models.Model):
                     search([('default_code', '=', record.bom_id.product_tmpl_id.vault_color)])
                 product_ids += max(product_ids_max)
                 for product in product_ids:
-                    lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
+                    if product.default_code:
+                        lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
                 print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
                 record.unlink()
         for rec in lines:

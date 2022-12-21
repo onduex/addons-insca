@@ -87,7 +87,7 @@ class Supplierlist(models.Model):
     _order = "id asc"
 
     # Definir jerarquía
-    category_id = fields.Many2one('library.book.category')
+    category_id = fields.Many2one('product.category')
     sale_order = fields.Many2one(comodel_name='sale.order', string='Venta ref. ', required=False, readonly=True)
     purchase_order = fields.Many2one(comodel_name='purchase.order', string='Compra ref.', required=False, readonly=True)
     mrp_production = fields.Many2one(comodel_name='mrp.production', string='Fabricación ref.', required=False,
