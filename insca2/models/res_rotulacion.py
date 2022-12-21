@@ -34,3 +34,15 @@ class ResRotulacion(models.Model):
                     _('Seleccione el tipo primero'))
 
         return super(ResRotulacion, self).create(vals_list)
+
+    @api.depends('name', 'dimensions', 'color', 'customer')
+    def _compute_code_concat(self):
+        for rec in self:
+            rec.code_concat = str(rec.name) + ' ' + \
+                              str(rec.dimensions) + ' ' + \
+                              str(rec.color) + ' ' + \
+                              str(rec.customer) or None
+        return True
+
+    code_concat = fields.Char(string='Concatenados', required=False,
+                              compute=_compute_code_concat, store=True)

@@ -119,6 +119,7 @@
                 <field name="dimensions"/>
                 <field name="color"/>
                 <field name="customer"/>
+                <field name="code_concat"/>
             </tree>
         </field>
     </record>
