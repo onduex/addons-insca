@@ -52,6 +52,11 @@
                     </group>
                 </page>
             </xpath>
+
+            <xpath expr="//field[@name='type']" position="before">
+                <field name="is_vault_product"/>
+            </xpath>
+
         </field>
     </record>
 

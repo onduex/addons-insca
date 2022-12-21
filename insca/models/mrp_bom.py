@@ -24,12 +24,12 @@ class MrpBomLine(models.Model):
                 # Obtener las nuevas líneas a crear
                 product_ids_max = self.env['product.product']. \
                     search([('default_code', '=', record.bom_id.product_tmpl_id.default_code[:-3] + '000')])
-                product_ids += self.env['product.product']. \
-                    search([('default_code', '=', record.bom_id.product_tmpl_id.vault_color)])
+                if record.bom_id.product_tmpl_id.vault_color:
+                    product_ids += self.env['product.product']. \
+                        search([('default_code', '=', record.bom_id.product_tmpl_id.vault_color)])
                 product_ids += max(product_ids_max)
                 for product in product_ids:
-                    if product.default_code:
-                        lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
+                    lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
                 print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
                 record.unlink()
         for rec in lines:

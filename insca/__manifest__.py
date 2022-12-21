@@ -16,9 +16,11 @@
 
     # any module necessary for this one to work correctly
     'depends': [
+        'rainbow_bom_structure',
         'product',
         'stock',
         'mrp',
+
     ],
 
     # always loaded

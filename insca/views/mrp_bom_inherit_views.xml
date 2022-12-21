@@ -9,6 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_tmpl_id']" position="after">
                 <field name="vault_route" readonly="1"/>
+                <field name="is_vault_bom"/>
             </xpath>
         </field>
     </record>
@@ -22,6 +23,10 @@
             <xpath expr="//field[@name='routing_id']" position="after">
                 <field name="vault_route" readonly="1"/>
             </xpath>
+            <xpath expr="//field[@name='product_tmpl_id']" position="before">
+                <field name="is_vault_bom"/>
+            </xpath>
+
         </field>
     </record>
 
