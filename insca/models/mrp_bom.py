@@ -80,8 +80,9 @@ class MrpBom(models.Model):
                     bom.is_vault_bom:
                 product_ids_max = self.env['product.product']. \
                     search([('default_code', '=', bom.product_tmpl_id.default_code[:-3] + '000')])
-                product_ids += self.env['product.product']. \
-                    search([('default_code', '=', bom.product_tmpl_id.vault_color)])
+                if bom.product_tmpl_id.vault_color:
+                    product_ids += self.env['product.product']. \
+                        search([('default_code', '=', bom.product_tmpl_id.vault_color)])
                 product_ids += max(product_ids_max)
                 for product in product_ids:
                     if product.categ_base == 'COLOR METAL':
