@@ -175,7 +175,7 @@ class ProductTemplate(models.Model):
                                             qty = vals['vault_sup_madera']
                                     if product.categ_base == 'CANTO':
                                         if 'vault_edge_len' in vals:
-                                            qty = float(vals['vault_edge_len']) / 1000
+                                            qty = vals['vault_edge_len']
                                     if product.categ_base == 'COLOR MADERA':
                                         if 'vault_sup_pintada' in vals:
                                             qty = str(vals['vault_sup_pintada'])
