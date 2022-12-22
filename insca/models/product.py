@@ -52,7 +52,7 @@ class ProductTemplate(models.Model):
         for record in self:
 
             # Código A00
-            if str(record.default_code)[0:3] == 'A00' and 'categ_id' in vals:
+            if str(record.default_code)[0:3] == 'A00' and 'categ_id' in vals and vals['categ_id'] == 2549:
                 vals.update({'categ_id': record.categ_id.id,
                              'vault_route': 'EMB',
                              })
@@ -217,13 +217,15 @@ class ProductTemplate(models.Model):
                                                                                        vals['vault_material_code'])])
                                 for product in product_ids:
                                     if vals.get('name'):
+                                        qty = 0.0001
                                         if vals['name'][0:3] == 'CPF' or vals['name'][0:3] == 'CPC':
                                             qty = vals['vault_sup_madera']
                                         if vals['name'][0:2] == 'TR' or \
                                                 vals['name'][0:2] == 'TC' or \
                                                 vals['name'][0:2] == 'TO' or \
-                                                vals['name'][0:2] == 'MZ':
-                                            qty = vals['vault_length_tub']
+                                                vals['name'][0:2] == 'MZ' and 'vault_length_tub' in vals:
+                                            if vals['vault_length_tub'] is not None:
+                                                qty = float(vals['vault_length_tub']) / 1000
                                         lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                                         qty = None
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
