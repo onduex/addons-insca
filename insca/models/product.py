@@ -53,13 +53,24 @@ class ProductTemplate(models.Model):
         for record in self:
 
             # Código A00
+            res_code_00 = self.env['res.code'].search([('name', '=', 'A00')])
             if str(record.default_code)[0:3] == 'A00' and 'categ_id' in vals and vals['categ_id'] == 2549:
                 vals.update({'categ_id': record.categ_id.id,
-                             'vault_route': 'EMB',
+                             'vault_route': res_code_00.route_mrp,
+                             'sale_ok': res_code_00.sale_ok,
+                             'purchase_ok': res_code_00.purchase_ok,
+                             'produce_delay': res_code_00.date_schedule_mrp,
+                             'route_ids': [(6, 0, [x.id for x in res_code_00.product_route_ids])],
+                             'type': res_code_00.type_store,
                              })
             elif str(record.default_code)[0:3] == 'A00' and 'categ_id' not in vals:
                 vals.update({'categ_id': record.categ_id.id,
-                             'vault_route': 'EMB',
+                             'vault_route': res_code_00.route_mrp,
+                             'sale_ok': res_code_00.sale_ok,
+                             'purchase_ok': res_code_00.purchase_ok,
+                             'produce_delay': res_code_00.date_schedule_mrp,
+                             'route_ids': [(6, 0, [x.id for x in res_code_00.product_route_ids])],
+                             'type': res_code_00.type_store,
                              })
 
             if record.is_vault_product and not record.is_old_revision:
