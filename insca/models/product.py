@@ -22,6 +22,7 @@ class ProductTemplate(models.Model):
     vault_edge_pin_code = fields.Char(string='COD COLOR CANTOS', required=False)  # Texto
     vault_material = fields.Char(string='CODIGO MATERIAL', required=False)  # Texto
     vault_material_code = fields.Char(string='CODIGO VIRTUAL', required=False)  # Texto
+    vault_material_name = fields.Char(string='NOMBRE VIRTUAL', required=False)  # Texto
     # COLOR MATERIAL --> product_color                                          # Texto
     vault_purchase_code = fields.Char(string='CODIGO COMPRA', required=False)  # Texto
     vault_left_hand = fields.Char(string='CODIGO IZQ', required=False)  # Texto

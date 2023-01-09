@@ -24,6 +24,7 @@
                             <field name="vault_edge_pin_code" readonly="1"/>
                             <field name="vault_material" readonly="1"/>
                             <field name="vault_material_code" readonly="1"/>
+                            <field name="vault_material_name" readonly="1"/>
                             <field name="vault_purchase_code" readonly="1" invisible="0"/>
                             <field name="vault_left_hand" readonly="1" invisible="0"/>
                             <field name="vault_right_hand" readonly="1" invisible="0"/>
