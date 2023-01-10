@@ -29,6 +29,7 @@
         'views/product_inherit_views.xml',
         'views/product_data.xml',
         'views/mrp_bom_inherit_views.xml',
+        'views/mrp_workorder_inherit_views.xml',
 
     ],
 
