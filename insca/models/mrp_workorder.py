@@ -7,5 +7,6 @@ from odoo import api, fields, models, _
 class MrpWorkorder(models.Model):
     _inherit = "mrp.workorder"
 
-    vault_material_name = fields.Char(string='Nombre Virtual', required=False,
-                                      related='product_id.vault_material_name')
+    vault_material_name = fields.Char(string='Nombre virtual', required=False,
+                                      related='product_id.vault_material_name',
+                                      store=True)
