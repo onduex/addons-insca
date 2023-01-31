@@ -16,6 +16,18 @@
                                 </tree>
                             </field>
                         </div>
+                        <div>
+                            <field name="categ_id"/>
+                            <group>
+                                <group>
+                                    <field name="product_length"/>
+                                    <field name="product_width"/>
+                                </group>
+                                <group>
+
+                                </group>
+                            </group>
+                        </div>
                         <!--<div class="alert alert-info" role="alert">
                             <p><span class="fa fa-info-circle"/> Productos existentes en la categoría</p>
                         </div>-->

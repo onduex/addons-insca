@@ -12,6 +12,9 @@ class CreateProductWiz(models.TransientModel):
 
     product_ids = fields.One2many(comodel_name='product.template', inverse_name='name',
                                   string='Productos existentes', required=False, readonly=True)
+    categ_id = fields.Many2one(comodel_name='product.category', string='Categoría', required=False, readonly=True)
+    product_length = fields.Integer(string='Largo', required=True)
+    product_width = fields.Integer(string='Ancho', required=True)
 
 
 class ProductCategory(models.Model):
