@@ -11,7 +11,7 @@ class CreateProductWiz(models.TransientModel):
     _description = 'Wizard para crear productos desde la categoría'
 
     product_ids = fields.One2many(comodel_name='product.template', inverse_name='name',
-                                  string='Productos existentes', required=False)
+                                  string='Productos existentes', required=False, readonly=True)
 
 
 class ProductCategory(models.Model):
@@ -19,7 +19,9 @@ class ProductCategory(models.Model):
 
     def create_product_wiz_action(self):
         product_ids = self.env["product.template"].search([("categ_id", "=", self.id)])
-        context = {'default_categ_id': self.id}
+        context = {'default_categ_id': self.id,
+                   'default_product_ids': product_ids.ids,
+                   }
         return {
             'name': 'Crear producto',
             'type': 'ir.actions.act_window',

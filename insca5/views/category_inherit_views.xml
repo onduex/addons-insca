@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <header>
-                    <button name="create_bom_wiz_action" string="Crear producto" type="object"/>
+                    <button name="create_product_wiz_action" string="Crear producto" type="object"/>
                 </header>
             </xpath>
         </field>

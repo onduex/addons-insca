@@ -8,20 +8,17 @@
                 <form string="Check LdM artículos">
                     <sheet>
                         <div>
-                            <group>
-                                <group>
-                                    <label for="product_ids" string="Productos existentes"/>
-                                    <div>
-                                        <field name="product_ids"/>
-                                    </div>
-                                </group>
-                                <group>
-                                </group>
-                            </group>
+                            <field name="product_ids" nolabel="1">
+                                <tree>
+                                    <field name="default_code"/>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
                         </div>
-                        <div class="alert alert-info" role="alert">
+                        <!--<div class="alert alert-info" role="alert">
                             <p><span class="fa fa-info-circle"/> Productos existentes en la categoría</p>
-                        </div>
+                        </div>-->
                     </sheet>
                     <footer>
                         <button name="create_bom" type="object" string="Aplicar" class="oe_highlight"/>
