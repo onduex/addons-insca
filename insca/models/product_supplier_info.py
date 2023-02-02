@@ -22,6 +22,7 @@ class ProductTemplate(models.Model):
                                                       'delay': 1.0,
                                                       'name': rec.id,
                                                       'product_id': self.product_variant_id.id,
+                                                      'company_id': False,
                                                       }
                                                ))
                     vals.update({'seller_ids': supplier_lines})
