@@ -19,6 +19,7 @@
 
     # always loaded
     'data': [
+        'data/tab_sequence.xml',
         'views/category_inherit_views.xml',
         'wizards/create_product_wiz.xml'
     ],

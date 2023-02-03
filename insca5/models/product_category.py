@@ -3,6 +3,7 @@
 from odoo import fields, models, api, _
 from datetime import date
 
+
 class Supplierlist(models.Model):
     _name = 'supplier.list'
     _description = "Lista para proveedores de las piezas/ensamblajes requeridos de los pedidos activos"
