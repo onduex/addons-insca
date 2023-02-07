@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="sequence_tab" model="ir.sequence">
+        <field name="name">Referencia internal tableros</field>
+        <field name="code">product.tab</field>
+        <field eval="6" name="padding" />
+        <field name="prefix">TB.</field>
+    </record>
+</odoo>
