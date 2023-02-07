@@ -120,6 +120,7 @@
                 <field name="color"/>
                 <field name="customer"/>
                 <field name="code_concat"/>
+                <field name="nota"/>
             </tree>
         </field>
     </record>

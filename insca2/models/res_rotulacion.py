@@ -15,6 +15,7 @@ class ResRotulacion(models.Model):
     dimensions = fields.Char(string='Medidas', required=True)
     color = fields.Char(string='Colores', required=False)
     customer = fields.Char(string='Cliente', required=False)
+    nota = fields.Text(string="Notas", required=False)
 
     _sql_constraints = [
         ('res_rotulacion', 'UNIQUE (code)',
