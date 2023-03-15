@@ -77,7 +77,6 @@ class MrpBomLine(models.Model):
 
         # Código A30
         elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] == '000':
-            qty = ''
             lines = []
             product_ids = []
             if self.product_id.vault_material_code:
@@ -91,12 +90,33 @@ class MrpBomLine(models.Model):
                     if self.product_id.name[0:2] == 'TR' or \
                             self.product_id.name[0:2] == 'TC' or \
                             self.product_id.name[0:2] == 'TO' or \
-                            self.product_id.name[0:2] == 'MZ' and self.product_id.vault_length_tub != 0.0:
-                        if self.product_id.name.vault_length_tub is not None:
-                            qty = float(self.product_id.name.vault_length_tub) / 1000
+                            self.product_id.name[0:2] == 'MZ' and float(self.product_id.name.vault_length_tub) != 0.0:
+                        if float(self.product_id.vault_length_tub) != 0.0:
+                            qty = float(self.product_id.vault_length_tub) / 1000
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-                    qty = None
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
+
+        # Código A30P
+        elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] != '000':
+            qty = ''
+            lines = []
+            product_ids = []
+            product_ids_max = self.env['product.product']. \
+                search([('default_code', '=', self.product_id.default_code[:-3] + '000')])
+            if self.product_id.vault_color:
+                product_ids = self.env['product.product']. \
+                    search([('default_code', '=', self.product_id.vault_color)])
+            product_ids += max(product_ids_max)
+            for product in product_ids:
+                if product.categ_base == 'COLOR METAL':
+                    if float(self.product_id.vault_sup_pintada) != 0.0:
+                        qty = str(float(self.product_id.vault_sup_pintada))
+                else:
+                    qty = 1
+                lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                qty = None
+            self.child_bom_id.sudo().update({'bom_line_ids': lines})
+
         return res
 
 
