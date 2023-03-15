@@ -43,6 +43,62 @@ class MrpBomLine(models.Model):
                                                         'product_qty': 1})
         return res
 
+    def write(self, values):
+        res = super().write(values)
+        # Código A10
+        if self.product_id.code[0:3] == 'A10':
+            qty = ''
+            lines = []
+            product_ids = []
+            if self.product_id.vault_material_code:
+                product_ids = self.env['product.product']. \
+                    search([('default_code', '=', self.product_id.vault_material_code)])
+            if self.product_id.vault_edge_code:
+                product_ids += self.env['product.product']. \
+                    search([('default_code', '=', self.product_id.vault_edge_code),
+                            ('default_code', '!=', '000000')])
+            if self.product_id.vault_color:
+                if self.product_id.vault_sup_pintada != 0.0:
+                    product_ids += self.env['product.product']. \
+                        search([('default_code', '=', self.product_id.vault_color)])
+            for product in product_ids:
+                if product.categ_base == 'MADERA':
+                    if self.product_id.vault_sup_madera != 0.0:
+                        qty = self.product_id.vault_sup_madera
+                if product.categ_base == 'CANTO':
+                    if self.product_id.vault_edge_len != 0.0:
+                        qty = self.product_id.vault_edge_len
+                if product.categ_base == 'COLOR MADERA':
+                    if self.product_id.vault_sup_pintada != 0.0:
+                        qty = self.product_id.vault_sup_pintada
+                lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                qty = None
+            self.child_bom_id.sudo().update({'bom_line_ids': lines})
+
+        # Código A30
+        elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] == '000':
+            qty = ''
+            lines = []
+            product_ids = []
+            if self.product_id.vault_material_code:
+                product_ids = self.env['product.product']. \
+                    search([('default_code', '=', self.product_id.vault_material_code)])
+            for product in product_ids:
+                if self.product_id.name:
+                    qty = 0.0001
+                    if self.product_id.name[0:3] == 'CPF' or self.product_id.name[0:3] == 'CPC':
+                        qty = self.product_id.vault_sup_madera
+                    if self.product_id.name[0:2] == 'TR' or \
+                            self.product_id.name[0:2] == 'TC' or \
+                            self.product_id.name[0:2] == 'TO' or \
+                            self.product_id.name[0:2] == 'MZ' and self.product_id.vault_length_tub != 0.0:
+                        if self.product_id.name.vault_length_tub is not None:
+                            qty = float(self.product_id.name.vault_length_tub) / 1000
+                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                    qty = None
+            self.child_bom_id.sudo().update({'bom_line_ids': lines})
+        return res
+
 
 class MrpBom(models.Model):
     _inherit = "mrp.bom"
