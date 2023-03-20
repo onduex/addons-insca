@@ -49,30 +49,35 @@ class MrpBomLine(models.Model):
         if self.product_id.code[0:3] == 'A10':
             qty = ''
             lines = []
-            product_ids = []
             if self.product_id.vault_material_code:
-                product_ids = self.env['product.product']. \
+                product = self.env['product.product']. \
                     search([('default_code', '=', self.product_id.vault_material_code)])
+                qty = self.product_id.vault_sup_madera
+                if product:
+                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             if self.product_id.vault_edge_code:
-                product_ids += self.env['product.product']. \
+                product = self.env['product.product']. \
                     search([('default_code', '=', self.product_id.vault_edge_code),
                             ('default_code', '!=', '000000')])
+                qty = self.product_id.vault_edge_len
+                if product:
+                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             if self.product_id.vault_color:
                 if self.product_id.vault_sup_pintada != 0.0:
-                    product_ids += self.env['product.product']. \
-                        search([('default_code', '=', self.product_id.vault_color)])
-            for product in product_ids:
-                if product.categ_base == 'MADERA':
-                    if self.product_id.vault_sup_madera != 0.0:
-                        qty = self.product_id.vault_sup_madera
-                if product.categ_base == 'CANTO':
-                    if self.product_id.vault_edge_len != 0.0:
-                        qty = self.product_id.vault_edge_len
-                if product.categ_base == 'COLOR MADERA':
-                    if self.product_id.vault_sup_pintada != 0.0:
-                        qty = self.product_id.vault_sup_pintada
-                lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-                qty = None
+                    product = self.env['product.product']. \
+                        search([('default_code', '=', self.product_id.vault_color),
+                                ('default_code', '!=', 'I0039Y')])
+                    qty = self.product_id.vault_sup_pintada
+                    if product:
+                        lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+            if self.product_id.vault_edge_pin_code:
+                if self.product_id.vault_edge_painted_sup != 0.0:
+                    product = self.env['product.product']. \
+                        search([('default_code', '=', self.product_id.vault_edge_pin_code),
+                                ('default_code', '!=', 'I0039Y')])
+                    qty = self.product_id.vault_edge_painted_sup
+                    if product:
+                        lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
         # Código A30
         elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] == '000':

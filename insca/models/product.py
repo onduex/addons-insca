@@ -167,34 +167,36 @@ class ProductTemplate(models.Model):
                                                     % (vals['vault_route'], vals['name'])))
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0:
-                            qty = ''
-                            if vals.get('vault_material_code') or vals['vault_edge_code'] or vals['vault_color']:
+                            if vals.get('vault_material_code') or vals['vault_edge_code'] or \
+                                    vals['vault_color'] or vals['vault_edge_pin_code']:
                                 lines = []
-                                product_ids = []
-                                if vals['vault_material_code']:
-                                    product_ids = self.env['product.product'].search([('default_code', '=',
-                                                                                       vals['vault_material_code'])])
-                                if vals['vault_edge_code']:
-                                    product_ids += self.env['product.product'].\
+                                if vals['vault_material_code'] and 'vault_sup_madera' in vals:
+                                    product = self.env['product.product'].\
+                                            search([('default_code', '=', vals['vault_material_code'])])
+                                    qty = vals['vault_sup_madera']
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+
+                                if vals['vault_edge_code'] and 'vault_edge_len' in vals:
+                                    product = self.env['product.product'].\
                                         search([('default_code', '=', vals['vault_edge_code']),
                                                 ('default_code', '!=', '000000')])
-                                if vals['vault_color']:
-                                    if 'vault_sup_pintada' in vals:
-                                        product_ids += self.env['product.product'].\
-                                            search([('default_code', '=', vals['vault_color']),
-                                                    ('default_code', '!=', 'I0039Y')])
-                                for product in product_ids:
-                                    if product.categ_base == 'MADERA':
-                                        if 'vault_sup_madera' in vals:
-                                            qty = vals['vault_sup_madera']
-                                    if product.categ_base == 'CANTO':
-                                        if 'vault_edge_len' in vals:
-                                            qty = vals['vault_edge_len']
-                                    if product.categ_base == 'COLOR MADERA':
-                                        if 'vault_sup_pintada' in vals:
-                                            qty = str(vals['vault_sup_pintada'])
+                                    qty = vals['vault_edge_len']
                                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-                                    qty = None
+
+                                if vals['vault_color'] and 'vault_sup_pintada' in vals:
+                                    product = self.env['product.product'].\
+                                        search([('default_code', '=', vals['vault_color']),
+                                                ('default_code', '!=', 'I0039Y')])
+                                    qty = str(vals['vault_sup_pintada'])
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+
+                                if vals['vault_edge_pin_code'] and 'vault_edge_painted_sup' in vals:
+                                    product = self.env['product.product'].\
+                                        search([('default_code', '=', vals['vault_edge_pin_code']),
+                                                ('default_code', '!=', 'I0039Y')])
+                                    qty = str(vals['vault_edge_painted_sup'])
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+
                                 mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
                                                               'code': self.vault_revision,
                                                               'product_qty': 1,
