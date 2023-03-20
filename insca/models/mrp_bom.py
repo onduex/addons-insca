@@ -166,6 +166,18 @@ class MrpBomLine(models.Model):
                 lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                 qty = None
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
+        # Código EM0
+        elif self.product_id.code[0:3] == 'EM0':
+            lines = []
+            product_ids = self.env['product.product']. \
+                search([('default_code', 'ilike', self.product_id.default_code[4:]),
+                        ('is_old_revision', '=', False)])
+            if product_ids:
+                for product in product_ids:
+                    if product['name'][:5] == 'BULTO':
+                        qty = product.product_package_number
+                        lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                self.child_bom_id.sudo().update({'bom_line_ids': lines})
         return res
 
 
