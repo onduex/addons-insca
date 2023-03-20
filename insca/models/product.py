@@ -54,9 +54,11 @@ class ProductTemplate(models.Model):
 
             # Código A00
             res_code_00 = self.env['res.code'].search([('name', '=', 'A00')])
+            if not vals.get('vault_route'):
+                vals.update({'vault_route': self.vault_route})
             if str(record.default_code)[0:3] == 'A00' and 'categ_id' in vals and vals['categ_id'] == 2549:
                 vals.update({'categ_id': record.categ_id.id,
-                             'vault_route': res_code_00.route_mrp,
+                             # 'vault_route': res_code_00.route_mrp,
                              'sale_ok': res_code_00.sale_ok,
                              'purchase_ok': res_code_00.purchase_ok,
                              'produce_delay': res_code_00.date_schedule_mrp,
@@ -65,7 +67,7 @@ class ProductTemplate(models.Model):
                              })
             elif str(record.default_code)[0:3] == 'A00' and 'categ_id' not in vals:
                 vals.update({'categ_id': record.categ_id.id,
-                             'vault_route': res_code_00.route_mrp,
+                             # 'vault_route': res_code_00.route_mrp,
                              'sale_ok': res_code_00.sale_ok,
                              'purchase_ok': res_code_00.purchase_ok,
                              'produce_delay': res_code_00.date_schedule_mrp,
