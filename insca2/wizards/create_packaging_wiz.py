@@ -167,6 +167,7 @@ class CreatePackagingWiz(models.TransientModel):
                                           'categ_id': self.embalaje_id.categ_id.id,
                                           'sale_ok': False,
                                           'purchase_ok': False,
+                                          'product_package_number': self.n_bultos
                                           })['id']
         product_obj = self.env['product.product'].search([('product_tmpl_id', '=', new_id)])
         # Crear LdM del bulto
@@ -174,7 +175,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                 'product_id': product_obj.id,
                                                 'product_qty': 1,
                                                 'type': 'phantom',
-                                                'routing_id': 132,  # EMB
+                                                'routing_id': 141,  # SEC-EMB
                                                 })
         # Crear bulto como línea de LdM
         self.env['mrp.bom.line'].sudo().create({'bom_id': self.embalaje_bom.id,
@@ -186,6 +187,7 @@ class CreatePackagingWiz(models.TransientModel):
         if self.base_id:
             product_ids.append({'id': self.base_id,
                                 'qty': 1,
+                                'name': self.base
                                 })
         if not self.base_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.base,
@@ -204,6 +206,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                        float(self.ancho) / 1000000)
                                                                }).id,
                                 'qty': 1,
+                                'name': self.base
                                 })
 
         # Taco
@@ -212,6 +215,7 @@ class CreatePackagingWiz(models.TransientModel):
         if self.taco_id:
             product_ids.append({'id': self.taco_id,
                                 'qty': self.n_tacos,
+                                'name': self.taco
                                 })
         if not self.taco_id:
             product_ids.append({'id': product_tmpl_obj.create({'name': self.taco,
@@ -230,6 +234,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                        / 1000000000),
                                                                }).id,
                                 'qty': self.n_tacos,
+                                'name': self.taco
                                 })
 
         # Taco lateral
@@ -238,6 +243,7 @@ class CreatePackagingWiz(models.TransientModel):
             if self.taco_lateral_id:
                 product_ids.append({'id': self.taco_lateral_id,
                                     'qty': self.n_tacos_lateral,
+                                    'name': self.taco_lateral
                                     })
             if not self.taco_lateral_id:
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_lateral,
@@ -258,6 +264,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                            / 1000000000),
                                                                    }).id,
                                     'qty': self.n_tacos_lateral,
+                                    'name': self.taco_lateral
                                     })
 
         # Taco costado
@@ -266,6 +273,7 @@ class CreatePackagingWiz(models.TransientModel):
             if self.taco_costado_id:
                 product_ids.append({'id': self.taco_costado_id,
                                     'qty': self.n_tacos_costado,
+                                    'name': self.taco_costado
                                     })
             if not self.taco_costado_id:
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_costado,
@@ -286,6 +294,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                            / 1000000000),
                                                                    }).id,
                                     'qty': self.n_tacos_costado,
+                                    'name': self.taco_costado
                                     })
 
         # Si el tipo palet != solo base
@@ -296,6 +305,7 @@ class CreatePackagingWiz(models.TransientModel):
             if self.tapa_id:
                 product_ids.append({'id': self.tapa_id,
                                     'qty': 1,
+                                    'name': self.tapa
                                     })
             if not self.tapa_id:
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
@@ -315,6 +325,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                            float(self.ancho) / 1000000),
                                                                    }).id,
                                     'qty': 1,
+                                    'name': self.tapa
                                     })
 
             # Lateral largo
@@ -322,6 +333,7 @@ class CreatePackagingWiz(models.TransientModel):
             if self.l_largo_id:
                 product_ids.append({'id': self.l_largo_id,
                                     'qty': 2,
+                                    'name': self.l_largo
                                     })
             if not self.l_largo_id:
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.l_largo,
@@ -343,6 +355,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                            float(self.alto) / 1000000)
                                                                    }).id,
                                     'qty': 2,
+                                    'name': self.l_largo
                                     })
 
             # Lateral corto
@@ -350,6 +363,7 @@ class CreatePackagingWiz(models.TransientModel):
             if self.l_corto_id:
                 product_ids.append({'id': self.l_corto_id,
                                     'qty': 2,
+                                    'name': self.l_corto
                                     })
             if not self.l_corto_id:
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
@@ -369,6 +383,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                            float(self.ancho) / 1000000)
                                                                    }).id,
                                     'qty': 2,
+                                    'name': self.l_corto
                                     })
 
         # Crear las líneas de la LdM del bulto
@@ -386,23 +401,24 @@ class CreatePackagingWiz(models.TransientModel):
 
         # Crear las LdM de los materiales y su consumo de material prima
         for record in product_ids:
-            product_id = self.env['product.product'].search([('product_tmpl_id', '=', record['id'])]).id
-            product_tmpl = self.env['product.template'].search([('id', '=', record['id'])])
-            raw_material = self.env['product.product'].search(
-                [('default_code', '=', product_tmpl['vault_material_code'])])
-            if not product_tmpl.bom_ids:
-                new2_bom_id = mrp_bom_obj.sudo().create({'product_tmpl_id': record['id'],
-                                                         'product_id': product_id,
-                                                         'product_qty': 1,
-                                                         'type': 'normal',
-                                                         'routing_id': 132,  # EMB
-                                                         })
-                if len(raw_material) == 1:
-                    self.env['mrp.bom.line'].sudo().create({'bom_id': new2_bom_id.id,
-                                                            'product_id': raw_material.id,
-                                                            'product_qty':
-                                                                float(new2_bom_id.product_tmpl_id.vault_sup_madera)
-                                                            })
+            if record['name'][:4] != 'TACO':
+                product_id = self.env['product.product'].search([('product_tmpl_id', '=', record['id'])]).id
+                product_tmpl = self.env['product.template'].search([('id', '=', record['id'])])
+                raw_material = self.env['product.product'].search(
+                    [('default_code', '=', product_tmpl['vault_material_code'])])
+                if not product_tmpl.bom_ids:
+                    new2_bom_id = mrp_bom_obj.sudo().create({'product_tmpl_id': record['id'],
+                                                             'product_id': product_id,
+                                                             'product_qty': 1,
+                                                             'type': 'normal',
+                                                             'routing_id': 132,  # EMB
+                                                             })
+                    if len(raw_material) == 1:
+                        self.env['mrp.bom.line'].sudo().create({'bom_id': new2_bom_id.id,
+                                                                'product_id': raw_material.id,
+                                                                'product_qty':
+                                                                    float(new2_bom_id.product_tmpl_id.vault_sup_madera)
+                                                                })
 
         self.n_bultos = 1
         self.largo = 0
