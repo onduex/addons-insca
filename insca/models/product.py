@@ -58,6 +58,11 @@ class ProductTemplate(models.Model):
             if not vals.get('vault_route'):
                 vals.update({'vault_route': self.vault_route})
             if str(record.default_code)[0:3] == 'A00' and 'categ_id' in vals and vals['categ_id'] == 2549:
+                # Check si existe ruta
+                mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                if vals['vault_route'] and not len(mrp_routing):
+                    raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                            % (vals['vault_route'], vals['name'])))
                 vals.update({'categ_id': record.categ_id.id,
                              # 'vault_route': res_code_00.route_mrp,
                              'sale_ok': res_code_00.sale_ok,
@@ -67,6 +72,11 @@ class ProductTemplate(models.Model):
                              'type': res_code_00.type_store,
                              })
             elif str(record.default_code)[0:3] == 'A00' and 'categ_id' not in vals:
+                # Check si existe ruta
+                mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                if vals['vault_route'] and not len(mrp_routing):
+                    raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                            % (vals['vault_route'], vals['name'])))
                 vals.update({'categ_id': record.categ_id.id,
                              # 'vault_route': res_code_00.route_mrp,
                              'sale_ok': res_code_00.sale_ok,
