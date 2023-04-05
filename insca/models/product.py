@@ -163,8 +163,7 @@ class ProductTemplate(models.Model):
                     elif vals['vault_code'] == 'A10':
                         parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
                         categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
-                                                                     ('parent_id', '=', parent_categ.id)
-                                                                     ])
+                                                                     ('parent_id', '=', parent_categ.id)])
                         if not categ:
                             categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
                                                                                 'parent_id': parent_categ.id,
@@ -226,6 +225,23 @@ class ProductTemplate(models.Model):
                                                               'routing_id': mrp_routing.id or None,
                                                               'bom_line_ids': lines,
                                                               })
+
+                    # Código A11
+                    elif vals['vault_code'] == 'A11':
+                        parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
+                        categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
+                                                                     ('parent_id', '=', parent_categ.id)])
+                        if not categ:
+                            categ = self.env['product.category'].sudo().create({'name': vals.get('vault_categ'),
+                                                                                'parent_id': parent_categ.id,
+                                                                                })
+                        vals.update({'categ_id': categ.id})
+
+                        # Check si existe ruta
+                        mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                        if vals['vault_route'] and not len(mrp_routing):
+                            raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                    % (vals['vault_route'], vals['name'])))
 
                     # Código A30
                     elif vals['vault_code'] == 'A30' and vals['vault_categ']:

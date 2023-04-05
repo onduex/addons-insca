@@ -32,15 +32,47 @@ class MrpBomLine(models.Model):
                     lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
                 print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
                 record.unlink()
-        for rec in lines:
-            new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
-                                                                ('product_id', '=', rec[2]['product_id'])])
-            for records in new_bom_lines_id:
-                print(records.product_id.name)
-            if not new_bom_lines_id:
-                self.env['mrp.bom.line'].sudo().create({'bom_id': rec[2]['bom_id'].id,
-                                                        'product_id': rec[2]['product_id'],
-                                                        'product_qty': 1})
+            for rec in lines:
+                new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
+                                                                    ('product_id', '=', rec[2]['product_id'])])
+                if not new_bom_lines_id:
+                    self.env['mrp.bom.line'].sudo().create({'bom_id': rec[2]['bom_id'].id,
+                                                            'product_id': rec[2]['product_id'],
+                                                            'product_qty': 1})
+
+            # Código A11 update lines that rainbow has removed
+            if record.bom_id.product_tmpl_id.vault_code == 'A11' and \
+                    record.bom_id.is_vault_bom:
+                qty = ''
+                # Obtener las nuevas líneas a crear
+                if record.bom_id.product_tmpl_id.vault_color:
+                    product = self.env['product.product']. \
+                        search([('default_code', '=', record.bom_id.product_tmpl_id.vault_color),
+                                ('default_code', '!=', 'I0039Y')])
+                    if product.categ_base == 'COLOR MADERA':
+                        qty = str(record.bom_id.product_tmpl_id.vault_sup_pintada)
+                        lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': qty}))
+                if record.bom_id.product_tmpl_id.vault_edge_pin_code:
+                    product = self.env['product.product']. \
+                        search([('default_code', '=', record.bom_id.product_tmpl_id.vault_edge_pin_code),
+                                ('default_code', '!=', 'I0039Y')])
+                    if product.categ_base == 'COLOR MADERA':
+                        qty = str(record.bom_id.product_tmpl_id.vault_edge_painted_sup)
+                        lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': qty}))
+                if record.bom_id.product_tmpl_id.vault_edge_code:
+                    product = self.env['product.product']. \
+                        search([('default_code', '=', record.bom_id.product_tmpl_id.vault_edge_code),
+                                ('default_code', '!=', '000000')])
+                    if product.categ_base == 'CANTO':
+                        qty = str(record.bom_id.product_tmpl_id.vault_edge_len)
+                        lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': qty}))
+                for rec in lines:
+                    new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
+                                                                        ('product_id', '=', rec[2]['product_id'])])
+                    if not new_bom_lines_id:
+                        self.env['mrp.bom.line'].sudo().create({'bom_id': rec[2]['bom_id'].id,
+                                                                'product_id': rec[2]['product_id'],
+                                                                'product_qty': rec[2]['product_qty']})
         return res
 
     def write(self, values):
@@ -212,6 +244,7 @@ class MrpBom(models.Model):
             elif product_for_bom.vault_route and len(mrp_routing):
                 res.update({'routing_id': mrp_routing.id})
 
+            # add extra lines to A31P codes
             if bom.product_tmpl_id.vault_code == 'A31P' and \
                     bom.product_tmpl_id.default_code[-3:] != '000' and \
                     bom.is_vault_bom:
@@ -228,5 +261,39 @@ class MrpBom(models.Model):
                         qty = 1
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                     qty = None
+                res.update({'bom_line_ids': lines})
+
+            # add extra lines to A11 codes
+            if bom.product_tmpl_id.vault_code == 'A11' and bom.is_vault_bom:
+                qty = ''
+                if bom.product_tmpl_id.vault_color:
+                    if bom.product_tmpl_id.vault_sup_pintada:
+                        product = self.env['product.product']. \
+                            search([('default_code', '=', bom.product_tmpl_id.vault_color),
+                                    ('default_code', '!=', 'I0039Y')])
+                        if product.categ_base == 'COLOR MADERA':
+                            if bom.product_tmpl_id.vault_sup_pintada:
+                                qty = str(bom.product_tmpl_id.vault_sup_pintada)
+                        if product:
+                            lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                if bom.product_tmpl_id.vault_edge_code:
+                    product = self.env['product.product']. \
+                        search([('default_code', '=', bom.product_tmpl_id.vault_edge_code),
+                                ('default_code', '!=', '000000')])
+                    if product.categ_base == 'CANTO':
+                        if bom.product_tmpl_id.vault_edge_len:
+                            qty = bom.product_tmpl_id.vault_edge_len
+                    if product:
+                        lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                if bom.product_tmpl_id.vault_edge_pin_code:
+                    if bom.product_tmpl_id.vault_edge_painted_sup:
+                        product = self.env['product.product']. \
+                            search([('default_code', '=', bom.product_tmpl_id.vault_edge_pin_code),
+                                    ('default_code', '!=', 'I0039Y')])
+                        if product.categ_base == 'COLOR MADERA':
+                            if bom.product_tmpl_id.vault_edge_painted_sup:
+                                qty = str(bom.product_tmpl_id.vault_edge_painted_sup)
+                        if product:
+                            lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                 res.update({'bom_line_ids': lines})
         return res
