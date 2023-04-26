@@ -65,7 +65,7 @@ class MrpBomLine(models.Model):
                 product_ids += max(product_ids_max)
                 for product in product_ids:
                     lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
-                print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
+                # print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
                 record.unlink()
             for rec in lines:
                 new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
