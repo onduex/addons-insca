@@ -39,7 +39,8 @@ class ResRotulacion(models.Model):
     @api.depends('name', 'dimensions', 'color', 'customer')
     def _compute_code_concat(self):
         for rec in self:
-            rec.code_concat = str(rec.name) + ' ' + \
+            rec.code_concat = str(rec.code[:3]) + ' ' + \
+                              str(rec.name) + ' ' + \
                               str(rec.dimensions) + ' ' + \
                               str(rec.color) + ' ' + \
                               str(rec.customer) or None
