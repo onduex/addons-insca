@@ -128,7 +128,7 @@ class MrpBomLine(models.Model):
                     if self.product_id.name[0:2] == 'TR' or \
                             self.product_id.name[0:2] == 'TC' or \
                             self.product_id.name[0:2] == 'TO' or \
-                            self.product_id.name[0:2] == 'MZ' and float(self.product_id.name.vault_length_tub) != 0.0:
+                            self.product_id.name[0:2] == 'MZ' and float(self.product_id.vault_length_tub) != 0.0:
                         if float(self.product_id.vault_length_tub) != 0.0:
                             qty = float(self.product_id.vault_length_tub) / 1000
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
