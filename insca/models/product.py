@@ -159,6 +159,30 @@ class ProductTemplate(models.Model):
                                                           'routing_id': mrp_routing.id or None,
                                                           })
 
+                    # Código A60S
+                    if vals['vault_code'] == 'A60S':
+                        # Check si existe ruta
+                        mrp_routing = self.env['mrp.routing'].search([('name', '=', res_code.route_mrp)])
+                        if vals['vault_route'] and not len(mrp_routing):
+                            raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                    % (vals['vault_route'], vals['name'])))
+                        # Crear lista de materiales
+                        if len(self.bom_ids) == 0:
+                            lines = []
+                            product_ids = []
+                            product_ids = self.env['product.product'].search([('default_code', '=', 'MP.000129')])
+                            for product in product_ids:
+                                if vals.get('name'):
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': 1}))
+                                    qty = None
+                            mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                          'code': self.vault_revision,
+                                                          'product_qty': 1,
+                                                          'type': 'normal',
+                                                          'routing_id': mrp_routing.id or None,
+                                                          'bom_line_ids': lines,
+                                                          })
+
                     # Código A10
                     elif vals['vault_code'] == 'A10':
                         parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
@@ -502,6 +526,10 @@ class ProductTemplate(models.Model):
                 var = vals['default_code'][0:3] + 'P'
             elif vals.get('default_code')[0:3] == 'A31' and vals.get('default_code')[-3:] != '000':
                 var = vals['default_code'][0:3] + 'P'
+            elif vals.get('default_code')[0:3] == 'A60' and vals.get('default_code')[-6:-5] != 'V':
+                var = vals['default_code'][0:3] + 'V'
+            elif vals.get('default_code')[0:3] == 'A60' and vals.get('default_code')[-6:-5] != 'S':
+                var = vals['default_code'][0:3] + 'S'
             elif vals.get('default_code'):
                 var = vals['default_code'][0:3]
 
