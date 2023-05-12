@@ -526,9 +526,9 @@ class ProductTemplate(models.Model):
                 var = vals['default_code'][0:3] + 'P'
             elif vals.get('default_code')[0:3] == 'A31' and vals.get('default_code')[-3:] != '000':
                 var = vals['default_code'][0:3] + 'P'
-            elif vals.get('default_code')[0:3] == 'A60' and vals.get('default_code')[-6:-5] != 'V':
+            elif vals.get('default_code')[0:3] == 'A60' and vals.get('default_code')[-6:-5] == 'V':
                 var = vals['default_code'][0:3] + 'V'
-            elif vals.get('default_code')[0:3] == 'A60' and vals.get('default_code')[-6:-5] != 'S':
+            elif vals.get('default_code')[0:3] == 'A60' and vals.get('default_code')[-6:-5] == 'S':
                 var = vals['default_code'][0:3] + 'S'
             elif vals.get('default_code'):
                 var = vals['default_code'][0:3]
