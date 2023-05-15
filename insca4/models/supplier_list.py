@@ -439,7 +439,7 @@ class Supplierlist(models.Model):
                                                  'product_material': materialname,
                                                  'model_id': '',
                                                  'type': '',
-                                                 'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
+                                                 'type_model_id': str(record.type_model_id[:-4]) + '1' + str(x) + str(y) + '0',
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + '0',
                                                  'n0': n0,
@@ -492,7 +492,7 @@ class Supplierlist(models.Model):
                                                  'product_material': materialname,
                                                  'model_id': '',
                                                  'type': '',
-                                                 'type_model_id': record.type_model_id[:-4] + '1' + str(x) +
+                                                 'type_model_id': str(record.type_model_id[:-4]) + '1' + str(x) +
                                                 str(y) + str(z),
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + str(z),
@@ -537,7 +537,7 @@ class Supplierlist(models.Model):
                                              'product_material': bom_line2.product_tmpl_id.name,
                                              'model_id': '',
                                              'type': '',
-                                             'type_model_id': record.type_model_id[:-4] + '1' + str(x) + str(y) + '0',
+                                             'type_model_id': str(record.type_model_id[:-4]) + '1' + str(x) + str(y) + '0',
                                              'lmat': lmatid,
                                              'lmat_level': '1' + str(x) + str(y) + '0',
                                              'n0': n0,
