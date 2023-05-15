@@ -375,7 +375,7 @@ class Supplierlist(models.Model):
                                      'product_material': materialname,
                                      'model_id': '',
                                      'type': '',
-                                     'type_model_id': record.type_model_id[:-4] + '1' + str(x) + '00',
+                                     'type_model_id': str(record.type_model_id[:-4]) + '1' + str(x) + '00',
                                      'lmat': lmatid,
                                      'lmat_level': '1' + str(x) + '00',
                                      'n0': n0,
