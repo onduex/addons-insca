@@ -258,7 +258,7 @@ class Supplierlist(models.Model):
                         materialname = 'NA'
 
                     for bom in bom_ids_max:
-                        route_list += bom['vault_route'].split("-", -1)
+                        route_list += str(bom['vault_route']).split("-", -1)
 
                     lmatid = mo_id.bom_id.id
                     n1 = mo_id.product_id.default_code
@@ -347,7 +347,7 @@ class Supplierlist(models.Model):
                         n3 = bom.product_tmpl_id.default_code
                         n3_name = bom.product_tmpl_id.name
                         n3_vlink = bom.product_tmpl_id.vault_web_link
-                        route_list += bom['vault_route'].split("-", -1)
+                        route_list += str(bom['vault_route']).split("-", -1)
                         purchaseorder = self.env['purchase.order.line'].search([
                             ('product_template_id.default_code', '=', bom.product_tmpl_id.default_code),
                             ('order_id.origin', 'ilike', orden_principal)
