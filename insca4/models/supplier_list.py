@@ -275,8 +275,8 @@ class Supplierlist(models.Model):
                                  'partner_name': mo_id.sale_id.partner_id.name,
                                  'commitment_date': mo_id.sale_id.commitment_date,
                                  'sale_order': mo_id.sale_id.id,
-                                 'product_origin': '[' + mo_id.product_id.default_code + ']' + ' ' +
-                                                   mo_id.product_id.name,
+                                 'product_origin': '[' + str(mo_id.product_id.default_code) + ']' + ' ' +
+                                                   str(mo_id.product_id.name),
                                  'mrp_production': self.env['mrp.production'].search([
                                      ('name', '=', sm.origin)]).id,
                                  'purchase_order': purchaseorder,
