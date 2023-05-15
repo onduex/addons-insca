@@ -114,7 +114,7 @@ class Supplierlist(models.Model):
     product_uom_name = fields.Char(string='UoM', required=False, readonly=True)
     model_id = fields.Integer(string='Id del Modelo', required=False, readonly=True)
     type = fields.Char(string='Tipo', required=False, readonly=True)
-    type_model_id = fields.Char(string='Ref. Interna', required=False, readonly=True)
+    type_model_str = fields.Char(string='Ref. Interna', required=False, readonly=True)
     checked = fields.Boolean(string='Procesada', required=False)
     is_finished_line = fields.Boolean(string='Fabricado', compute='compute_is_finished_line', store=True)
     lmat = fields.Integer(string='LdM ID', required=False, readonly=True)
@@ -221,7 +221,7 @@ class Supplierlist(models.Model):
                              'product_material': '',
                              # 'model_id': sm['id'],
                              # 'type': 'SML',
-                             # 'type_model_id': str(sm['id']) + '-' + '1000',
+                             # 'type_model_str': str(sm['id']) + '-' + '1000',
                              'lmat': orden_principal_obj.bom_id.id,
                              'lmat_level': '0001',
                              'n0': n0,
@@ -293,7 +293,7 @@ class Supplierlist(models.Model):
                                  'product_material': materialname,
                                  'model_id': sm['id'],
                                  'type': 'SML',
-                                 'type_model_id': str(sm['id']) + '-' + '1000',
+                                 'type_model_str': str(sm['id']) + '-' + '1000',
                                  'lmat': lmatid,
                                  'lmat_level': '1000',
                                  'n0': n0,
@@ -375,7 +375,7 @@ class Supplierlist(models.Model):
                                      'product_material': materialname,
                                      'model_id': '',
                                      'type': '',
-                                     'type_model_id': str(record.type_model_id[:-4]) + '1' + str(x) + '00',
+                                     'type_model_str': str(record.type_model_str[:-4]) + '1' + str(x) + '00',
                                      'lmat': lmatid,
                                      'lmat_level': '1' + str(x) + '00',
                                      'n0': n0,
@@ -439,7 +439,7 @@ class Supplierlist(models.Model):
                                                  'product_material': materialname,
                                                  'model_id': '',
                                                  'type': '',
-                                                 'type_model_id': str(record.type_model_id[:-4]) + '1' + str(x) + str(y) + '0',
+                                                 'type_model_str': str(record.type_model_str[:-4]) + '1' + str(x) + str(y) + '0',
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + '0',
                                                  'n0': n0,
@@ -492,7 +492,7 @@ class Supplierlist(models.Model):
                                                  'product_material': materialname,
                                                  'model_id': '',
                                                  'type': '',
-                                                 'type_model_id': str(record.type_model_id[:-4]) + '1' + str(x) +
+                                                 'type_model_str': str(record.type_model_str[:-4]) + '1' + str(x) +
                                                 str(y) + str(z),
                                                  'lmat': lmatid,
                                                  'lmat_level': '1' + str(x) + str(y) + str(z),
@@ -537,7 +537,7 @@ class Supplierlist(models.Model):
                                              'product_material': bom_line2.product_tmpl_id.name,
                                              'model_id': '',
                                              'type': '',
-                                             'type_model_id': str(record.type_model_id[:-4]) + '1' + str(x) + str(y) + '0',
+                                             'type_model_str': str(record.type_model_str[:-4]) + '1' + str(x) + str(y) + '0',
                                              'lmat': lmatid,
                                              'lmat_level': '1' + str(x) + str(y) + '0',
                                              'n0': n0,
