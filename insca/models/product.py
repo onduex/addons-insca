@@ -204,7 +204,7 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
 
-                        vals.update({'description': self.product_color + self.vault_material_name})
+                        vals.update({'description': self.product_color + ' ' + self.vault_material_name})
 
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0:
@@ -273,7 +273,7 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
 
-                        vals.update({'description': self.product_color + self.vault_material_name})
+                        vals.update({'description': self.product_color + ' ' + self.vault_material_name})
 
                     # Código A30
                     elif vals['vault_code'] == 'A30' and vals['vault_categ']:
@@ -292,7 +292,7 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
 
-                        vals.update({'description': self.product_color + self.vault_material_name})
+                        vals.update({'description': self.product_color + ' ' + self.vault_material_name})
 
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0 and self.default_code[-3:] == '000':
@@ -394,7 +394,7 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
 
-                        vals.update({'description': self.product_color + self.vault_material_name})
+                        vals.update({'description': self.product_color + ' ' + self.vault_material_name})
 
                     # Código A31P
                     elif vals['vault_code'] == 'A31P' and vals['vault_categ']:
