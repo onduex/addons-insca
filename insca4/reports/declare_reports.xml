@@ -19,14 +19,14 @@
         </record>
 
         <report
-                id="report_supplier_list_material"
+                id="report_supplier_list_material_view"
                 model="supplier.list"
                 string="Etiquetas"
-                name="insca4.report_supplier_list_material_view"
+                name="insca4.report_supplier_list_material"
                 file="insca4.report_supplier_list_material"
                 report_type="qweb-pdf"
-                paperformat="insca4.paperformat_supplier_list_material_labels"/>
-        />
-
+                paperformat="insca4.paperformat_supplier_list_material_labels"
+                print_report_name="'Etiqueta - %s' % (object.id)"
+                />
     </data>
 </odoo>
