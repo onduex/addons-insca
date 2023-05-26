@@ -546,6 +546,7 @@ class ProductTemplate(models.Model):
                                                                                        vals[
                                                                                            'vault_right_hand'])])
                                 for product in product_ids:
+                                    qty = 0.0
                                     if vals.get('vault_length_tub'):
                                         if vals['vault_length_tub'] is not None:
                                             qty = float(vals['vault_length_tub']) / 1000

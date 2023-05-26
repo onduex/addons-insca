@@ -182,8 +182,14 @@ class MrpBomLine(models.Model):
                 product_ids = self.env['product.product']. \
                     search([('default_code', '=', self.product_id.vault_right_hand)])
             for product in product_ids:
-                qty = 1
-                lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                qty = 0.0
+                if self.vault_length_tub:
+                    if self.vault_length_tub is not None:
+                        qty = float(self.vault_length_tub) / 1000
+                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                else:
+                    qty = 1
+                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
         # Código A90
         elif self.product_id.code[0:3] == 'A90':
