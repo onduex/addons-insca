@@ -204,11 +204,18 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
 
-                        if self.vault_material_name and self.product_color:
+                        if not self.vault_material_name or not self.product_color:
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
-                        if vals.get('vault_material_name') and vals.get('product_color'):
+                        if not vals.get('vault_material_name') or not vals.get('product_color'):
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                                        vals.get('product_color')})
+                                         vals.get('product_color')
+                                         })
 
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0:
@@ -277,11 +284,18 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
 
-                        if self.vault_material_name and self.product_color:
+                        if not self.vault_material_name or not self.product_color:
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
-                        if vals.get('vault_material_name') and vals.get('product_color'):
+                        if not vals.get('vault_material_name') or not vals.get('product_color'):
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                                        vals.get('product_color')})
+                                         vals.get('product_color')
+                                         })
 
                     # Código A30
                     elif vals['vault_code'] == 'A30' and vals['vault_categ']:
@@ -300,11 +314,18 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
 
-                        if self.vault_material_name and self.product_color:
+                        if not self.vault_material_name or not self.product_color:
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
-                        if vals.get('vault_material_name') and vals.get('product_color'):
+                        if not vals.get('vault_material_name') or not vals.get('product_color'):
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                                        vals.get('product_color')})
+                                         vals.get('product_color')
+                                         })
 
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0 and self.default_code[-3:] == '000':
@@ -360,11 +381,18 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('Producto %s no encontrado. Revise Vault'
                                                     % (self.default_code[:-3] + '000')))
 
-                        if self.vault_material_name and self.product_color:
+                        if not self.vault_material_name or not self.product_color:
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
-                        if vals.get('vault_material_name') and vals.get('product_color'):
+                        if not vals.get('vault_material_name') or not vals.get('product_color'):
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                                        vals.get('product_color')})
+                                         vals.get('product_color')
+                                         })
 
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
@@ -412,11 +440,18 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
 
-                        if self.vault_material_name and self.product_color:
+                        if not self.vault_material_name or not self.product_color:
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
-                        if vals.get('vault_material_name') and vals.get('product_color'):
+                        if not vals.get('vault_material_name') or not vals.get('product_color'):
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                                        vals.get('product_color')})
+                                         vals.get('product_color')
+                                         })
 
                     # Código A31P
                     elif vals['vault_code'] == 'A31P' and vals['vault_categ']:
@@ -442,11 +477,18 @@ class ProductTemplate(models.Model):
                             raise ValidationError(_('Producto %s no encontrado. Revise Vault'
                                                     % (self.default_code[:-3] + '000')))
 
-                        if self.vault_material_name and self.product_color:
+                        if not self.vault_material_name or not self.product_color:
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
-                        if vals.get('vault_material_name') and vals.get('product_color'):
+                        if not vals.get('vault_material_name') or not vals.get('product_color'):
+                            raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o '
+                                                    'COLOR MATERIAL, no están definidos'))
+                        elif vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                                        vals.get('product_color')})
+                                         vals.get('product_color')
+                                         })
 
                     # Código A50
                     elif vals['vault_code'] == 'A50':
