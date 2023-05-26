@@ -175,7 +175,7 @@ class CreatePackagingWiz(models.TransientModel):
                                                 'product_id': product_obj.id,
                                                 'product_qty': 1,
                                                 'type': 'phantom',
-                                                'routing_id': 141,  # SEC-EMB
+                                                # 'routing_id': 141,  # SEC-EMB
                                                 })
         # Crear bulto como línea de LdM
         self.env['mrp.bom.line'].sudo().create({'bom_id': self.embalaje_bom.id,
