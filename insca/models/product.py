@@ -206,7 +206,7 @@ class ProductTemplate(models.Model):
 
                         if not self.vault_material_name or not self.product_color:
                             raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o COLOR MATERIAL, no están definidos'
-                                                    % self.default_code))
+                                                    % vals.get('default_code')))
                         elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if not vals.get('vault_material_name') or not vals.get('product_color'):
@@ -286,7 +286,7 @@ class ProductTemplate(models.Model):
 
                         if not self.vault_material_name or not self.product_color:
                             raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o COLOR MATERIAL, no están definidos'
-                                                    % self.default_code))
+                                                    % vals.get('default_code')))
                         elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if not vals.get('vault_material_name') or not vals.get('product_color'):
@@ -316,7 +316,7 @@ class ProductTemplate(models.Model):
 
                         if not self.vault_material_name or not self.product_color:
                             raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o COLOR MATERIAL, no están definidos'
-                                                    % self.default_code))
+                                                    % vals.get('default_code')))
                         elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if not vals.get('vault_material_name') or not vals.get('product_color'):
@@ -383,7 +383,7 @@ class ProductTemplate(models.Model):
 
                         if not self.vault_material_name or not self.product_color:
                             raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o COLOR MATERIAL, no están definidos'
-                                                    % self.default_code))
+                                                    % vals.get('default_code')))
                         elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if not vals.get('vault_material_name') or not vals.get('product_color'):
@@ -442,7 +442,7 @@ class ProductTemplate(models.Model):
 
                         if not self.vault_material_name or not self.product_color:
                             raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o COLOR MATERIAL, no están definidos'
-                                                    % self.default_code))
+                                                    % vals.get('default_code')))
                         elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if not vals.get('vault_material_name') or not vals.get('product_color'):
@@ -479,7 +479,7 @@ class ProductTemplate(models.Model):
 
                         if not self.vault_material_name or not self.product_color:
                             raise ValidationError(_('los valores de CODIGO MATERIAL VIRTUAL y/o COLOR MATERIAL, no están definidos'
-                                                    % self.default_code))
+                                                    % vals.get('default_code')))
                         elif self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if not vals.get('vault_material_name') or not vals.get('product_color'):
