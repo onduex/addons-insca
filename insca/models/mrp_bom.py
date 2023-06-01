@@ -132,7 +132,6 @@ class MrpBomLine(models.Model):
                         if float(self.product_id.vault_length_tub) != 0.0:
                             qty = float(self.product_id.vault_length_tub) / 1000
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-            self.child_bom_id.sudo().bom_line_ids.unlink()
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
         # Código A30P
         elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] != '000':
