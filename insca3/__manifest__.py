@@ -20,6 +20,10 @@
         'crm',
     ],
 
+    'external_dependencies': {
+        'python': ['pysmb'],
+    },
+
     # always loaded
     'data': [
         'security/ir.model.access.csv',
