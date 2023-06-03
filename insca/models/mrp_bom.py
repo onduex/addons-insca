@@ -112,7 +112,8 @@ class MrpBomLine(models.Model):
                     qty = self.product_id.vault_edge_painted_sup
                     if product:
                         lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-            self.child_bom_id.sudo().update({'bom_line_ids': lines})
+            if len(lines) > 0:
+                self.child_bom_id.sudo().update({'bom_line_ids': lines})
         # Código A30
         elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] == '000':
             lines = []
@@ -269,7 +270,10 @@ class MrpBom(models.Model):
                         qty = 1
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                     qty = None
-                res.update({'bom_line_ids': lines})
+                if bom.product_tmpl_id.active is True:
+                    res.update({'bom_line_ids': lines})
+                if bom.product_tmpl_id.active is False and bom.is_old_revision is True:
+                    bom.sudo().write({'active': False})
 
             # add extra lines to A11 codes
             if bom.product_tmpl_id.vault_code == 'A11' and bom.is_vault_bom:
@@ -303,5 +307,8 @@ class MrpBom(models.Model):
                                 qty = str(bom.product_tmpl_id.vault_edge_painted_sup)
                         if product:
                             lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-                res.update({'bom_line_ids': lines})
+                if bom.product_tmpl_id.active is True:
+                    res.update({'bom_line_ids': lines})
+                if bom.product_tmpl_id.active is False and bom.is_old_revision is True:
+                    bom.sudo().write({'active': False})
         return res

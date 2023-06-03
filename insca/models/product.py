@@ -253,13 +253,14 @@ class ProductTemplate(models.Model):
                                                 qty = str(vals['vault_edge_painted_sup'])
                                         if product:
                                             lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-                                mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
-                                                              'code': self.vault_revision,
-                                                              'product_qty': 1,
-                                                              'type': 'normal',
-                                                              'routing_id': mrp_routing.id or None,
-                                                              'bom_line_ids': lines,
-                                                              })
+                                if len(lines) > 0:
+                                    mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                                  'code': self.vault_revision,
+                                                                  'product_qty': 1,
+                                                                  'type': 'normal',
+                                                                  'routing_id': mrp_routing.id or None,
+                                                                  'bom_line_ids': lines,
+                                                                  })
 
                     # Código A11
                     elif vals['vault_code'] == 'A11':
@@ -331,13 +332,14 @@ class ProductTemplate(models.Model):
                                                 qty = float(vals['vault_length_tub']) / 1000
                                         lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                                         qty = None
-                                mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
-                                                              'code': self.vault_revision,
-                                                              'product_qty': 1,
-                                                              'type': 'normal',
-                                                              'routing_id': mrp_routing.id or None,
-                                                              'bom_line_ids': lines,
-                                                              })
+                                if len(lines) > 0:
+                                    mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                                  'code': self.vault_revision,
+                                                                  'product_qty': 1,
+                                                                  'type': 'normal',
+                                                                  'routing_id': mrp_routing.id or None,
+                                                                  'bom_line_ids': lines,
+                                                                  })
 
                     # Código A30P
                     elif vals['vault_code'] == 'A30P' and vals['vault_categ']:
