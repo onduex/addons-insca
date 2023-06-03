@@ -8,12 +8,10 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     def write(self, vals):
-        print(vals.get('is_old_revision'))
         if vals.get('is_old_revision'):
             for record in self.bom_ids:
                 record.sudo().write({'active': False,
                                      'is_old_revision': True})
             vals.update({'active': False})
-            print("eureka")
 
         return super(ProductTemplate, self).write(vals)
