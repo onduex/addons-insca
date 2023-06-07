@@ -413,8 +413,8 @@ class Supplierlist(models.Model):
                                 if bom['vault_route']:
                                     route_list2 += bom['vault_route'].split("-", -1)
                                     materialcode = bom.product_tmpl_id.vault_material_code
-                                    materialname = self.env['product.template'].search([
-                                                     ('default_code', '=', bom.product_tmpl_id.vault_material_code)]).name
+                                    materialname = self.env['product.template'].search([('type', '=', 'product'),
+                                                                                        ('default_code', '=', bom.product_tmpl_id.vault_material_code)]).name
                                     y = y + 1
                                     self.create({'checked': True,
                                                  'partner_name': self.env['sale.order'].
