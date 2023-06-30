@@ -5,4 +5,3 @@ from . import product
 from . import res_code
 from . import product_supplier_info
 from . import mrp_workorder
-# from . import bom_product_is_old_revision

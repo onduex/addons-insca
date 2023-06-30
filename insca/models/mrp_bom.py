@@ -105,7 +105,7 @@ class MrpBomLine(models.Model):
                     if product:
                         lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             if self.product_id.vault_edge_pin_code:
-                if self.product_id.vault_edge_painted_sup != 0.0:
+                if self.product_id.vault_edge_painted_sup is not False:
                     product = self.env['product.product']. \
                         search([('default_code', '=', self.product_id.vault_edge_pin_code),
                                 ('default_code', '!=', 'I0039Y')])

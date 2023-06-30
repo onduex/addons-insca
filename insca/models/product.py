@@ -132,6 +132,8 @@ class ProductTemplate(models.Model):
                         vals.update({'vault_material_name': self.vault_material_name})
                     if not vals.get('product_color'):
                         vals.update({'product_color': self.product_color})
+                    if not vals.get('vault_edge_pin_code'):
+                        vals.update({'vault_edge_pin_code': self.vault_edge_pin_code})
 
                     # Escribe material code
                     if not vals.get('vault_material_code'):
