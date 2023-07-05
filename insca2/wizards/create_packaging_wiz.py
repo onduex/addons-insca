@@ -463,7 +463,7 @@ class ProductTemplate(models.Model):
 
     def create_bom_wiz_action(self):
         embalaje_id = self.env["product.template"]. \
-            search([("default_code", "ilike", 'EM0.' + self.default_code[4:10]),
+            search([("default_code", "ilike", 'EM0.' + self.default_code[4:17]),
                     ("vault_revision", "=", self.vault_revision)])
         embalaje_bom = self.env["mrp.bom"].search([("product_tmpl_id", "=", embalaje_id.id)])
 
