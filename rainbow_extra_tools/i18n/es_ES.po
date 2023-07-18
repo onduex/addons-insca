@@ -1,0 +1,111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rainbow_extra_tools
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-18 08:32+0000\n"
+"PO-Revision-Date: 2023-07-18 10:45+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#. module: rainbow_extra_tools
+#: model_terms:ir.ui.view,arch_db:rainbow_extra_tools.preview_import_wiz_form_view
+msgid ""
+"<span class=\"fa fa-info-circle\"/>This is calling vault products to "
+"import.\n"
+"                                If nothing when Start, no new ones products "
+"to import."
+msgstr ""
+"<span j=\"0/\">Esto es para llamar a los productos de vault para importar.\n"
+"                                Si nada cuando Inicio, no hay nuevos "
+"productos para importar.</span>"
+
+#. module: rainbow_extra_tools
+#: model_terms:ir.ui.view,arch_db:rainbow_extra_tools.vault_server_view_kanban_inherit
+#, fuzzy
+msgid "<span>Archive old revisions</span>"
+msgstr "<span>Archivar revisiones antiguas</span>"
+
+#. module: rainbow_extra_tools
+#: model_terms:ir.ui.view,arch_db:rainbow_extra_tools.vault_server_view_kanban_inherit
+#, fuzzy
+msgid "<span>Preview products to import</span>"
+msgstr "<span>Vista previa de productos para importar</span>"
+
+#. module: rainbow_extra_tools
+#: model_terms:ir.ui.view,arch_db:rainbow_extra_tools.preview_import_wiz_form_view
+msgid "Apply"
+msgstr "Aplicar"
+
+#. module: rainbow_extra_tools
+#: model_terms:ir.ui.view,arch_db:rainbow_extra_tools.preview_import_wiz_form_view
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: rainbow_extra_tools
+#: model:ir.model.fields,field_description:rainbow_extra_tools.field_preview_import_wiz__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: rainbow_extra_tools
+#: model:ir.model.fields,field_description:rainbow_extra_tools.field_preview_import_wiz__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: rainbow_extra_tools
+#: model:ir.model.fields,field_description:rainbow_extra_tools.field_preview_import_wiz__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: rainbow_extra_tools
+#: model:ir.model.fields,field_description:rainbow_extra_tools.field_preview_import_wiz__id
+msgid "ID"
+msgstr "ID"
+
+#. module: rainbow_extra_tools
+#: model:ir.model.fields,field_description:rainbow_extra_tools.field_preview_import_wiz__items_to_import
+#, fuzzy
+msgid "Items To Import"
+msgstr "Elementos para importar"
+
+#. module: rainbow_extra_tools
+#: model:ir.model.fields,field_description:rainbow_extra_tools.field_preview_import_wiz____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: rainbow_extra_tools
+#: model:ir.model.fields,field_description:rainbow_extra_tools.field_preview_import_wiz__write_uid
+msgid "Last Updated by"
+msgstr "Actualizado por"
+
+#. module: rainbow_extra_tools
+#: model:ir.model.fields,field_description:rainbow_extra_tools.field_preview_import_wiz__write_date
+msgid "Last Updated on"
+msgstr "Actualizado el"
+
+#. module: rainbow_extra_tools
+#: model:ir.model,name:rainbow_extra_tools.model_preview_import_wiz
+#: model_terms:ir.ui.view,arch_db:rainbow_extra_tools.preview_import_wiz_form_view
+#, fuzzy
+msgid "Preview products to import"
+msgstr "Vista previa de productos para importar"
+
+#. module: rainbow_extra_tools
+#: model_terms:ir.ui.view,arch_db:rainbow_extra_tools.preview_import_wiz_form_view
+msgid "Start"
+msgstr "Inicio"
+
+#. module: rainbow_extra_tools
+#: model:ir.model,name:rainbow_extra_tools.model_vault_server
+#, fuzzy
+msgid "Vault Server"
+msgstr "Servidor de bóveda"
