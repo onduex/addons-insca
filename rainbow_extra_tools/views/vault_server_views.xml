@@ -12,7 +12,13 @@
                 <br/>
                 <button class="btn btn-primary" name="preview_import_wiz_action"
                         type="object">
-                    <span>Preview import products</span>
+                    <span>Preview products to import</span>
+                </button>
+                <br/>
+                <br/>
+                <button class="btn btn-primary" name="archive_old_revision_product"
+                        type="object">
+                    <span>Archive old revisions</span>
                 </button>
             </xpath>
 

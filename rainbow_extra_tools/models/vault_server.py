@@ -44,3 +44,10 @@ class VaultServer(models.Model):
         items = sorted(items, key=lambda r: r["MasterId"])
 
         return items
+
+    def archive_old_revision_product(self):
+        products_to_archive = self.env['product.template'].search([('is_old_revision', '=', True)])
+        for rec in products_to_archive:
+            rec.write({'active': True,
+                       })
+            print('eureka')
