@@ -1,6 +1,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 from odoo.addons.rainbow.controllers.main import service_client, vault_log
 from odoo.addons.rainbow.tools.tools import (
@@ -50,3 +50,11 @@ class VaultServer(models.Model):
         for rec in products_to_archive:
             rec.write({'active': False,
                        })
+        message = _('%s products set as archived.') % len(products_to_archive)
+        if not bool(products_to_archive):
+            message = _('No new products to archive in the system.')
+        return self._show_info_message(
+            title=_('Products archived correctly!'),
+            message=message,
+            sticky=True
+        )
