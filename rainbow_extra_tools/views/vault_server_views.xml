@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vault_server_view_kanban_inherit" model="ir.ui.view">
+        <field name="name">vault.server.view.kanban.inherit</field>
+        <field name="model">vault.server</field>
+        <field name="inherit_id" ref="rainbow.vault_server_view_kanban"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='sync_vault_products']" position="after">
+                <br/>
+                <br/>
+                <button class="btn btn-primary" name="preview_import_wiz_action"
+                        type="object">
+                    <span>Preview import products</span>
+                </button>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
