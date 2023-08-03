@@ -115,8 +115,7 @@ class MrpBomLine(models.Model):
             if len(lines) > 0:
                 self.child_bom_id.sudo().update({'bom_line_ids': lines})
         # Código A30
-        elif (self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] == '000' and
-              not self.product_id.is_old_revision):
+        elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] == '000':
             lines = []
             product_ids = []
             if self.product_id.vault_material_code:
@@ -135,10 +134,6 @@ class MrpBomLine(models.Model):
                             qty = float(self.product_id.vault_length_tub) / 1000
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
-        elif (self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] == '000' and
-              (self.product_id.is_old_revision or self.product_tmpl_id.is_old_revision)):
-            self.write({'is_old_revision': True
-                        })
 
         # Código A30P
         elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] != '000':
