@@ -290,6 +290,11 @@ class ProductTemplate(models.Model):
 
                     # Código A30
                     elif vals['vault_code'] == 'A30' and vals['vault_categ']:
+                        if 'is_old_revision' in vals:
+                            if vals['is_old_revision']:
+                                for rec in self.bom_ids:
+                                    rec.is_old_revision = True
+                            continue
                         parent_categ = self.env['product.category'].search([('name', '=', res_code.type)])
                         categ = self.env['product.category'].search([('name', '=', vals['vault_categ']),
                                                                      ('parent_id', '=', parent_categ.id)])
