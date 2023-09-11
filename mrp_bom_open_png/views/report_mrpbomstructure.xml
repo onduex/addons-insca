@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_mrpbomstructure_png" inherit_id="mrp.report_mrp_bom">
+        <xpath expr="//thead/tr/th[1]" position="after">
+            <th class="o_mrp_bom_cost text-left" title="PNG link">
+                PNG
+            </th>
+        </xpath>
+        <xpath expr="//tbody/tr/td[1]" position="after">
+            <td class="text-left">
+                <span>
+                    <a t-attf-href="{{data['bom'].png_link}}">
+                        #
+                    </a>
+                </span>
+            </td>
+        </xpath>
+    </template>
+    <template id="report_mrp_bom_line_png" inherit_id="mrp.report_mrp_bom_line">
+        <xpath expr="//tr/td[1]" position="after">
+            <td class="text-left">
+                <span>
+                    <a t-attf-href="{{data['bom'].png_link}}">
+                        #
+                    </a>
+                </span>
+            </td>
+        </xpath>
+    </template>
+</odoo>
