@@ -11,7 +11,7 @@ class MrpBom(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for bom in res:
-            bom.png_link = ("C:/IMG/0_PNG/" + bom.product_tmpl_id.default_code[0:3] + "/" +
+            bom.png_link = ("R:/DTECNIC/PLANOS/0_PNG/" + bom.product_tmpl_id.default_code[0:3] + "/" +
                             bom.product_tmpl_id.default_code[0:7] + "/" +
                             bom.product_tmpl_id.default_code + ".png")
             return res
@@ -19,7 +19,7 @@ class MrpBom(models.Model):
     def write(self, values):
         super(MrpBom, self).write(values)
         if values.get('product_tmpl_id'):
-            values.update({'png_link': ("C:/IMG/0_PNG/" + self.product_tmpl_id.default_code[0:3] + "/" +
+            values.update({'png_link': ("R:/DTECNIC/PLANOS/0_PNG/" + self.product_tmpl_id.default_code[0:3] + "/" +
                                         self.product_tmpl_id.default_code[0:7] + "/" +
                                         self.product_tmpl_id.default_code + ".png")
                            })
@@ -35,7 +35,7 @@ class MrpBomLine(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for bomLine in res:
-            bomLine.png_link = ("C:/IMG/0_PNG/" + bomLine.product_id.default_code[0:3] + "/" +
+            bomLine.png_link = ("R:/DTECNIC/PLANOS/0_PNG/" + bomLine.product_id.default_code[0:3] + "/" +
                                 bomLine.product_id.default_code[0:7] + "/" +
                                 bomLine.product_id.default_code + ".png")
             return res
@@ -43,7 +43,7 @@ class MrpBomLine(models.Model):
     def write(self, values):
         super(MrpBomLine, self).write(values)
         if values.get('product_id'):
-            values.update({'png_link': ("C:/IMG/0_PNG/" + self.product_id.default_code[0:3] + "/" +
+            values.update({'png_link': ("R:/DTECNIC/PLANOS/0_PNG/" + self.product_id.default_code[0:3] + "/" +
                                         self.product_id.default_code[0:7] + "/" +
                                         self.product_id.default_code + ".png")
                            })
