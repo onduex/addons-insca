@@ -58,15 +58,16 @@ class MrpBomLine(models.Model):
     def write(self, values):
         super(MrpBomLine, self).write(values)
         if values.get('product_id'):
-            suffix = ''
-            if len(self.bom_id.code) == 1:
-                suffix = "_R0" + self.bom_id.code
-            elif len(self.bom_id.code) == 2:
-                suffix = "_R" + self.bom_id.code
-            values.update({'png_link': ("R:/DTECNIC/PLANOS/0_PNG/" + self.product_id.default_code[0:3] + "/" +
-                                        self.product_id.default_code[0:7] + "/" +
-                                        self.product_id.default_code + suffix + ".png")
-                           })
-            return super(MrpBomLine, self).write(values)
+            for bomLine in self:
+                suffix = ''
+                if len(bomLine.bom_id.code) == 1:
+                    suffix = "_R0" + bomLine.bom_id.code
+                elif len(bomLine.bom_id.code) == 2:
+                    suffix = "_R" + bomLine.bom_id.code
+                values.update({'png_link': ("R:/DTECNIC/PLANOS/0_PNG/" + bomLine.product_id.default_code[0:3] + "/" +
+                                            bomLine.product_id.default_code[0:7] + "/" +
+                                            bomLine.product_id.default_code + suffix + ".png")
+                               })
+                return super(MrpBomLine, self).write(values)
 
     png_link = fields.Char(string='PNG', required=False, readonly=False, store=True)
