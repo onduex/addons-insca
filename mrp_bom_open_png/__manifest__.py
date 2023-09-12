@@ -8,7 +8,7 @@
     "author": "T. Pascual",
     "license": "LGPL-3",
     "application": False,
-    "depends": ["mrp"],
+    "depends": ["mrp", "rainbow"],
     "data": [
         # "views/actions.xml",
         "views/report_mrpbomstructure.xml"
