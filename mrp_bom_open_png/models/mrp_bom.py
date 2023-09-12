@@ -68,6 +68,6 @@ class MrpBomLine(models.Model):
                                             bomLine.product_id.default_code[0:7] + "/" +
                                             bomLine.product_id.default_code + suffix + ".png")
                                })
-                return super(MrpBomLine, self).write(values)
+                return super(MrpBomLine, bomLine).write(values)
 
     png_link = fields.Char(string='PNG', required=False, readonly=False, store=True)

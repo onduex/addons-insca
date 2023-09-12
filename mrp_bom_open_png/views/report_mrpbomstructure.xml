@@ -20,7 +20,7 @@
         <xpath expr="//tr/td[1]" position="after">
             <td class="text-left">
                 <span>
-                    <a t-attf-href="{{data['bom'].png_link}}">
+                    <a t-attf-href="{{data['line_id'].png_link}}">
                         #
                     </a>
                 </span>
