@@ -7,69 +7,36 @@ from odoo import fields, models, api, _
 class MrpBom(models.Model):
     _inherit = "mrp.bom"
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        for bom in res:
-            suffix = ''
-            if len(bom.product_tmpl_id.vault_revision) == 1:
-                suffix = "_R0" + bom.product_tmpl_id.vault_revision
-            elif len(bom.product_tmpl_id.vault_revision) == 2:
-                suffix = "_R" + bom.product_tmpl_id.vault_revision
-            bom.png_link = ("R:/DTECNIC/PLANOS/0_PNG/" + bom.product_tmpl_id.default_code[0:3] + "/" +
-                            bom.product_tmpl_id.default_code[0:7] + "/" +
-                            bom.product_tmpl_id.default_code + suffix + ".png")
-            return res
+    @api.depends('product_tmpl_id', 'product_id', '__last_update')
+    def _set_png_link(self):
+        for bom in self:
+            if bom.product_tmpl_id.is_vault_product:
+                suffix = ''
+                if len(str(bom.product_tmpl_id.vault_revision)) == 1:
+                    suffix = "_R0" + bom.product_tmpl_id.vault_revision
+                elif len(str(bom.product_tmpl_id.vault_revision)) == 2:
+                    suffix = "_R" + bom.product_tmpl_id.vault_revision
+                bom.png_link = ("R:/DTECNIC/PLANOS/0_PNG/" + bom.product_tmpl_id.default_code[0:3] + "/" +
+                                bom.product_tmpl_id.default_code[0:7] + "/" +
+                                bom.product_tmpl_id.default_code + suffix + ".png")
 
-    def write(self, values):
-        super(MrpBom, self).write(values)
-        if values.get('product_tmpl_id'):
-            suffix = ''
-            if len(self.product_tmpl_id.vault_revision) == 1:
-                suffix = "_R0" + self.product_tmpl_id.vault_revision
-            elif len(self.product_tmpl_id.vault_revision) == 2:
-                suffix = "_R" + self.product_tmpl_id.vault_revision
-            values.update({'png_link': ("R:/DTECNIC/PLANOS/0_PNG/" + self.product_tmpl_id.default_code[0:3] + "/" +
-                                        self.product_tmpl_id.default_code[0:7] + "/" +
-                                        self.product_tmpl_id.default_code + suffix + ".png")
-                           })
-            return super(MrpBom, self).write(values)
-
-    png_link = fields.Char(string='PNG', required=False, readonly=False, store=True)
+    png_link = fields.Char(string='PNG', required=False, readonly=False, store=True, compute='_set_png_link')
 
 
 class MrpBomLine(models.Model):
     _inherit = "mrp.bom.line"
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        for bomLine in res:
-            if bomLine.product_id.is_vault_product:
+    @api.depends('product_id', 'product_tmpl_id.vault_revision', '__last_update')
+    def _set_png_link(self):
+        for bomLine in self:
+            if bomLine.product_tmpl_id.is_vault_product:
                 suffix = ''
-                if len(bomLine.product_id.vault_revision) == 1:
-                    suffix = "_R0" + bomLine.product_id.vault_revision
-                elif len(bomLine.product_id.vault_revision) == 2:
-                    suffix = "_R" + bomLine.product_id.vault_revision
-                bomLine.png_link = ("R:/DTECNIC/PLANOS/0_PNG/" + bomLine.product_id.default_code[0:3] + "/" +
-                                    bomLine.product_id.default_code[0:7] + "/" +
-                                    bomLine.product_id.default_code + suffix + ".png")
-        return res
+                if len(str(bomLine.product_tmpl_id.vault_revision)) == 1:
+                    suffix = "_R0" + bomLine.product_tmpl_id.vault_revision
+                elif len(str(bomLine.product_tmpl_id.vault_revision)) == 2:
+                    suffix = "_R" + bomLine.product_tmpl_id.vault_revision
+                bomLine.png_link = ("R:/DTECNIC/PLANOS/0_PNG/" + bomLine.product_tmpl_id.default_code[0:3] + "/" +
+                                    bomLine.product_tmpl_id.default_code[0:7] + "/" +
+                                    bomLine.product_tmpl_id.default_code + suffix + ".png")
 
-    def write(self, values):
-        super(MrpBomLine, self).write(values)
-        if values.get('product_id'):
-            if self.product_id.is_vault_product:
-                suffix = ''
-                if len(self.product_id.vault_revision) == 1:
-                    suffix = "_R0" + self.product_id.vault_revision
-                elif len(self.product_id.vault_revision) == 2:
-                    suffix = "_R" + self.product_id.vault_revision
-                values.update(
-                    {'png_link': ("R:/DTECNIC/PLANOS/0_PNG/" + self.product_id.default_code[0:3] + "/" +
-                                  self.product_id.default_code[0:7] + "/" +
-                                  self.product_id.default_code + suffix + ".png")
-                     })
-                return super(MrpBomLine, self).write(values)
-
-    png_link = fields.Char(string='PNG', required=False, readonly=False, store=True)
+    png_link = fields.Char(string='PNG', required=False, readonly=False, store=True, compute='_set_png_link')
