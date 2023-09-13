@@ -56,22 +56,20 @@ class MrpBomLine(models.Model):
                                     bomLine.product_id.default_code + suffix + ".png")
         return res
 
-
     def write(self, values):
         super(MrpBomLine, self).write(values)
         if values.get('product_id'):
-            for bomLine in self:
-                if bomLine.product_id.is_vault_product:
-                    suffix = ''
-                    if len(bomLine.product_id.vault_revision) == 1:
-                        suffix = "_R0" + bomLine.product_id.vault_revision
-                    elif len(bomLine.product_id.vault_revision) == 2:
-                        suffix = "_R" + bomLine.product_id.vault_revision
-                    values.update(
-                        {'png_link': ("R:/DTECNIC/PLANOS/0_PNG/" + bomLine.product_id.default_code[0:3] + "/" +
-                                      bomLine.product_id.default_code[0:7] + "/" +
-                                      bomLine.product_id.default_code + suffix + ".png")
-                         })
-                    return super(MrpBomLine, self).write(values)
+            if self.product_id.is_vault_product:
+                suffix = ''
+                if len(self.product_id.vault_revision) == 1:
+                    suffix = "_R0" + self.product_id.vault_revision
+                elif len(self.product_id.vault_revision) == 2:
+                    suffix = "_R" + self.product_id.vault_revision
+                values.update(
+                    {'png_link': ("R:/DTECNIC/PLANOS/0_PNG/" + self.product_id.default_code[0:3] + "/" +
+                                  self.product_id.default_code[0:7] + "/" +
+                                  self.product_id.default_code + suffix + ".png")
+                     })
+                return super(MrpBomLine, self).write(values)
 
     png_link = fields.Char(string='PNG', required=False, readonly=False, store=True)
