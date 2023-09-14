@@ -16,15 +16,18 @@ class A12A15(models.Model):
     color_madera1_id = fields.Many2one(comodel_name='product.template',
                                        string='Color M1',
                                        required=True,
-                                       domain="[('categ_base', '=', 'COLOR MADERA')]")
+                                       domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
+                                       )
     color_madera2_id = fields.Many2one(comodel_name='product.template',
                                        string='Color M2',
                                        required=True,
-                                       domain="[('categ_base', '=', 'COLOR MADERA')]")
+                                       domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
+                                       )
     color_madera3_id = fields.Many2one(comodel_name='product.template',
                                        string='Color M3',
                                        required=True,
-                                       domain="[('categ_base', '=', 'COLOR MADERA')]")
+                                       domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
+                                       )
     obsoleto = fields.Boolean(string='Obsoleto', required=False)
 
     @api.model

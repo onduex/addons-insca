@@ -14,17 +14,21 @@ class A32A32(models.Model):
 
     name = fields.Char(string='Código', required=False, store=True, readonly=True)
     color_metal1_id = fields.Many2one(comodel_name='product.template',
-                                       string='Color MT1',
-                                       required=True,
-                                       domain="[('categ_base', '=', 'COLOR METAL')]")
+                                      string='Color MT1',
+                                      required=True,
+                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')]),"
+                                             "]"
+                                      )
     color_metal2_id = fields.Many2one(comodel_name='product.template',
-                                       string='Color MT2',
-                                       required=True,
-                                       domain="[('categ_base', '=', 'COLOR METAL')]")
+                                      string='Color MT2',
+                                      required=True,
+                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
+                                      )
     color_metal3_id = fields.Many2one(comodel_name='product.template',
-                                       string='Color MT3',
-                                       required=True,
-                                       domain="[('categ_base', '=', 'COLOR METAL')]")
+                                      string='Color MT3',
+                                      required=True,
+                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
+                                      )
     obsoleto = fields.Boolean(string='Obsoleto', required=False)
 
     @api.model
@@ -50,7 +54,7 @@ class A32A32(models.Model):
         res.update({'name': difference[0], })
 
         return res
-    
+
     def write(self, vals):
         used_keywords = []
         config_ids = self.env['a32.a32'].search([])
@@ -91,8 +95,8 @@ class A32A32(models.Model):
     code_concat = fields.Char(string='Códigos concatenados', required=False,
                               compute=_compute_code_concat, store=True)
     color_metal1_name = fields.Char(string='Color MT1 nombre', required=False,
-                                     compute=_compute_code_concat, store=True)
+                                    compute=_compute_code_concat, store=True)
     color_metal2_name = fields.Char(string='Color MT2 nombre', required=False,
-                                     compute=_compute_code_concat, store=True)
+                                    compute=_compute_code_concat, store=True)
     color_metal3_name = fields.Char(string='Color MT3 nombre', required=False,
-                                     compute=_compute_code_concat, store=True)
+                                    compute=_compute_code_concat, store=True)
