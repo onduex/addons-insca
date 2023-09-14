@@ -7,10 +7,10 @@ from odoo import fields, models, api, _
 class MrpBom(models.Model):
     _inherit = "mrp.bom"
 
-    @api.depends('product_tmpl_id', 'product_id', '__last_update')
+    @api.depends('product_tmpl_id', 'product_id', 'product_tmpl_id.vault_internal_id')
     def _set_png_link(self):
         for bom in self:
-            if bom.product_tmpl_id.is_vault_product:
+            if bom.product_tmpl_id.default_code[0:3] == 'A00' or bom.product_tmpl_id.is_vault_product:
                 suffix = ''
                 if len(str(bom.product_tmpl_id.vault_revision)) == 1:
                     suffix = "_R0" + bom.product_tmpl_id.vault_revision
@@ -26,10 +26,10 @@ class MrpBom(models.Model):
 class MrpBomLine(models.Model):
     _inherit = "mrp.bom.line"
 
-    @api.depends('product_id', 'product_tmpl_id.vault_revision', '__last_update')
+    @api.depends('product_id', 'product_tmpl_id.vault_revision', 'product_tmpl_id.vault_internal_id')
     def _set_png_link(self):
         for bomLine in self:
-            if bomLine.product_tmpl_id.is_vault_product:
+            if bomLine.product_tmpl_id.default_code[0:3] == 'A00' or bomLine.product_tmpl_id.is_vault_product:
                 suffix = ''
                 if len(str(bomLine.product_tmpl_id.vault_revision)) == 1:
                     suffix = "_R0" + bomLine.product_tmpl_id.vault_revision
