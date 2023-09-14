@@ -10,3 +10,5 @@ class MrpWorkorder(models.Model):
     vault_material_name = fields.Char(string='Nombre virtual', required=False,
                                       related='product_id.vault_material_name',
                                       store=True)
+    png_link = fields.Char(string='PNG', store=True, related='product_id.png_link')
+    vault_web_link = fields.Char(string='Vault Web Link', store=True, related='product_id.vault_web_link')
