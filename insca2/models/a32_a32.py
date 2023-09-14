@@ -16,8 +16,7 @@ class A32A32(models.Model):
     color_metal1_id = fields.Many2one(comodel_name='product.template',
                                       string='Color MT1',
                                       required=True,
-                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')]),"
-                                             "]"
+                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
                                       )
     color_metal2_id = fields.Many2one(comodel_name='product.template',
                                       string='Color MT2',
