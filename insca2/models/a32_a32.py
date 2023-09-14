@@ -16,17 +16,17 @@ class A32A32(models.Model):
     color_metal1_id = fields.Many2one(comodel_name='product.template',
                                       string='Color MT1',
                                       required=True,
-                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
+                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL'), ('MADERA')])]"
                                       )
     color_metal2_id = fields.Many2one(comodel_name='product.template',
                                       string='Color MT2',
                                       required=True,
-                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
+                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL'), ('MADERA')])]"
                                       )
     color_metal3_id = fields.Many2one(comodel_name='product.template',
                                       string='Color MT3',
                                       required=True,
-                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL')])]"
+                                      domain="[('categ_base', '=', [('COLOR MADERA'), ('COLOR METAL'), ('MADERA')])]"
                                       )
     obsoleto = fields.Boolean(string='Obsoleto', required=False)
 
