@@ -27,9 +27,11 @@ class MrpBom(models.Model):
     _inherit = "mrp.bom"
 
     png_link = fields.Char(string='PNG', store=True, related='product_tmpl_id.png_link')
+    vault_web_link = fields.Char(string='PNG', store=True, related='product_tmpl_id.vault_web_link')
 
 
 class MrpBomLine(models.Model):
     _inherit = "mrp.bom.line"
 
     png_link = fields.Char(string='PNG', store=True, related='product_tmpl_id.png_link')
+    vault_web_link = fields.Char(string='PNG', store=True, related='product_tmpl_id.vault_web_link')

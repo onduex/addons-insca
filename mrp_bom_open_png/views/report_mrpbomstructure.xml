@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template id="report_mrpbomstructure_png" inherit_id="mrp.report_mrp_bom">
-        <xpath expr="//thead/tr/th[1]" position="after">
-            <th class="o_mrp_bom_cost text-left" title="PNG link">
+        <xpath expr="//thead/tr/th[2]" position="before">
+            <th class="o_mrp_bom_cost text-center" title="PNG link">
                 PNG
             </th>
+            <th class="o_mrp_bom_cost text-center" title="VWL link">
+                VWL
+            </th>
         </xpath>
-        <xpath expr="//tbody/tr/td[1]" position="after">
-            <td class="text-left">
+        <xpath expr="//tbody/tr/td[2]" position="before">
+            <td class="text-center">
                 <span>
                     <a t-attf-href="{{data['bom'].png_link}}">
                         #
                     </a>
                 </span>
             </td>
+            <td class="text-center">
+                <span>
+                    <a t-attf-href="{{data['bom'].vault_web_link}}">
+                        ##
+                    </a>
+                </span>
+            </td>
         </xpath>
     </template>
     <template id="report_mrp_bom_line_png" inherit_id="mrp.report_mrp_bom_line">
-        <xpath expr="//tr/td[1]" position="after">
-            <td t-if="l.get('png_link', False)" class="text-left">
+        <xpath expr="//tr/td[2]" position="before">
+            <td t-if="l.get('png_link', False)" class="text-center">
                 <span>
                     <a t-attf-href="{{l['png_link']}}">
                         #
+                    </a>
+                </span>
+            </td>
+            <td t-if="l.get('png_link', False)" class="text-center">
+                <span>
+                    <a t-attf-href="{{l['vault_web_link']}}">
+                        ##
                     </a>
                 </span>
             </td>

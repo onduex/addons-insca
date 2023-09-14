@@ -10,7 +10,7 @@
     "application": False,
     "depends": ["mrp", "rainbow"],
     "data": [
-        # "views/actions.xml",
+        "views/some_view.xml",
         "views/report_mrpbomstructure.xml"
     ],
     "installable": True,
