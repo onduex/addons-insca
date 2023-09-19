@@ -6,21 +6,21 @@
                 PNG
             </th>
             <th class="o_mrp_bom_cost text-center" title="VWL link">
-                VWL
+                VLT
             </th>
         </xpath>
         <xpath expr="//tbody/tr/td[2]" position="before">
             <td class="text-center">
                 <span>
                     <a t-attf-href="{{data['bom'].png_link}}">
-                        #
+                        PNG
                     </a>
                 </span>
             </td>
             <td class="text-center">
                 <span>
                     <a t-attf-href="{{data['bom'].vault_web_link}}">
-                        ##
+                        VLT
                     </a>
                 </span>
             </td>
@@ -31,14 +31,14 @@
             <td t-if="l.get('png_link', False)" class="text-center">
                 <span>
                     <a t-attf-href="{{l['png_link']}}">
-                        #
+                        PNG
                     </a>
                 </span>
             </td>
             <td t-if="l.get('png_link', False)" class="text-center">
                 <span>
                     <a t-attf-href="{{l['vault_web_link']}}">
-                        ##
+                        VLT
                     </a>
                 </span>
             </td>
