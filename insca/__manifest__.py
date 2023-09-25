@@ -20,6 +20,7 @@
         'product',
         'stock',
         'mrp',
+        'mrp_bom_open_png',
 
     ],
 
