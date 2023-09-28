@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    vault_state = fields.Char(string='ESTADO', required=False)
     vault_code = fields.Char(string='CODIGO TRUNCADO', required=False)
     vault_categ_terminado = fields.Char(string='00 CAT. PTERMINADO', required=False)  # Texto
     # 01 NOTAS INTERNAS --> description                                               # Texto
