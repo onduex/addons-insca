@@ -70,11 +70,11 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='default_code']" position="before">
-                <field name="id"/>
-                <field name="vault_internal_id"/>
-                <field name="vault_master_id"/>
-                <field name="is_old_revision"/>
-                <field name="is_vault_product"/>
+                <field name="id" optional="hide"/>
+                <field name="vault_internal_id" optional="hide"/>
+                <field name="vault_master_id" optional="hide"/>
+                <field name="is_old_revision" optional="hide"/>
+                <field name="is_vault_product" optional="hide"/>
             </xpath>
         </field>
     </record>
