@@ -47,12 +47,18 @@ class VaultServer(models.Model):
 
     def archive_old_revision_product(self):
         products_to_archive = self.env['product.template'].search([('is_old_revision', '=', True)])
+        boms_to_archive = self.env['mrp.bom'].search([('is_old_revision', '=', True)])
         for rec in products_to_archive:
             rec.write({'active': False,
                        })
-        message = _('%s products set as archived.') % len(products_to_archive)
+        for bom in boms_to_archive:
+            bom.write({'active': False,
+                       })
+        message = _('%s products and %s boms set as archived') % (len(products_to_archive), len(boms_to_archive))
         if not bool(products_to_archive):
-            message = _('No new products to archive in the system.')
+            message = _('No new products to archive in the system.\n')
+        if not bool(boms_to_archive):
+            message += _('No new bom to archive in the system.')
         return self._show_info_message(
             title=_('Products archived correctly!'),
             message=message,
