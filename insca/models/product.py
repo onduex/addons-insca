@@ -188,7 +188,7 @@ class ProductTemplate(models.Model):
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                         vals.get('product_color')
+                                                        vals.get('product_color')
                                          })
 
                         # Crear lista de materiales
@@ -263,7 +263,7 @@ class ProductTemplate(models.Model):
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                         vals.get('product_color')
+                                                        vals.get('product_color')
                                          })
 
                     # Código A30
@@ -292,7 +292,7 @@ class ProductTemplate(models.Model):
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                         vals.get('product_color')
+                                                        vals.get('product_color')
                                          })
 
                         # Crear lista de materiales
@@ -354,7 +354,7 @@ class ProductTemplate(models.Model):
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                         vals.get('product_color')
+                                                        vals.get('product_color')
                                          })
 
                         # Crear lista de materiales
@@ -407,7 +407,7 @@ class ProductTemplate(models.Model):
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                         vals.get('product_color')
+                                                        vals.get('product_color')
                                          })
 
                     # Código A31P
@@ -438,7 +438,7 @@ class ProductTemplate(models.Model):
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
                         if vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                         vals.get('product_color')
+                                                        vals.get('product_color')
                                          })
 
                     # Código A50
@@ -490,12 +490,12 @@ class ProductTemplate(models.Model):
                                                                                            'vault_purchase_code'])])
                                 if vals['vault_left_hand']:
                                     product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                       vals[
-                                                                                           'vault_left_hand'])])
+                                                                                        vals[
+                                                                                            'vault_left_hand'])])
                                 if vals['vault_right_hand']:
                                     product_ids += self.env['product.product'].search([('default_code', '=',
-                                                                                       vals[
-                                                                                           'vault_right_hand'])])
+                                                                                        vals[
+                                                                                            'vault_right_hand'])])
                                 for product in product_ids:
                                     qty = 0.0
                                     if vals.get('vault_length_tub'):
@@ -512,7 +512,48 @@ class ProductTemplate(models.Model):
                                                               'routing_id': mrp_routing.id or None,
                                                               'bom_line_ids': lines,
                                                               })
-                    
+                    # Código A72
+                    elif vals['vault_code'] == 'A72':
+                        # Check si existe ruta
+                        mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                        if vals['vault_route'] and not len(mrp_routing):
+                            raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
+                                                    % (vals['vault_route'], vals['name'])))
+
+                        # Crear lista de materiales
+                        if len(self.bom_ids) == 0:
+
+                            if vals.get('vault_purchase_code') or vals['vault_left_hand'] or vals['vault_right_hand']:
+                                lines = []
+                                product_ids = []
+                                if vals['vault_purchase_code']:
+                                    product_ids = self.env['product.product'].search([('default_code', '=',
+                                                                                       vals[
+                                                                                           'vault_purchase_code'])])
+                                if vals['vault_left_hand']:
+                                    product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                        vals[
+                                                                                            'vault_left_hand'])])
+                                if vals['vault_right_hand']:
+                                    product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                        vals[
+                                                                                            'vault_right_hand'])])
+                                for product in product_ids:
+                                    qty = 0.0
+                                    if vals.get('vault_length_tub'):
+                                        if vals['vault_length_tub'] is not None:
+                                            qty = float(vals['vault_length_tub']) / 1000
+                                        lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                    else:
+                                        qty = 1
+                                        lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                mrp_bom_object.sudo().create({'product_tmpl_id': self.id,
+                                                              'code': self.vault_revision,
+                                                              'product_qty': 1,
+                                                              'type': 'normal',
+                                                              'routing_id': mrp_routing.id or None,
+                                                              'bom_line_ids': lines,
+                                                              })
                     # Código A90
                     elif vals['vault_code'] == 'A90':
                         # Check si existe ruta
