@@ -444,10 +444,11 @@ class ProductTemplate(models.Model):
                     # Código A50
                     elif vals['vault_code'] == 'A50':
                         # Check si existe ruta
-                        mrp_routing = self.env['mrp.routing'].search([('name', '=', vals['vault_route'])])
+                        mrp_routing = self.env['mrp.routing'].search([('name', '=', res_code.route_mrp)])
                         if vals['vault_route'] and not len(mrp_routing):
                             raise ValidationError(_('La ruta %s del producto %s no existe en Odoo'
                                                     % (vals['vault_route'], vals['name'])))
+
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0:
                             if vals.get('vault_purchase_code'):
