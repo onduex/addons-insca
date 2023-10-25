@@ -55,7 +55,7 @@ class MrpBomLine(models.Model):
             if record.bom_id.product_tmpl_id.vault_code == 'A31P' and \
                     record.bom_id.product_tmpl_id.default_code[-3:] != '000' and \
                     record.bom_id.is_vault_bom and \
-                    record.product_tmpl_id.vault_code == 'A30':
+                    record.product_tmpl_id.vault_code == 'A30' or 'A31':
                 # Obtener las nuevas líneas a crear
                 product_ids_max = self.env['product.product']. \
                     search([('default_code', '=', record.bom_id.product_tmpl_id.default_code[:-3] + '000')])
