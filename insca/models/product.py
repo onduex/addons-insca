@@ -104,6 +104,8 @@ class ProductTemplate(models.Model):
                         vals.update({'vault_length_cut': self.vault_length_cut})
                     if not vals.get('vault_sup_madera'):
                         vals.update({'vault_sup_madera': self.vault_sup_madera})
+                    if not vals.get('vault_sup_pintada'):
+                        vals.update({'vault_sup_pintada': self.vault_sup_pintada})
                     if not vals.get('default_code'):
                         vals.update({'default_code': self.default_code})
                     if not vals.get('vault_material_name'):
@@ -357,6 +359,7 @@ class ProductTemplate(models.Model):
                                                         vals.get('product_color')
                                          })
 
+                        # Actualiza lista de materiales
                         if len(self.bom_ids) != 0 and self.default_code[-3:] != '000':
                             for line in self.bom_ids[0].bom_line_ids:
                                 line.unlink()
@@ -371,7 +374,7 @@ class ProductTemplate(models.Model):
                                                                                         vals['vault_color'])])
                                 product_ids += max(product_ids_max)
                                 for product in product_ids:
-                                    if product.categ_base == 'COLOR METAL':
+                                    if product.categ_base == 'HIERRO':
                                         if 'vault_sup_pintada' in vals:
                                             qty = str(vals['vault_sup_pintada'])
                                     else:
@@ -393,7 +396,7 @@ class ProductTemplate(models.Model):
                                                                                         vals['vault_color'])])
                                 product_ids += max(product_ids_max)
                                 for product in product_ids:
-                                    if product.categ_base == 'COLOR METAL':
+                                    if product.categ_base == 'HIERRO':
                                         if 'vault_sup_pintada' in vals:
                                             qty = str(vals['vault_sup_pintada'])
                                     else:

@@ -279,7 +279,7 @@ class MrpBom(models.Model):
                         search([('default_code', '=', bom.product_tmpl_id.vault_color)])
                 product_ids += max(product_ids_max)
                 for product in product_ids:
-                    if product.categ_base == 'COLOR METAL':
+                    if product.categ_base == 'HIERRO':
                         qty = str(bom.product_tmpl_id.vault_sup_pintada)
                     else:
                         qty = 1
