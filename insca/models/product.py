@@ -357,6 +357,29 @@ class ProductTemplate(models.Model):
                                                         vals.get('product_color')
                                          })
 
+                        if len(self.bom_ids) != 0 and self.default_code[-3:] != '000':
+                            for line in self.bom_ids[0].bom_line_ids:
+                                line.unlink()
+                            qty = ''
+                            if vals['vault_color']:
+                                lines = []
+                                product_ids = []
+                                product_ids_max = self.env['product.product'].search([('default_code', '=',
+                                                                                       self.default_code[:-3] + '000')])
+                                if vals['vault_color']:
+                                    product_ids += self.env['product.product'].search([('default_code', '=',
+                                                                                        vals['vault_color'])])
+                                product_ids += max(product_ids_max)
+                                for product in product_ids:
+                                    if product.categ_base == 'COLOR METAL':
+                                        if 'vault_sup_pintada' in vals:
+                                            qty = str(vals['vault_sup_pintada'])
+                                    else:
+                                        qty = 1
+                                    lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+                                    qty = None
+                                self.bom_ids[0].write({'bom_line_ids': lines})
+
                         # Crear lista de materiales
                         if len(self.bom_ids) == 0 and self.default_code[-3:] != '000':
                             qty = ''
