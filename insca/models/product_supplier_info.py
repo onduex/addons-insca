@@ -17,13 +17,15 @@ class ProductTemplate(models.Model):
             if product.is_vault_product and not product.is_old_revision:
                 if res_code.supplier_ids:
                     for rec in res_code.supplier_ids:
-                        supplier_lines.append((0, 0, {'min_qty': 1.0,
-                                                      'price': 0.0,
-                                                      'delay': 1.0,
-                                                      'name': rec.id,
-                                                      'product_id': self.product_variant_id.id,
-                                                      'company_id': False,
-                                                      }
-                                               ))
+                        if rec.id not in product.seller_ids.mapped('name').ids:
+                            supplier_lines.append((0, 0, {'min_qty': 1.0,
+                                                          'price': 0.0,
+                                                          'delay': 1.0,
+                                                          'name': rec.id,
+                                                          'product_id': self.product_variant_id.id,
+                                                          'company_id': False,
+                                                          }
+                                                   ))
+
                     vals.update({'seller_ids': supplier_lines})
         return super(ProductTemplate, self).write(vals)
