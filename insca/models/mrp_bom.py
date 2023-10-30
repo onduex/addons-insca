@@ -118,6 +118,7 @@ class MrpBomLine(models.Model):
                         lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             if len(lines) > 0:
                 self.child_bom_id.sudo().update({'bom_line_ids': lines})
+
         # Código A30
         elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] == '000':
             lines = []
@@ -137,6 +138,8 @@ class MrpBomLine(models.Model):
                         if float(self.product_id.vault_length_tub) != 0.0:
                             qty = float(self.product_id.vault_length_tub) / 1000
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
+            for record in self.child_bom_id.bom_line_ids:
+                record.unlink()
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
 
         # Código A50
@@ -154,6 +157,7 @@ class MrpBomLine(models.Model):
                 lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                 qty = None
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
+
         # Código A70
         elif self.product_id.code[0:3] == 'A70':
             lines = []
@@ -177,6 +181,7 @@ class MrpBomLine(models.Model):
                     qty = 1
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
+
         # Código A72
         elif self.product_id.code[0:3] == 'A72':
             lines = []
@@ -200,6 +205,7 @@ class MrpBomLine(models.Model):
                     qty = 1
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
+
         # Código A90
         elif self.product_id.code[0:3] == 'A90':
             lines = []
@@ -215,6 +221,7 @@ class MrpBomLine(models.Model):
                 lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
                 qty = None
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
+
         # Código EM0
         elif self.product_id.code[0:3] == 'EM0':
             lines = []
@@ -320,3 +327,4 @@ class MrpBom(models.Model):
                 if bom.product_tmpl_id.active is False and bom.is_old_revision is True:
                     bom.sudo().write({'active': False})
         return res
+

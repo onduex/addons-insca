@@ -384,6 +384,7 @@ class ProductTemplate(models.Model):
                                                               'type': 'normal',
                                                               'routing_id': mrp_routing.id or None,
                                                               'bom_line_ids': lines,
+                                                              'is_vault_bom': False,
                                                               })
 
                     # Código A31
