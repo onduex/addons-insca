@@ -8,6 +8,8 @@ from odoo.exceptions import ValidationError
 class MrpBomLine(models.Model):
     _inherit = "mrp.bom.line"
 
+    rainbow_line = fields.Boolean(string='Rainbow Line', required=False, default=False)
+
     @api.model_create_multi
     def create(self, vals_list):
         # Borrado de las mrp.bom.lines que vienen de vault
@@ -51,11 +53,10 @@ class MrpBomLine(models.Model):
                                                                 'product_id': rec[2]['product_id'],
                                                                 'product_qty': rec[2]['product_qty']})
 
-            # Código A31 borrar líneas de BoM
+            # Código A31P borrar líneas de BoM
             if record.bom_id.product_tmpl_id.vault_code == 'A31P' and \
                     record.bom_id.product_tmpl_id.default_code[-3:] != '000' and \
-                    record.bom_id.is_vault_bom and \
-                    record.product_tmpl_id.vault_code == 'A30':
+                    record.bom_id.is_vault_bom:
                 # Obtener las nuevas líneas a crear
                 product_ids_max = self.env['product.product']. \
                     search([('default_code', '=', record.bom_id.product_tmpl_id.default_code[:-3] + '000')])
@@ -65,16 +66,19 @@ class MrpBomLine(models.Model):
                 product_ids += max(product_ids_max)
                 for product in product_ids:
                     lines.append((0, 0, {'bom_id': record.bom_id, 'product_id': product.id, 'product_qty': 1}))
-                # print('Delete %s of %s' % (record.display_name, record.bom_id.product_tmpl_id.default_code))
-                record.unlink()
-            for rec in lines:
-                new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
-                                                                    ('product_id', '=', rec[2]['product_id'])])
-                if not new_bom_lines_id:
-                    self.env['mrp.bom.line'].sudo().create({'bom_id': rec[2]['bom_id'].id,
-                                                            'product_id': rec[2]['product_id'],
-                                                            'product_qty': 1})
 
+                if record.rainbow_line is False:
+                    record.unlink()
+
+                for rec in lines:
+                    new_bom_lines_id = self.env['mrp.bom.line'].search([('bom_id', '=', rec[2]['bom_id'].id),
+                                                                        ('product_id', '=', rec[2]['product_id'])])
+                    if not new_bom_lines_id:
+                        self.env['mrp.bom.line'].sudo().create({'bom_id': rec[2]['bom_id'].id,
+                                                                'product_id': rec[2]['product_id'],
+                                                                'product_qty': 1,
+                                                                'rainbow_line': True,
+                                                                })
         return res
 
     def write(self, values):
@@ -135,26 +139,6 @@ class MrpBomLine(models.Model):
                     lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
             self.child_bom_id.sudo().update({'bom_line_ids': lines})
 
-        # Código A30P
-        elif self.product_id.code[0:3] == 'A30' and self.product_id.default_code[-3:] != '000':
-            qty = ''
-            lines = []
-            product_ids = []
-            product_ids_max = self.env['product.product']. \
-                search([('default_code', '=', self.product_id.default_code[:-3] + '000')])
-            if self.product_id.vault_color:
-                product_ids = self.env['product.product']. \
-                    search([('default_code', '=', self.product_id.vault_color)])
-            product_ids += max(product_ids_max)
-            for product in product_ids:
-                if product.categ_base == 'COLOR METAL':
-                    if float(self.product_id.vault_sup_pintada) != 0.0:
-                        qty = str(float(self.product_id.vault_sup_pintada))
-                else:
-                    qty = 1
-                lines.append((0, 0, {'product_id': product.id, 'product_qty': qty}))
-                qty = None
-            self.child_bom_id.sudo().update({'bom_line_ids': lines})
         # Código A50
         elif self.product_id.code[0:3] == 'A50':
             lines = []
