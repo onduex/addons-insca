@@ -374,7 +374,7 @@ class ProductTemplate(models.Model):
                                                                                         vals['vault_color'])])
                                 product_ids += max(product_ids_max)
                                 for product in product_ids:
-                                    if product.categ_base == 'HIERRO':
+                                    if product.categ_base == 'COLOR METAL':
                                         if 'vault_sup_pintada' in vals:
                                             qty = str(vals['vault_sup_pintada'])
                                     else:
@@ -396,7 +396,7 @@ class ProductTemplate(models.Model):
                                                                                         vals['vault_color'])])
                                 product_ids += max(product_ids_max)
                                 for product in product_ids:
-                                    if product.categ_base == 'HIERRO':
+                                    if product.categ_base == 'COLOR METAL':
                                         if 'vault_sup_pintada' in vals:
                                             qty = str(vals['vault_sup_pintada'])
                                     else:
