@@ -3,6 +3,8 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from collections import OrderedDict
+from operator import itemgetter
 
 
 class ProductTemplate(models.Model):
@@ -26,6 +28,6 @@ class ProductTemplate(models.Model):
                                                           'company_id': False,
                                                           }
                                                    ))
-
+                    supplier_lines.sort(reverse=False, key=lambda x: x[2]['name'])
                     vals.update({'seller_ids': supplier_lines})
         return super(ProductTemplate, self).write(vals)
