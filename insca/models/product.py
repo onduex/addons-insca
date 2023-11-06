@@ -263,10 +263,13 @@ class ProductTemplate(models.Model):
 
                         if self.vault_material_name and self.product_color:
                             vals.update({'description': str(self.vault_material_name) + ' ' + str(self.product_color)})
+                        else:
+                            vals.update({'description': str(self.product_color)})
                         if vals.get('vault_material_name') and vals.get('product_color'):
                             vals.update({'description': vals.get('vault_material_name') + ' ' +
-                                                        vals.get('product_color')
-                                         })
+                                        vals.get('product_color')})
+                        else:
+                            vals.update({'description': vals.get('product_color')})
 
                     # Código A30
                     elif vals['vault_code'] == 'A30' and vals['vault_categ']:
