@@ -7,23 +7,35 @@
         <field name="arch" type="xml">
 
             <xpath expr="//notebook" position="inside">
-                    <page string="Expedientes" name="expedientes">
-                        <group>
-                            <group name="left">
-                                <field name="smb_user"/>
-                                <field name="smb_pass" password="True"/>
-                                <field name="odoo_server_name"/>
-                                <field name="ds_sequence_start"/>
-                            </group>
-                            <group name="right">
-                                <field name="filestore_server_name"/>
-                                <field name="filestore_server_ip"/>
-                                <field name="filestore_server_port"/>
-                                <field name="filestore_server_shared_folder"/>
-                                <field name="filestore_server_shared_folder_level1"/>
-                            </group>
+                <page string="Expedientes" name="expedientes">
+                    <group>
+                        <group name="left">
+                            <field name="ds_sequence_start"/>
                         </group>
-                    </page>
+                    </group>
+                    <group>
+                        <group name="left" string="Odoo Lnx Server">
+                            <field name="smb_user"/>
+                            <field name="smb_pass" password="True"/>
+                            <field name="odoo_server_name"/>
+                        </group>
+                        <group name="right" string="Filestore Win Server">
+                            <field name="filestore_server_name"/>
+                            <field name="filestore_server_ip"/>
+                            <field name="filestore_server_port"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="left" string="Shared 1">
+                            <field name="filestore_server_shared_folder"/>
+                            <field name="filestore_server_shared_folder_level1"/>
+                        </group>
+                        <group name="right" string="Shared 2">
+                            <field name="filestore_server_shared_folder_2"/>
+                            <field name="filestore_server_shared_folder_level1_2"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
 
         </field>

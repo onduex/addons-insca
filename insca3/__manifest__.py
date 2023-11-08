@@ -29,6 +29,7 @@
         'security/ir.model.access.csv',
         'views/folder_config.xml',
         'views/res_company_form.xml',
+        'views/product_inherit_views.xml'
     ],
 
     'installable': True,

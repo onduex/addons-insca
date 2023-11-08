@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--<record id="product_template_view_form_inherit_insca" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.insca</field>
+        <field name="model">product.template</field>
+        <field name="priority">6</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page name="vault_info" string="Extra Vault Info">
+                    <group name="vault_product2">
+                        <group string="Bloque A">
+                            <field name="vault_state" readonly="1"/>
+                            <field name="vault_code" readonly="1"/>
+                            <field name="vault_categ_terminado" readonly="1"/>
+                            <field name="vault_program_assoc" readonly="1" invisible="0"/>
+                            <field name="vault_width" readonly="1" invisible="0"/>
+                            <field name="vault_width_sheet" readonly="1"/>
+                            <field name="vault_width_cut" readonly="1"/>
+                            <field name="vault_working_face" readonly="1"/>
+                            <field name="vault_categ" readonly="1"/>
+                            <field name="vault_edge_code" readonly="1"/>
+                            <field name="vault_color" readonly="1"/>
+                            <field name="vault_edge_pin_code" readonly="1"/>
+                            <field name="vault_edge_pin_name" readonly="1"/>
+                            <field name="vault_material" readonly="1"/>
+                            <field name="vault_material_code" readonly="1"/>
+                            <field name="vault_material_name" readonly="1"/>
+                            <field name="vault_purchase_code" readonly="1" invisible="0"/>
+                            <field name="vault_left_hand" readonly="1" invisible="0"/>
+                            <field name="vault_right_hand" readonly="1" invisible="0"/>
+                        </group>
+
+                        <group string="Bloque B">
+                            <field name="vault_diameter" readonly="1" invisible="0"/>
+                            <field name="vault_thinkness" readonly="1" invisible="0"/>
+                            <field name="vault_height" readonly="1" invisible="0"/>
+                            <field name="vault_length" readonly="1" invisible="0"/>
+                            <field name="vault_length_sheet" readonly="1"/>
+                            <field name="vault_length_cut" readonly="1"/>
+                            <field name="vault_length_tub" readonly="1"/>
+                            <field name="vault_edge_len" readonly="1"/>
+                            <field name="vault_mesh" readonly="1" invisible="0"/>
+                            <field name="vault_edge_num" readonly="1"/>
+                            <field name="vault_edge_num_pin" readonly="1"/>
+                            <field name="vault_painted_face" readonly="1"/>
+                            <field name="vault_weight" readonly="1"/>
+                            <field name="vault_edge_paint" readonly="1"/>
+                            <field name="vault_route" readonly="1"/>
+                            <field name="vault_edge_painted_sup" readonly="1"/>
+                            <field name="vault_sup_madera" readonly="1"/>
+                            <field name="vault_sup_pintada" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='type']" position="before">
+                <field name="is_vault_product"/>
+            </xpath>
+
+        </field>
+    </record>-->
+
+    <record id="product_template_view_tree_inherit_insca2" model="ir.ui.view">
+        <field name="name">product.template.view.tree.inherit.insca2</field>
+        <field name="model">product.template</field>
+        <field name="priority">116</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="before">
+                <button name="open_dir" type="object"
+                        string="PTG" class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

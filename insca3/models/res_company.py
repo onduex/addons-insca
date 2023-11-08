@@ -14,4 +14,6 @@ class ResCompany(models.Model):
     filestore_server_port = fields.Char(string='Filestore Srv Port', required=False)
     filestore_server_shared_folder = fields.Char(string='Filestore Srv Shared Folder', required=False)
     filestore_server_shared_folder_level1 = fields.Char(string='Filestore Srv Shared Folder L1', required=False)
-    ds_sequence_start = fields.Integer(string='Inicio Sec. DS', required=False)
+    filestore_server_shared_folder_2 = fields.Char(string='Filestore Srv Shared Folder', required=False)
+    filestore_server_shared_folder_level1_2 = fields.Char(string='Filestore Srv Shared Folder L1', required=False)
+    ds_sequence_start = fields.Integer(string='Inicio Secuencia DS', required=False)
