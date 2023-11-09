@@ -1,8 +1,8 @@
-console.log('Eureka')
+
 
 odoo.define('insca3.check_ptg', function (require){
     "use strict";
-
+    console.log('Eureka')
     var ajax = require('web.ajax');
     var ListController = require('web.ListController');
     var rpc = require('web.rpc')

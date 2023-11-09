@@ -9,14 +9,18 @@ import subprocess
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.workorder'
 
+    has_folder = fields.Boolean(string='Carpeta', required=False, store=True)
+    has_been_verified = fields.Boolean(string='OK', required=False, default=False)
+    ptg_link = fields.Char(string='PTG', required=False, store=True)
+
     @api.model
     def check_dir(self):
         folders = []
         a10_searched = ''
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
-        mrp_workorder_ids = self.env['mrp.workorder'].search([('has_been_verified', '=', False),
-                                                              ('state', '=', 'progress'),
-                                                              ('workcenter_id', '=', 17)
+        mrp_workorder_ids = self.env['mrp.workorder'].search([('state', '=', 'ready'),
+                                                              ('has_been_verified', '=', False),
+                                                              ('workcenter_id', '=', 17),
                                                               ])
         conn = SMBConnection(res_company_obj.smb_user,
                              res_company_obj.smb_pass,
@@ -47,8 +51,3 @@ class MrpWorkorder(models.Model):
                 record.ptg_link = "-"
 
         conn.close()
-
-    has_folder = fields.Boolean(string='Carpeta', required=False, store=True)
-    has_been_verified = fields.Boolean(string='OK', required=False, default=False)
-    ptg_link = fields.Char(string='PTG', required=False, store=True)
-
