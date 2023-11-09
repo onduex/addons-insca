@@ -1,6 +1,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models, _
+from odoo import fields, models, api, _
 from smb.SMBConnection import SMBConnection
 from odoo.exceptions import ValidationError
 import subprocess
@@ -9,11 +9,15 @@ import subprocess
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.workorder'
 
+    @api.model
     def check_dir(self):
         folders = []
         a10_searched = ''
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
-        product_tmpl_obj = self.env['product.template']
+        mrp_workorder_ids = self.env['mrp.workorder'].search([('has_been_verified', '=', False),
+                                                              ('state', '=', 'progress'),
+                                                              ('workcenter_id', '=', 17)
+                                                              ])
         conn = SMBConnection(res_company_obj.smb_user,
                              res_company_obj.smb_pass,
                              res_company_obj.odoo_server_name,
@@ -28,7 +32,7 @@ class MrpWorkorder(models.Model):
         for rec in results:
             folders.append(rec.filename)
 
-        for record in self:
+        for record in mrp_workorder_ids:
             if record.product_id.default_code[4] == '0':
                 a10_searched = record.product_id.default_code[0:4] + record.product_id.default_code[5:-7]
             elif record.product_id.default_code[4] == '1':
@@ -44,7 +48,7 @@ class MrpWorkorder(models.Model):
 
         conn.close()
 
-    has_folder = fields.Boolean(string='Carpeta', required=False, store=True, compute=check_dir)
-    has_been_verified = fields.Boolean(string='Verificado', required=False, default=False)
-    ptg_link = fields.Char(string='PTG', required=False, store=True, compute=check_dir)
+    has_folder = fields.Boolean(string='Carpeta', required=False, store=True)
+    has_been_verified = fields.Boolean(string='OK', required=False, default=False)
+    ptg_link = fields.Char(string='PTG', required=False, store=True)
 

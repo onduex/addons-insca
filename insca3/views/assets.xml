@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="insca3 assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script
+                    type="text/javascript"
+                    src="/insca3/static/src/js/check_ptg.js"
+            />
+            <link rel="stylesheet" href="/insca3/static/src/css/file.css" />
+        </xpath>
+    </template>
+</odoo>
+

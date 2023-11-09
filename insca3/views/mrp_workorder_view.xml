@@ -8,7 +8,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="has_folder" invisible="1"/>
-                <field name="ptg_link" invisible="0" widget="url" text="PTG"/>
+                <field name="has_been_verified" optional="show"/>
+                <field name="ptg_link" invisible="0" widget="url" text="PTG"
+                       attrs="{'invisible': [('has_folder', '!=', True)]}"/>
                 </xpath>
         </field>
     </record>

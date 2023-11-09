@@ -30,8 +30,13 @@
         'security/ir.model.access.csv',
         'views/folder_config.xml',
         'views/res_company_form.xml',
-        'views/mrp_workorder_view.xml'
+        'views/mrp_workorder_view.xml',
+        'views/assets.xml',
     ],
+
+    'qweb': [
+            'static/src/xml/check_ptg.xml',
+        ],
 
     'installable': True,
     'application': True,

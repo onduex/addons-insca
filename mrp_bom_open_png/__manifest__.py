@@ -5,7 +5,7 @@
     "version": "13.0.0.0.0",
     "category": "Manufacture",
     "website": "None",
-    "author": "T. Pascual",
+    'author': "Onduex sl",
     "license": "LGPL-3",
     "application": False,
     "depends": ["mrp", "rainbow"],
