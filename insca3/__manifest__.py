@@ -32,6 +32,7 @@
         'views/res_company_form.xml',
         'views/mrp_workorder_view.xml',
         'views/assets.xml',
+        'data/ir_actions_server.xml'
     ],
 
     'qweb': [

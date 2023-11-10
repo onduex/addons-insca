@@ -9,19 +9,28 @@ import subprocess
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.workorder'
 
-    has_folder = fields.Boolean(string='Carpeta', required=False, store=True)
-    has_been_verified = fields.Boolean(string='OK', required=False, default=False)
-    ptg_link = fields.Char(string='PTG', required=False, store=True)
+    has_folder = fields.Boolean(string='Carpeta', required=False, store=True,
+                                related='product_id.has_folder')
+    has_been_verified = fields.Boolean(string='PTG OK', required=False, default=False,
+                                       related='product_id.has_been_verified')
+    ptg_link = fields.Char(string='PTG', required=False, store=True,
+                           related='product_id.ptg_link')
+
+    def action_check_has_been_verified_boolean(self):
+        for record in self:
+            record.product_id.has_been_verified = not record.product_id.has_been_verified
 
     @api.model
     def check_dir(self):
         folders = []
         a10_searched = ''
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
-        mrp_workorder_ids = self.env['mrp.workorder'].search([('state', '=', 'ready'),
-                                                              ('has_been_verified', '=', False),
-                                                              ('workcenter_id', '=', 17),
-                                                              ])
+        product_tmpl_ids = self.env['product.template'].search(['|', ('default_code', 'ilike', 'A10.'),
+                                                                ('default_code', 'ilike', 'A11.')])
+
+        for record in product_tmpl_ids:
+            print(record.default_code)
+
         conn = SMBConnection(res_company_obj.smb_user,
                              res_company_obj.smb_pass,
                              res_company_obj.odoo_server_name,
@@ -36,11 +45,11 @@ class MrpWorkorder(models.Model):
         for rec in results:
             folders.append(rec.filename)
 
-        for record in mrp_workorder_ids:
-            if record.product_id.default_code[4] == '0':
-                a10_searched = record.product_id.default_code[0:4] + record.product_id.default_code[5:-7]
-            elif record.product_id.default_code[4] == '1':
-                a10_searched = 'B' + record.product_id.default_code[1:4] + record.product_id.default_code[5:-7]
+        for record in product_tmpl_ids:
+            if record.default_code[4] == '0':
+                a10_searched = record.default_code[0:4] + record.default_code[5:-7]
+            elif record.default_code[4] == '1':
+                a10_searched = 'B' + record.default_code[1:4] + record.default_code[5:-7]
 
             if a10_searched in folders:
                 record.has_folder = True
@@ -48,6 +57,6 @@ class MrpWorkorder(models.Model):
                                    + "/" + a10_searched)
             else:
                 record.has_folder = False
-                record.ptg_link = "-"
+                record.ptg_link = ""
 
         conn.close()

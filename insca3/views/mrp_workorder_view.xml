@@ -10,7 +10,7 @@
                 <field name="has_folder" invisible="1"/>
                 <field name="has_been_verified" optional="show"/>
                 <field name="ptg_link" invisible="0" widget="url" text="PTG"
-                       attrs="{'invisible': [('has_folder', '!=', True)]}"/>
+                       attrs="{'invisible': [('has_folder', '!=', True), ('workcenter_id', '!=', 18)]}"/>
                 </xpath>
         </field>
     </record>
