@@ -2,6 +2,9 @@
 <odoo>
     <template id="report_mrpbomstructure_png" inherit_id="mrp.report_mrp_bom">
         <xpath expr="//thead/tr/th[2]" position="before">
+            <th class="o_mrp_bom_cost text-center" title="PTG link">
+                PTG
+            </th>
             <th class="o_mrp_bom_cost text-center" title="PNG link">
                 PNG
             </th>
@@ -11,6 +14,11 @@
         </xpath>
         <xpath expr="//tbody/tr/td[2]" position="before">
             <td class="text-center">
+                <span>
+                    <a t-attf-href="{{data['bom'].ptg_link}}">
+                        PTG
+                    </a>
+                </span>
                 <span>
                     <a t-attf-href="{{data['bom'].png_link}}">
                         PNG
@@ -28,14 +36,21 @@
     </template>
     <template id="report_mrp_bom_line_png" inherit_id="mrp.report_mrp_bom_line">
         <xpath expr="//tr/td[2]" position="before">
-            <td t-if="l.get('png_link', False)" class="text-center">
+            <td class="text-center">
+                <span>
+                    <a t-attf-href="{{l['ptg_link']}}">
+                        PTG
+                    </a>
+                </span>
+            </td>
+            <td class="text-center">
                 <span>
                     <a t-attf-href="{{l['png_link']}}">
                         PNG
                     </a>
                 </span>
             </td>
-            <td t-if="l.get('png_link', False)" class="text-center">
+            <td class="text-center">
                 <span>
                     <a t-attf-href="{{l['vault_web_link']}}">
                         VLT

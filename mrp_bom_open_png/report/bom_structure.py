@@ -20,6 +20,10 @@ class BomStructureReport(models.AbstractModel):
             line_id1 = line_ids.filtered(
                 lambda l: l.vault_web_link and l.id == line["line_id"]
             )
+            line_id2 = line_ids.filtered(
+                lambda l: l.ptg_link and l.id == line["line_id"]
+            )
             line["png_link"] = line_id.png_link or ""
             line["vault_web_link"] = line_id1.vault_web_link or ""
+            line["ptg_link"] = line_id2.ptg_link or ""
         return res

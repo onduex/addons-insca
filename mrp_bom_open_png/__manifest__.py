@@ -8,7 +8,7 @@
     'author': "Onduex sl",
     "license": "LGPL-3",
     "application": False,
-    "depends": ["mrp", "rainbow"],
+    "depends": ["mrp", "rainbow", "insca3"],
     "data": [
         "views/some_view.xml",
         "views/report_mrpbomstructure.xml"

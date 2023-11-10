@@ -9,6 +9,12 @@ class MrpBomLine(models.Model):
     _inherit = "mrp.bom.line"
 
     rainbow_line = fields.Boolean(string='Rainbow Line', required=False, default=False)
+    has_folder = fields.Boolean(string='Carpeta', required=False, store=True,
+                                related='product_id.has_folder')
+    has_been_verified = fields.Boolean(string='PTG OK', required=False, default=False,
+                                       related='product_id.has_been_verified')
+    ptg_link = fields.Char(string='PTG', required=False, store=True,
+                           related='product_id.ptg_link')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -241,6 +247,12 @@ class MrpBom(models.Model):
     _inherit = "mrp.bom"
 
     vault_route = fields.Char(related='product_tmpl_id.vault_route', string='Vault Ruta', required=False)
+    has_folder = fields.Boolean(string='Carpeta', required=False, store=True,
+                                related='product_id.has_folder')
+    has_been_verified = fields.Boolean(string='PTG OK', required=False, default=False,
+                                       related='product_id.has_been_verified')
+    ptg_link = fields.Char(string='PTG', required=False, store=True,
+                           related='product_id.ptg_link')
 
     @api.model_create_multi
     def create(self, vals_list):
