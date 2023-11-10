@@ -16,9 +16,11 @@
             <td class="text-center">
                 <span>
                     <a t-attf-href="{{data['bom'].ptg_link}}">
-                        PTG
+                        -
                     </a>
                 </span>
+            </td>
+            <td class="text-center">
                 <span>
                     <a t-attf-href="{{data['bom'].png_link}}">
                         PNG
@@ -36,10 +38,17 @@
     </template>
     <template id="report_mrp_bom_line_png" inherit_id="mrp.report_mrp_bom_line">
         <xpath expr="//tr/td[2]" position="before">
-            <td class="text-center">
+            <td t-if="l.get('ptg_link', False)" class="text-center">
                 <span>
                     <a t-attf-href="{{l['ptg_link']}}">
                         PTG
+                    </a>
+                </span>
+            </td>
+            <td t-if="not l.get('ptg_link', False)" class="text-center">
+                <span>
+                    <a>
+                        -
                     </a>
                 </span>
             </td>
