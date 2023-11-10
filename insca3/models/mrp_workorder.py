@@ -17,8 +17,12 @@ class MrpWorkorder(models.Model):
                            related='product_id.ptg_link')
 
     def action_check_has_been_verified_boolean(self):
+        unique_product_ids = []
         for record in self:
-            record.product_id.has_been_verified = not record.product_id.has_been_verified
+            if record.product_id not in unique_product_ids:
+                unique_product_ids.append(record.product_id)
+        for rec in unique_product_ids:
+            rec.has_been_verified = not rec.has_been_verified
 
     @api.model
     def check_dir(self):
@@ -27,9 +31,6 @@ class MrpWorkorder(models.Model):
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         product_tmpl_ids = self.env['product.template'].search(['|', ('default_code', 'ilike', 'A10.'),
                                                                 ('default_code', 'ilike', 'A11.')])
-
-        for record in product_tmpl_ids:
-            print(record.default_code)
 
         conn = SMBConnection(res_company_obj.smb_user,
                              res_company_obj.smb_pass,
