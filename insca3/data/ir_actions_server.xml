@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record model="ir.actions.server" id="action_check_has_been_verified_boolean">
+        <record model="ir.actions.server" id="action_check_has_been_verified_boolean_workorder">
             <field name="name">OK Verificado</field>
             <field name="model_id" ref="insca3.model_mrp_workorder"/>
             <field name="binding_model_id" ref="insca3.model_mrp_workorder"/>
@@ -11,7 +11,7 @@
                 action = records.action_check_has_been_verified_boolean()
             </field>
         </record>
-        <record model="ir.actions.server" id="action_check_has_been_verified_boolean">
+        <record model="ir.actions.server" id="action_check_has_been_verified_boolean_product">
             <field name="name">OK Verificado</field>
             <field name="model_id" ref="insca3.model_product_template"/>
             <field name="binding_model_id" ref="insca3.model_product_template"/>
