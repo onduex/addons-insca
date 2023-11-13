@@ -250,6 +250,14 @@ class MrpBom(models.Model):
     ptg_link = fields.Char(string='PTG', required=False, store=True,
                            related='product_id.ptg_link')
 
+    def action_check_has_been_verified_boolean(self):
+        unique_product_ids = []
+        for record in self:
+            if record.product_tmpl_id not in unique_product_ids:
+                unique_product_ids.append(record.product_tmpl_id)
+        for rec in unique_product_ids:
+            rec.has_been_verified = not rec.has_been_verified
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
