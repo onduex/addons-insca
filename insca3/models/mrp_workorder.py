@@ -52,6 +52,6 @@ class MrpWorkorder(models.Model):
                 record.ptg_link = ("H:/" + res_company_obj.filestore_server_shared_folder_level1_2
                                    + "/" + a10_searched)
             else:
-                record.ptg_link = ""
+                record.ptg_link = None
 
         conn.close()

@@ -246,9 +246,9 @@ class MrpBom(models.Model):
 
     vault_route = fields.Char(related='product_tmpl_id.vault_route', string='Vault Ruta', required=False)
     has_been_verified = fields.Boolean(string='PTG OK', required=False, default=False,
-                                       related='product_id.has_been_verified')
+                                       related='product_tmpl_id.has_been_verified')
     ptg_link = fields.Char(string='PTG', required=False, store=True,
-                           related='product_id.ptg_link')
+                           related='product_tmpl_id.ptg_link')
 
     def action_check_has_been_verified_boolean(self):
         unique_product_ids = []

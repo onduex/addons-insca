@@ -26,8 +26,9 @@
             <xpath expr="//field[@name='product_tmpl_id']" position="before">
                 <field name="is_vault_bom"/>
             </xpath>
-            <xpath expr="//field[@name='product_tmpl_id']" position="after">
-                <field name="ptg_link"/>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="ptg_link" optional="show"  widget="url" text="PTG"
+                       attrs="{'invisible': [('ptg_link', '==', False)]}"/>
             </xpath>
         </field>
     </record>
