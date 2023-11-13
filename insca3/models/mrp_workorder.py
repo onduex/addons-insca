@@ -2,8 +2,6 @@
 
 from odoo import fields, models, api, _
 from smb.SMBConnection import SMBConnection
-from odoo.exceptions import ValidationError
-import subprocess
 
 
 class MrpWorkorder(models.Model):
