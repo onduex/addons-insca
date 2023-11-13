@@ -76,6 +76,11 @@
                 <field name="is_old_revision" optional="hide"/>
                 <field name="is_vault_product" optional="hide"/>
             </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="has_been_verified" optional="show"/>
+                <field name="ptg_link" optional="show" widget="url" text="PTG"
+                       attrs="{'invisible': [('ptg_link', '==', False)]}"/>
+            </xpath>
         </field>
     </record>
 

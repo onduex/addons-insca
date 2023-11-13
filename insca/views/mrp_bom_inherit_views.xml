@@ -13,7 +13,7 @@
             </xpath>
         </field>
     </record>
-    
+
     <record id="mrp_bom_tree_inherit_insca" model="ir.ui.view">
         <field name="name">mrp.bom.tree.inherit.insca</field>
         <field name="model">mrp.bom</field>
@@ -27,7 +27,8 @@
                 <field name="is_vault_bom"/>
             </xpath>
             <xpath expr="//field[@name='code']" position="after">
-                <field name="ptg_link" optional="show"  widget="url" text="PTG"
+                <field name="has_been_verified" optional="show"/>
+                <field name="ptg_link" optional="show" widget="url" text="PTG"
                        attrs="{'invisible': [('ptg_link', '==', False)]}"/>
             </xpath>
         </field>
