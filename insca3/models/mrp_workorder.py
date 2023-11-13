@@ -9,8 +9,6 @@ import subprocess
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.workorder'
 
-    has_folder = fields.Boolean(string='Carpeta', required=False, store=True,
-                                related='product_id.has_folder')
     has_been_verified = fields.Boolean(string='PTG OK', required=False, default=False,
                                        related='product_id.has_been_verified')
     ptg_link = fields.Char(string='PTG', required=False, store=True,
@@ -53,11 +51,9 @@ class MrpWorkorder(models.Model):
                 a10_searched = 'B' + record.default_code[1:4] + record.default_code[5:-7]
 
             if a10_searched in folders:
-                record.has_folder = True
                 record.ptg_link = ("H:/" + res_company_obj.filestore_server_shared_folder_level1_2
                                    + "/" + a10_searched)
             else:
-                record.has_folder = False
                 record.ptg_link = ""
 
         conn.close()
