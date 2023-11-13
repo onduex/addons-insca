@@ -31,7 +31,7 @@
         'views/product_data.xml',
         'views/mrp_bom_inherit_views.xml',
         'views/mrp_workorder_inherit_views.xml',
-
+        'data/ir_actions_server.xml',
     ],
 
     'installable': True,

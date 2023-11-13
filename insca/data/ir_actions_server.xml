@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.server" id="action_check_has_been_verified_boolean_bom">
+            <field name="name">OK Verificado</field>
+            <field name="model_id" ref="insca.model_mrp_bom"/>
+            <field name="binding_model_id" ref="insca.model_mrp_bom"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                action = records.action_check_has_been_verified_boolean()
+            </field>
+        </record>
+    </data>
+</odoo>
