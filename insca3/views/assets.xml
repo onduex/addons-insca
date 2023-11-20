@@ -6,6 +6,10 @@
                     type="text/javascript"
                     src="/insca3/static/src/js/check_ptg.js"
             />
+            <script
+                    type="text/javascript"
+                    src="/insca3/static/src/js/print_wiz.js"
+            />
             <link rel="stylesheet" href="/insca3/static/src/css/file.css" />
         </xpath>
     </template>
