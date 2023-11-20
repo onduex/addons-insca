@@ -22,9 +22,10 @@ odoo.define('insca3.print_wiz', function (require){
                     view_mode: 'form',
                     view_type: 'form',
                     // action_from: 'mail.ThreadComposeMessage',
-                    views: [[false, 'form']],
+                    views: [[2787, 'form']],
+                    // "print_bom_wiz_form_view",
                     target: 'new',
-                    context: {},
+                    context: {'default_bom_id': self.id},
                 };
                 console.log('action done')
                 self.do_action(action);

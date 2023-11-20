@@ -18,22 +18,22 @@
                                 </div>
                             </group>
                         </div>
-                        <!--<div class="alert alert-info" role="alert">
+                        <div class="alert alert-info" role="alert">
                             <p>
                                 <span class="fa fa-info-circle"/>
                                 Líneas de la lista de materiales
                             </p>
                         </div>
                         <div>
-                            <field name="print_bom_line_ids" widget="one2many">
-                                <tree string="Components" default_order="mrp_bom_line_level">
+                            <field name="bom_line_ids" widget="one2many"><field name="default_code"/>
+                                <tree string="Components">
                                     <field name="mrp_bom_line_level"/>
-                                    <field name="default_code"/>
                                     <field name="name"/>
                                     <field name="qty"/>
+                                    <field name="default_code" optional="hide"/>
                                 </tree>
                             </field>
-                        </div>-->
+                        </div>
                     </sheet>
                     <footer>
                         <button name="print_bom" type="object" string="Aplicar" class="oe_highlight"/>

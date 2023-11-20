@@ -16,11 +16,11 @@ class PrintBomWiz(models.TransientModel):
     def print_bom_children(self, ch, row, level):
         i, j = row, level
         j += 1
-        line = [(0, 0, {'mrp_bom_line_level': ("> " * j) + ch.product_id.default_code,
-                        # 'default_code': ch.product_id.default_code,
-                        'name': ch.product_id.name,
-                        # 'qty': ch.product_qty,
-                        })]
+        line = (0, 0, {'mrp_bom_line_level': ("- - " * j) + ch.product_id.default_code,
+                       'default_code': ch.product_id.default_code,
+                       'name': ch.product_id.name,
+                       'qty': ch.product_qty,
+                       })
         # print(("> " * j), ch.product_id.default_code)
         # print(line)
         lines.append(line)
@@ -36,19 +36,7 @@ class PrintBomWiz(models.TransientModel):
             pass
 
         j -= 1
-        context = {'default_bom_id': self.bom_id.id,
-                   'default_print_bom_line_ids': lines,
-                   }
-
-        return {
-                'name': 'Imprimir Lista de Materiales',
-                'type': 'ir.actions.act_window',
-                'res_model': 'print.bom.wiz',
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': False,
-                'target': 'new'}
+        return lines
 
     def get_bom_lines(self):
         i = 0
@@ -57,18 +45,19 @@ class PrintBomWiz(models.TransientModel):
             j = 0
             for ch in o.bom_line_ids:
                 i = self.print_bom_children(ch, i, j)
-        print(i)
+        pp.pprint(lines)
 
-        # context = {'default_bom_id': self.bom_id.id}
-        # return {
-        #     'name': 'Imprimir Lista de Materiales',
-        #     'type': 'ir.actions.act_window',
-        #     'res_model': 'print.bom.wiz',
-        #     'context': self.env.context,
-        #     'view_type': 'form',
-        #     'view_mode': 'form',
-        #     'view_id': False,
-        #     'target': 'new'}
+        context = {'default_bom_id': self.bom_id.id,
+                   'default_bom_line_ids': lines}
+        return {
+            'name': 'Imprimir Lista de Materiales',
+            'type': 'ir.actions.act_window',
+            'res_model': 'print.bom.wiz',
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': 2787,
+            'target': 'new'}
 
     bom_id = fields.Many2one(comodel_name='mrp.bom',
                              string="Lista de materiales",
