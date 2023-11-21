@@ -28,7 +28,7 @@ odoo.define('insca3.print_wiz', function (require){
                     target: 'new',
                     context: {'default_bom_id': bom_id},
                 };
-                console.log(bom_id)
+                // console.log(bom_id)
                 self.do_action(action);
 
                });
