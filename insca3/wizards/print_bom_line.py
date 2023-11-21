@@ -13,3 +13,5 @@ class PrintBomLine(models.TransientModel):
     default_code = fields.Char(string='Referencia', required=False)
     name = fields.Char(string='Nombre', required=False)
     qty = fields.Float(string='Cantidad', required=False)
+    has_bom_line_ids = fields.Integer(string='Tiene BoM', required=False)
+    to_print = fields.Boolean(string='Imprimir', required=False)
