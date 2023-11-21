@@ -29,7 +29,7 @@
                         </div>-->
                         <div>
                             <field name="bom_line_ids" widget="one2many">
-                                <tree string="Components" limit="1000">
+                                <tree string="Components" limit="1000" editable="true">
                                     <field name="to_print"/>
                                     <field name="mrp_bom_line_level"/>
                                     <field name="name"/>
