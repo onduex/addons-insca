@@ -13,6 +13,8 @@ odoo.define('insca3.print_wiz', function (require){
         renderButtons: function($node) {
             this._super.apply(this, arguments);
             var self = this;
+            var field_values = this.model.get(this.handle, {raw: true}).data;
+            var bom_id = field_values['id'];
             if (this.$buttons) {
                 $(this.$buttons).find('.oe_new_custom_button_insca_open_wiz').on('click', function(event) {
                 event.stopPropagation();
@@ -22,12 +24,11 @@ odoo.define('insca3.print_wiz', function (require){
                     view_mode: 'form',
                     view_type: 'form',
                     // action_from: 'mail.ThreadComposeMessage',
-                    views: [[2787, 'form']],
-                    // "print_bom_wiz_form_view",
+                    views: [[2787, 'form']], // "print_bom_wiz_form_view",
                     target: 'new',
-                    context: {'default_bom_id': self.id},
+                    context: {'default_bom_id': bom_id},
                 };
-                console.log('action done')
+                console.log(bom_id)
                 self.do_action(action);
 
                });

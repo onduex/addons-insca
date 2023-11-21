@@ -61,7 +61,6 @@ class PrintBomWiz(models.TransientModel):
 
     bom_id = fields.Many2one(comodel_name='mrp.bom',
                              string="Lista de materiales",
-                             ondelete='cascade',
                              readonly=False)
 
     bom_line_ids = fields.One2many(
