@@ -19,11 +19,11 @@ odoo.define('insca3.print_wiz', function (require){
                 $(this.$buttons).find('.oe_new_custom_button_insca_open_wiz').on('click', function(event) {
                 event.stopPropagation();
                 var action = {
+                    name: 'Imprimir Lista de Materiales',
                     type: 'ir.actions.act_window',
                     res_model: 'print.bom.wiz',
                     view_mode: 'form',
                     view_type: 'form',
-                    // action_from: 'mail.ThreadComposeMessage',
                     views: [[2787, 'form']], // "print_bom_wiz_form_view",
                     target: 'new',
                     context: {'default_bom_id': bom_id},

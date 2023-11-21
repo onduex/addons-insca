@@ -13,6 +13,17 @@ class PrintBomWiz(models.TransientModel):
     _name = 'print.bom.wiz'
     _description = 'Wizard para imprimir LdM'
 
+    bom_id = fields.Many2one(comodel_name='mrp.bom',
+                             string="Lista de materiales",
+                             readonly=False)
+
+    bom_line_ids = fields.One2many(
+        comodel_name='print.bom.line',
+        inverse_name='id',
+        string='Componente',
+        required=False,
+    )
+
     def print_bom_children(self, ch, row, level):
         i, j = row, level
         j += 1
@@ -21,8 +32,6 @@ class PrintBomWiz(models.TransientModel):
                        'name': ch.product_id.name,
                        'qty': ch.product_qty,
                        })
-        # print(("> " * j), ch.product_id.default_code)
-        # print(line)
         lines.append(line)
         try:
             for child in ch.child_line_ids:
@@ -45,7 +54,6 @@ class PrintBomWiz(models.TransientModel):
             j = 0
             for ch in o.bom_line_ids:
                 i = self.print_bom_children(ch, i, j)
-        pp.pprint(lines)
 
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines}
@@ -59,16 +67,19 @@ class PrintBomWiz(models.TransientModel):
             'view_id': 2787,
             'target': 'new'}
 
-    bom_id = fields.Many2one(comodel_name='mrp.bom',
-                             string="Lista de materiales",
-                             readonly=False)
-
-    bom_line_ids = fields.One2many(
-        comodel_name='print.bom.line',
-        inverse_name='id',
-        string='Componente',
-        required=False,
-        )
+    def remove_bom_lines(self):
+        lines.clear()
+        context = {'default_bom_id': self.bom_id.id,
+                   'default_bom_line_ids': lines}
+        return {
+            'name': 'Imprimir Lista de Materiales',
+            'type': 'ir.actions.act_window',
+            'res_model': 'print.bom.wiz',
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': 2787,
+            'target': 'new'}
 
     @api.model
     def print_bom(self):

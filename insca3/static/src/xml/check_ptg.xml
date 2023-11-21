@@ -18,7 +18,7 @@
   <t t-extend="FormView.buttons">
     <t t-jquery="div.o_form_buttons_view" t-operation="append">
       <t t-if="widget.modelName=='mrp.bom'">
-        <button class="oe_new_custom_button_insca_open_wiz btn btn-secondary" type="button">Print Wiz</button>
+        <button class="oe_new_custom_button_insca_open_wiz btn btn-secondary" type="button">Imprimir</button>
       </t>
     </t>
   </t>
