@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Check LdM artículos">
                     <header>
-                        <button name="remove_bom_lines" type="object" string="Borrar" class="oe_highlight"/>
+                        <!--<button name="remove_bom_lines" type="object" string="Borrar" class="oe_highlight"/>-->
                         <!--<button name="get_all_bom_lines" type="object" string="Completa" class="oe_highlight"/>-->
                         <button name="get_all_bom_lines_with_bom" type="object"
                                 string="Sin MP" class="oe_highlight"/>
@@ -15,6 +15,8 @@
                                 string="Sin HRJ" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_mad" type="object"
                                 string="Solo MAD" class="oe_highlight"/>
+                        <button name="get_all_bom_lines_only_ptg" type="object"
+                                string="Solo PTG" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <div>

@@ -106,7 +106,7 @@ class PrintBomWiz(models.TransientModel):
 
     def get_all_bom_lines_only_mad(self):
         self.remove_bom_lines()
-        lines_only_ptg = []
+        lines_only_mad = []
         i = 0
         for o in self.bom_id:
             i += 1
@@ -117,9 +117,43 @@ class PrintBomWiz(models.TransientModel):
         for line in i:
             if line[2]['default_code'][0:4] == 'A10.' or line[2]['default_code'][0:4] == 'A11.':
                 line[2]['to_print'] = True
-                lines_only_ptg.append(line)
+                lines_only_mad.append(line)
             else:
                 line[2]['to_print'] = False
+                lines_only_mad.append(line)
+
+        context = {'default_bom_id': self.bom_id.id,
+                   'default_bom_line_ids': lines_only_mad}
+
+        return {
+            'name': 'Imprimir Lista de Materiales',
+            'type': 'ir.actions.act_window',
+            'res_model': 'print.bom.wiz',
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': 2787,
+            'target': 'new'}
+
+    def get_all_bom_lines_only_ptg(self):
+        self.remove_bom_lines()
+        lines_only_ptg = []
+        i = 0
+        for o in self.bom_id:
+            i += 1
+            j = 0
+            for ch in o.bom_line_ids:
+                i = self.print_all_bom_children_with_bom(ch, i, j)
+
+        for line in i:
+            if line[2]['route'] and 'PTG' not in line[2]['route']:
+                line[2]['to_print'] = False
+                lines_only_ptg.append(line)
+            elif not line[2]['route']:
+                line[2]['to_print'] = False
+                lines_only_ptg.append(line)
+            else:
+                line[2]['to_print'] = True
                 lines_only_ptg.append(line)
 
         context = {'default_bom_id': self.bom_id.id,
