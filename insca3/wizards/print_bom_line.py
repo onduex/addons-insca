@@ -15,6 +15,7 @@ class PrintBomLine(models.TransientModel):
     qty = fields.Float(string='Cantidad', required=False)
     has_bom_line_ids = fields.Integer(string='Tiene BoM', required=False)
     to_print = fields.Boolean(string='Imp', required=False, default=True)
+    has_pdf = fields.Boolean(string='Pdf', required=False, default=False)
     route = fields.Char(string='Ruta', required=False)
     path = fields.Char(string='Path', required=False)
     parent_bom = fields.Char(string='Padre', required=False)

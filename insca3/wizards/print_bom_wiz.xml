@@ -21,6 +21,8 @@
                                 string="Solo PANTOGRAFO" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_met" type="object"
                                 string="Solo METAL" class="oe_highlight"/>
+                        <button name="check_pdf" type="object"
+                                string="Check PDF" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <div>
@@ -41,6 +43,7 @@
                             <field name="bom_line_ids" widget="one2many">
                                 <tree string="Components" limit="1000" editable="true">
                                     <field name="to_print"/>
+                                    <field name="has_pdf"/>
                                     <field name="mrp_bom_line_level"/>
                                     <field name="name"/>
                                     <field name="qty" optional="hide"/>

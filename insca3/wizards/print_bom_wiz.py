@@ -4,7 +4,9 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import CacheMiss
+from smb.SMBConnection import SMBConnection
 import pprint
+
 pp = pprint.PrettyPrinter(indent=4)
 lines = []
 
@@ -255,6 +257,29 @@ class PrintBomWiz(models.TransientModel):
             'view_mode': 'form',
             'view_id': 2787,
             'target': 'new'}
+
+    def check_pdf(self):
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+
+        conn = SMBConnection(res_company_obj.smb_user,
+                             res_company_obj.smb_pass,
+                             res_company_obj.odoo_server_name,
+                             res_company_obj.filestore_server_name
+                             )
+        conn.connect(res_company_obj.filestore_server_ip,
+                     res_company_obj.filestore_server_port
+                     )
+        shared_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 +
+                       '/' + "PLANOS/1_PDF/A31/A31.010/A31.010103.BBAZRH_R0A.pdf")
+
+        try:
+            with open('exist', 'wb') as fp:
+                conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, shared_file, fp, timeout=30)
+        except Exception as e:
+            if e:
+                print('No existe el archivo')
+        finally:
+            conn.close()
 
     def remove_bom_lines(self):
         lines.clear()
