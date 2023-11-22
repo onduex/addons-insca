@@ -13,8 +13,8 @@
                                 string="Sin MP" class="oe_highlight"/>
                         <button name="get_all_bom_lines_without_hrj" type="object"
                                 string="Sin HRJ" class="oe_highlight"/>
-                        <button name="get_all_bom_lines_only_ptg" type="object"
-                                string="Solo PTG" class="oe_highlight"/>
+                        <button name="get_all_bom_lines_only_mad" type="object"
+                                string="Solo MAD" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <div>
@@ -37,8 +37,10 @@
                                     <field name="to_print"/>
                                     <field name="mrp_bom_line_level"/>
                                     <field name="name"/>
-                                    <field name="qty"/>
+                                    <field name="qty" optional="hide"/>
                                     <field name="default_code" optional="hide"/>
+                                    <field name="route" optional="hide"/>
+                                    <field name="path" optional="hide"/>
                                     <field name="has_bom_line_ids" optional="hide"/>
                                 </tree>
                             </field>

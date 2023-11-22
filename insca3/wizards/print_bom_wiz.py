@@ -33,6 +33,9 @@ class PrintBomWiz(models.TransientModel):
                        'name': ch.product_id.name,
                        'qty': ch.product_qty,
                        'has_bom_line_ids': len(ch.child_line_ids),
+                       'route': ch.child_bom_id.vault_route or None,
+                       'path': str(ch.product_id.png_link).
+                replace('png', 'pdf').replace('0_PNG', '0_PDF') or None,
                        })
         if line[2]['has_bom_line_ids'] != 0:
             lines.append(line)
@@ -101,7 +104,7 @@ class PrintBomWiz(models.TransientModel):
             'view_id': 2787,
             'target': 'new'}
 
-    def get_all_bom_lines_only_ptg(self):
+    def get_all_bom_lines_only_mad(self):
         self.remove_bom_lines()
         lines_only_ptg = []
         i = 0
