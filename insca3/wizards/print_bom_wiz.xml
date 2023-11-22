@@ -13,6 +13,8 @@
                                 string="Sin MP" class="oe_highlight"/>
                         <button name="get_all_bom_lines_without_hrj" type="object"
                                 string="Sin HRJ" class="oe_highlight"/>
+                        <button name="get_all_bom_lines_only_ptg" type="object"
+                                string="Solo PTG" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <div>
