@@ -10,13 +10,15 @@
                         <!--<button name="remove_bom_lines" type="object" string="Borrar" class="oe_highlight"/>-->
                         <!--<button name="get_all_bom_lines" type="object" string="Completa" class="oe_highlight"/>-->
                         <button name="get_all_bom_lines_with_bom" type="object"
-                                string="Sin MP" class="oe_highlight"/>
+                                string="COMPLETA" class="oe_highlight"/>
                         <button name="get_all_bom_lines_without_hrj" type="object"
-                                string="Sin HRJ" class="oe_highlight"/>
+                                string="Sin HERRAJES" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_mad" type="object"
-                                string="Solo MAD" class="oe_highlight"/>
+                                string="Solo MADERA" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_ptg" type="object"
-                                string="Solo PTG" class="oe_highlight"/>
+                                string="Solo PANTOGRAFO" class="oe_highlight"/>
+                        <button name="get_all_bom_lines_only_met" type="object"
+                                string="Solo METAL" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <div>
@@ -43,6 +45,7 @@
                                     <field name="default_code" optional="hide"/>
                                     <field name="route" optional="hide"/>
                                     <field name="path" optional="hide"/>
+                                    <field name="parent_bom" optional="hide"/>
                                     <field name="has_bom_line_ids" optional="hide"/>
                                 </tree>
                             </field>

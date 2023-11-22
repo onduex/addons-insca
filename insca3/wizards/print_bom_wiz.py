@@ -35,7 +35,8 @@ class PrintBomWiz(models.TransientModel):
                        'has_bom_line_ids': len(ch.child_line_ids),
                        'route': ch.child_bom_id.vault_route or None,
                        'path': str(ch.product_id.png_link).
-                replace('png', 'pdf').replace('0_PNG', '0_PDF') or None,
+                replace('png', 'pdf').replace('0_PNG', '1_PDF') or None,
+                       'parent_bom': ch.bom_id.product_tmpl_id.default_code or None,
                        })
         if line[2]['has_bom_line_ids'] != 0:
             lines.append(line)
@@ -158,6 +159,62 @@ class PrintBomWiz(models.TransientModel):
 
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines_only_ptg}
+
+        return {
+            'name': 'Imprimir Lista de Materiales',
+            'type': 'ir.actions.act_window',
+            'res_model': 'print.bom.wiz',
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': 2787,
+            'target': 'new'}
+
+    def get_all_bom_lines_only_met(self):
+        self.remove_bom_lines()
+        lines_only_met = []
+        lines_only_met2 = []
+        lines_only_met_reactivate = []
+        i = 0
+        for o in self.bom_id:
+            i += 1
+            j = 0
+            for ch in o.bom_line_ids:
+                i = self.print_all_bom_children_with_bom(ch, i, j)
+
+        for line in i:
+            if line[2]['parent_bom'][0:4] == 'A31.':
+                line[2]['to_print'] = False
+                lines_only_met.append(line)
+            elif line[2]['parent_bom'][0:4] == 'A30.' and line[2]['default_code'][0:4] == 'A30.':
+                line[2]['to_print'] = False
+                lines_only_met.append(line)
+            elif line[2]['default_code'][0:4] == 'A70.' \
+                    or line[2]['default_code'][0:4] == 'A10.' \
+                    or line[2]['default_code'][0:4] == 'A11.' \
+                    or line[2]['default_code'][0:4] == 'A12.' \
+                    or line[2]['default_code'][0:4] == 'A15.':
+                line[2]['to_print'] = False
+                lines_only_met.append(line)
+            else:
+                line[2]['to_print'] = True
+                lines_only_met.append(line)
+
+        for rec in lines_only_met:
+            if rec[2]['to_print'] and \
+                    (rec[2]['default_code'][0:4] == 'A30.' or rec[2]['default_code'][0:4] == 'A31.') and \
+                    (rec[2]['parent_bom'][0:4] != 'A31.' or rec[2]['parent_bom'][0:4] != 'A32.'):
+                lines_only_met_reactivate.append(rec[2]['parent_bom'])
+
+        for line in lines_only_met:
+            if line[2]['default_code'] in lines_only_met_reactivate:
+                line[2]['to_print'] = True
+                lines_only_met2.append(line)
+            else:
+                lines_only_met2.append(line)
+
+        context = {'default_bom_id': self.bom_id.id,
+                   'default_bom_line_ids': lines_only_met2}
 
         return {
             'name': 'Imprimir Lista de Materiales',

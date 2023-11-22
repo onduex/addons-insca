@@ -17,3 +17,4 @@ class PrintBomLine(models.TransientModel):
     to_print = fields.Boolean(string='Imp', required=False, default=True)
     route = fields.Char(string='Ruta', required=False)
     path = fields.Char(string='Path', required=False)
+    parent_bom = fields.Char(string='Padre', required=False)
