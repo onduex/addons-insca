@@ -13,6 +13,8 @@
                                 string="COMPLETA" class="oe_highlight"/>
                         <button name="get_all_bom_lines_without_hrj" type="object"
                                 string="Sin HERRAJES" class="oe_highlight"/>
+                        <button name="get_all_bom_lines_only_hrj" type="object"
+                                string="Solo HERRAJES" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_mad" type="object"
                                 string="Solo MADERA" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_ptg" type="object"

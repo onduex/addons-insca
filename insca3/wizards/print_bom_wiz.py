@@ -105,6 +105,36 @@ class PrintBomWiz(models.TransientModel):
             'view_id': 2787,
             'target': 'new'}
 
+    def get_all_bom_lines_only_hrj(self):
+        self.remove_bom_lines()
+        lines_only_hrj = []
+        i = 0
+        for o in self.bom_id:
+            i += 1
+            j = 0
+            for ch in o.bom_line_ids:
+                i = self.print_all_bom_children_with_bom(ch, i, j)
+
+        for line in i:
+            if line[2]['default_code'][0:4] != 'A70.':
+                line[2]['to_print'] = False
+                lines_only_hrj.append(line)
+            else:
+                lines_only_hrj.append(line)
+
+        context = {'default_bom_id': self.bom_id.id,
+                   'default_bom_line_ids': lines_only_hrj}
+
+        return {
+            'name': 'Imprimir Lista de Materiales',
+            'type': 'ir.actions.act_window',
+            'res_model': 'print.bom.wiz',
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': 2787,
+            'target': 'new'}
+
     def get_all_bom_lines_only_mad(self):
         self.remove_bom_lines()
         lines_only_mad = []
