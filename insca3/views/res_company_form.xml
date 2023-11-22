@@ -35,6 +35,14 @@
                             <field name="filestore_server_shared_folder_level1_2"/>
                         </group>
                     </group>
+                    <group>
+                        <group name="left" string="Shared 3">
+                            <field name="filestore_server_shared_folder_3"/>
+                            <field name="filestore_server_shared_folder_level1_3"/>
+                        </group>
+                        <group name="right" string="Shared 4">
+                        </group>
+                    </group>
                 </page>
             </xpath>
 
