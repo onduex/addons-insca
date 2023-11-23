@@ -269,12 +269,12 @@ class PrintBomWiz(models.TransientModel):
         conn.connect(res_company_obj.filestore_server_ip,
                      res_company_obj.filestore_server_port
                      )
-        shared_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 +
+        local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 +
                        '/' + "PLANOS/1_PDF/A31/A31.010/A31.010103.BBAZRH_R0A.pdf")
 
         try:
-            with open('exist', 'wb') as fp:
-                conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, shared_file, fp, timeout=30)
+            with open('local_file', 'wb') as fp:
+                conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
         except Exception as e:
             if e:
                 print('No existe el archivo')
