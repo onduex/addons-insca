@@ -118,7 +118,7 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
-            if line[2]['default_code'][0:4] != 'A70.' or line[2]['default_code'][0:4] != 'A72.':
+            if line[2]['default_code'][0:4] != 'A70.' and line[2]['default_code'][0:4] != 'A72.':
                 line[2]['to_print'] = False
                 lines_only_hrj.append(line)
             else:
