@@ -103,19 +103,18 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
-            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
-            try:
-                with open('local_file', 'wb') as fp:
-                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
-                    line[2]['has_pdf'] = True
-            except Exception as e:
-                if e:
-                    print('No existe el archivo')
-
             if line[2]['default_code'][0:4] == 'A70.' or line[2]['default_code'][0:4] == 'A72.':
                 line[2]['to_print'] = False
                 lines_without_hrj.append(line)
             else:
+                local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+                try:
+                    with open('local_file', 'wb') as fp:
+                        conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                        line[2]['has_pdf'] = True
+                except Exception as e:
+                    if e:
+                        print('No existe el archivo')
                 lines_without_hrj.append(line)
 
         conn.close()
@@ -144,19 +143,18 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
-            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
-            try:
-                with open('local_file', 'wb') as fp:
-                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
-                    line[2]['has_pdf'] = True
-            except Exception as e:
-                if e:
-                    print('No existe el archivo')
-
             if line[2]['default_code'][0:4] != 'A70.' and line[2]['default_code'][0:4] != 'A72.':
                 line[2]['to_print'] = False
                 lines_only_hrj.append(line)
             else:
+                local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+                try:
+                    with open('local_file', 'wb') as fp:
+                        conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                        line[2]['has_pdf'] = True
+                except Exception as e:
+                    if e:
+                        print('No existe el archivo')
                 lines_only_hrj.append(line)
 
         conn.close()
@@ -185,17 +183,17 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
-            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
-            try:
-                with open('local_file', 'wb') as fp:
-                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
-                    line[2]['has_pdf'] = True
-            except Exception as e:
-                if e:
-                    print('No existe el archivo')
-
             if line[2]['default_code'][0:4] == 'A10.' or line[2]['default_code'][0:4] == 'A11.':
                 line[2]['to_print'] = True
+                local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+                try:
+                    with open('local_file', 'wb') as fp:
+                        conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                        line[2]['has_pdf'] = True
+                except Exception as e:
+                    if e:
+                        print('No existe el archivo')
+
                 lines_only_mad.append(line)
             else:
                 line[2]['to_print'] = False
@@ -227,15 +225,6 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
-            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
-            try:
-                with open('local_file', 'wb') as fp:
-                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
-                    line[2]['has_pdf'] = True
-            except Exception as e:
-                if e:
-                    print('No existe el archivo')
-
             if line[2]['route'] and 'PTG' not in line[2]['route']:
                 line[2]['to_print'] = False
                 lines_only_ptg.append(line)
@@ -244,6 +233,14 @@ class PrintBomWiz(models.TransientModel):
                 lines_only_ptg.append(line)
             else:
                 line[2]['to_print'] = True
+                local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+                try:
+                    with open('local_file', 'wb') as fp:
+                        conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                        line[2]['has_pdf'] = True
+                except Exception as e:
+                    if e:
+                        print('No existe el archivo')
                 lines_only_ptg.append(line)
 
         conn.close()
@@ -274,15 +271,6 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
-            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
-            try:
-                with open('local_file', 'wb') as fp:
-                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
-                    line[2]['has_pdf'] = True
-            except Exception as e:
-                if e:
-                    print('No existe el archivo')
-
             if line[2]['parent_bom'][0:4] == 'A31.':
                 line[2]['to_print'] = False
                 lines_only_met.append(line)
@@ -298,6 +286,14 @@ class PrintBomWiz(models.TransientModel):
                 lines_only_met.append(line)
             else:
                 line[2]['to_print'] = True
+                local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+                try:
+                    with open('local_file', 'wb') as fp:
+                        conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                        line[2]['has_pdf'] = True
+                except Exception as e:
+                    if e:
+                        print('No existe el archivo')
                 lines_only_met.append(line)
 
         for rec in lines_only_met:
@@ -309,6 +305,14 @@ class PrintBomWiz(models.TransientModel):
         for line in lines_only_met:
             if line[2]['default_code'] in lines_only_met_reactivate:
                 line[2]['to_print'] = True
+                local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+                try:
+                    with open('local_file', 'wb') as fp:
+                        conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                        line[2]['has_pdf'] = True
+                except Exception as e:
+                    if e:
+                        print('No existe el archivo')
                 lines_only_met2.append(line)
             else:
                 lines_only_met2.append(line)
