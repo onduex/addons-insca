@@ -16,7 +16,7 @@ class ProductTemplate(models.Model):
                     suffix = "_R0" + product.vault_revision
                 elif len(str(product.vault_revision)) == 2:
                     suffix = "_R" + product.vault_revision
-                product.png_link = ("R:/DTECNIC/PLANOS/0_PNG/" + product.default_code[0:3] + "/" +
+                product.png_link = ("file:///R:/DTECNIC/PLANOS/0_PNG/" + product.default_code[0:3] + "/" +
                                     product.default_code[0:7] + "/" +
                                     product.default_code + suffix + ".png")
 

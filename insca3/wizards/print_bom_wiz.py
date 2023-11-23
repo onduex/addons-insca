@@ -36,7 +36,7 @@ class PrintBomWiz(models.TransientModel):
                        'qty': ch.product_qty,
                        'has_bom_line_ids': len(ch.child_line_ids),
                        'route': ch.child_bom_id.vault_route or None,
-                       'path': str(ch.product_id.png_link)[11:].strip().
+                       'path': str(ch.product_id.png_link)[19:].strip().
                 replace('png', 'pdf').replace('0_PNG', '1_PDF') or None,
                        'parent_bom': ch.bom_id.product_tmpl_id.default_code or None,
                        })

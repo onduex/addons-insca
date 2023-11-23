@@ -40,6 +40,7 @@
                         <div>
                             <field name="bom_line_ids" widget="one2many">
                                 <tree string="Components" limit="1000" editable="true">
+                                <!--decoration-danger="has_pdf == False"-->
                                     <field name="to_print"/>
                                     <field name="has_pdf"/>
                                     <field name="mrp_bom_line_level"/>
