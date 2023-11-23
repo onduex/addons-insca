@@ -21,8 +21,6 @@
                                 string="Solo PANTOGRAFO" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_met" type="object"
                                 string="Solo METAL" class="oe_highlight"/>
-                        <button name="check_pdf" type="object"
-                                string="Check PDF" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <div>

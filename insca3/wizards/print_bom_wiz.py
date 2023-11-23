@@ -36,7 +36,7 @@ class PrintBomWiz(models.TransientModel):
                        'qty': ch.product_qty,
                        'has_bom_line_ids': len(ch.child_line_ids),
                        'route': ch.child_bom_id.vault_route or None,
-                       'path': str(ch.product_id.png_link).
+                       'path': str(ch.product_id.png_link)[11:].strip().
                 replace('png', 'pdf').replace('0_PNG', '1_PDF') or None,
                        'parent_bom': ch.bom_id.product_tmpl_id.default_code or None,
                        })
@@ -58,6 +58,8 @@ class PrintBomWiz(models.TransientModel):
 
     def get_all_bom_lines_with_bom(self):
         self.remove_bom_lines()
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+        conn = self.establish_conn()
         i = 0
         for o in self.bom_id:
             i += 1
@@ -65,6 +67,17 @@ class PrintBomWiz(models.TransientModel):
             for ch in o.bom_line_ids:
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
+        for line in i:
+            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+            try:
+                with open('local_file', 'wb') as fp:
+                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                    line[2]['has_pdf'] = True
+            except Exception as e:
+                if e:
+                    print('No existe el archivo')
+
+        conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines}
         return {
@@ -79,6 +92,8 @@ class PrintBomWiz(models.TransientModel):
 
     def get_all_bom_lines_without_hrj(self):
         self.remove_bom_lines()
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+        conn = self.establish_conn()
         lines_without_hrj = []
         i = 0
         for o in self.bom_id:
@@ -88,15 +103,24 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
+            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+            try:
+                with open('local_file', 'wb') as fp:
+                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                    line[2]['has_pdf'] = True
+            except Exception as e:
+                if e:
+                    print('No existe el archivo')
+
             if line[2]['default_code'][0:4] == 'A70.' or line[2]['default_code'][0:4] == 'A72.':
                 line[2]['to_print'] = False
                 lines_without_hrj.append(line)
             else:
                 lines_without_hrj.append(line)
 
+        conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines_without_hrj}
-
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -109,6 +133,8 @@ class PrintBomWiz(models.TransientModel):
 
     def get_all_bom_lines_only_hrj(self):
         self.remove_bom_lines()
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+        conn = self.establish_conn()
         lines_only_hrj = []
         i = 0
         for o in self.bom_id:
@@ -118,15 +144,24 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
+            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+            try:
+                with open('local_file', 'wb') as fp:
+                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                    line[2]['has_pdf'] = True
+            except Exception as e:
+                if e:
+                    print('No existe el archivo')
+
             if line[2]['default_code'][0:4] != 'A70.' and line[2]['default_code'][0:4] != 'A72.':
                 line[2]['to_print'] = False
                 lines_only_hrj.append(line)
             else:
                 lines_only_hrj.append(line)
 
+        conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines_only_hrj}
-
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -139,6 +174,8 @@ class PrintBomWiz(models.TransientModel):
 
     def get_all_bom_lines_only_mad(self):
         self.remove_bom_lines()
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+        conn = self.establish_conn()
         lines_only_mad = []
         i = 0
         for o in self.bom_id:
@@ -148,6 +185,15 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
+            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+            try:
+                with open('local_file', 'wb') as fp:
+                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                    line[2]['has_pdf'] = True
+            except Exception as e:
+                if e:
+                    print('No existe el archivo')
+
             if line[2]['default_code'][0:4] == 'A10.' or line[2]['default_code'][0:4] == 'A11.':
                 line[2]['to_print'] = True
                 lines_only_mad.append(line)
@@ -155,9 +201,9 @@ class PrintBomWiz(models.TransientModel):
                 line[2]['to_print'] = False
                 lines_only_mad.append(line)
 
+        conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines_only_mad}
-
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -170,6 +216,8 @@ class PrintBomWiz(models.TransientModel):
 
     def get_all_bom_lines_only_ptg(self):
         self.remove_bom_lines()
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+        conn = self.establish_conn()
         lines_only_ptg = []
         i = 0
         for o in self.bom_id:
@@ -179,6 +227,15 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
+            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+            try:
+                with open('local_file', 'wb') as fp:
+                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                    line[2]['has_pdf'] = True
+            except Exception as e:
+                if e:
+                    print('No existe el archivo')
+
             if line[2]['route'] and 'PTG' not in line[2]['route']:
                 line[2]['to_print'] = False
                 lines_only_ptg.append(line)
@@ -189,9 +246,9 @@ class PrintBomWiz(models.TransientModel):
                 line[2]['to_print'] = True
                 lines_only_ptg.append(line)
 
+        conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines_only_ptg}
-
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -204,6 +261,8 @@ class PrintBomWiz(models.TransientModel):
 
     def get_all_bom_lines_only_met(self):
         self.remove_bom_lines()
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+        conn = self.establish_conn()
         lines_only_met = []
         lines_only_met2 = []
         lines_only_met_reactivate = []
@@ -215,6 +274,15 @@ class PrintBomWiz(models.TransientModel):
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
         for line in i:
+            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+            try:
+                with open('local_file', 'wb') as fp:
+                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                    line[2]['has_pdf'] = True
+            except Exception as e:
+                if e:
+                    print('No existe el archivo')
+
             if line[2]['parent_bom'][0:4] == 'A31.':
                 line[2]['to_print'] = False
                 lines_only_met.append(line)
@@ -245,9 +313,9 @@ class PrintBomWiz(models.TransientModel):
             else:
                 lines_only_met2.append(line)
 
+        conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines_only_met2}
-
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -258,9 +326,8 @@ class PrintBomWiz(models.TransientModel):
             'view_id': 2787,
             'target': 'new'}
 
-    def check_pdf(self):
+    def establish_conn(self):
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
-
         conn = SMBConnection(res_company_obj.smb_user,
                              res_company_obj.smb_pass,
                              res_company_obj.odoo_server_name,
@@ -269,17 +336,7 @@ class PrintBomWiz(models.TransientModel):
         conn.connect(res_company_obj.filestore_server_ip,
                      res_company_obj.filestore_server_port
                      )
-        local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 +
-                       '/' + "PLANOS/1_PDF/A31/A31.010/A31.010103.BBAZRH_R0A.pdf")
-
-        try:
-            with open('local_file', 'wb') as fp:
-                conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
-        except Exception as e:
-            if e:
-                print('No existe el archivo')
-        finally:
-            conn.close()
+        return conn
 
     def remove_bom_lines(self):
         lines.clear()
