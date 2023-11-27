@@ -21,6 +21,8 @@
                                 string="Solo PANTOGRAFO" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_met" type="object"
                                 string="Solo METAL" class="oe_highlight"/>
+                        <button name="print_bom" type="object"
+                                string="IMPRIMIR" class="oe_highlight"/>
                     </header>
                     <sheet>
                         <div>
@@ -56,7 +58,7 @@
                         </div>
                     </sheet>
                     <footer>
-                        <button name="print_bom" type="object" string="Aplicar" class="oe_highlight"/>
+                        <!--<button name="print_bom" type="object" string="Aplicar" class="oe_highlight"/>-->
                         <button special="cancel" string="Cancelar"/>
                     </footer>
                 </form>
