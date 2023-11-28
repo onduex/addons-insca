@@ -19,7 +19,7 @@ class PrintBomWiz(models.TransientModel):
 
     bom_id = fields.Many2one(comodel_name='mrp.bom',
                              string="Lista de materiales",
-                             readonly=False)
+                             readonly=False, ondelete="cascade")
 
     bom_line_ids = fields.One2many(
         comodel_name='print.bom.line',
@@ -38,9 +38,10 @@ class PrintBomWiz(models.TransientModel):
                        'qty': ch.product_qty,
                        'has_bom_line_ids': len(ch.child_line_ids),
                        'route': ch.child_bom_id.vault_route or None,
-                       'path': str(ch.product_id.png_link)[19:].strip().
-                replace('png', 'pdf').replace('0_PNG', '1_PDF') or None,
+                       'path': str(ch.product_id.png_link)[19:].strip().replace('png', 'pdf').
+                replace('0_PNG', '1_PDF') or None,
                        'parent_bom': ch.bom_id.product_tmpl_id.default_code or None,
+                       'wizard_id': self.id,
                        })
         if line[2]['has_bom_line_ids'] != 0:
             lines.append(line)
