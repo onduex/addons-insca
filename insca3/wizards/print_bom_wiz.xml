@@ -25,8 +25,13 @@
                                 string="IMPRIMIR" class="oe_highlight"/>
                     </header>
                     <sheet>
+
                         <div>
                             <group>
+                                <label for="button_pressed" string="Solicitud"/>
+                                <div>
+                                    <field name="button_pressed" readonly="1"/>
+                                </div>
                                 <label for="bom_id" string="Lista de Materiales"/>
                                 <div>
                                     <field name="bom_id"/>
@@ -53,6 +58,7 @@
                                     <field name="path" optional="hide"/>
                                     <field name="parent_bom" optional="hide"/>
                                     <field name="has_bom_line_ids" optional="hide"/>
+                                    <field name="wizard_id" optional="hide"/>
                                 </tree>
                             </field>
                         </div>

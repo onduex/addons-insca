@@ -19,3 +19,4 @@ class PrintBomLine(models.TransientModel):
     route = fields.Char(string='Ruta', required=False)
     path = fields.Char(string='Path', required=False)
     parent_bom = fields.Char(string='Padre', required=False)
+    wizard_id = fields.Integer(string='Wizard', required=False)

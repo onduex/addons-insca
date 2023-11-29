@@ -5,17 +5,18 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import CacheMiss
 from smb.SMBConnection import SMBConnection
-from PyPDF2 import PdfFileMerger
+import PyPDF2
 import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 lines = []
-input_paths = []
 
 
 class PrintBomWiz(models.TransientModel):
     _name = 'print.bom.wiz'
     _description = 'Wizard para imprimir LdM'
+
+    button_pressed = fields.Char(string='Solicitud', required=False, readonly=True, default='#')
 
     bom_id = fields.Many2one(comodel_name='mrp.bom',
                              string="Lista de materiales",
@@ -60,11 +61,12 @@ class PrintBomWiz(models.TransientModel):
         return lines
 
     def get_all_bom_lines_with_bom(self):
+        files_to_merge = []
+        mergeFile = PyPDF2.PdfFileMerger()
         self.remove_bom_lines()
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         conn = self.establish_conn()
-        pdfmerge = PdfFileMerger()
-        file_handles = []
+        self.button_pressed = 'COMPLETA'
 
         i = 0
         for o in self.bom_id:
@@ -73,20 +75,42 @@ class PrintBomWiz(models.TransientModel):
             for ch in o.bom_line_ids:
                 i = self.print_all_bom_children_with_bom(ch, i, j)
 
+        line_0 = (0, 0, {'to_print': True,
+                         'mrp_bom_line_level': self.bom_id.product_tmpl_id.default_code,
+                         'default_code': self.bom_id.product_tmpl_id.default_code,
+                         'name': self.bom_id.product_tmpl_id.name,
+                         'qty': 1,
+                         'has_bom_line_ids': len(self.bom_id.bom_line_ids),
+                         'route': self.bom_id.vault_route or None,
+                         'path': str(self.bom_id.product_tmpl_id.png_link)[19:].strip().replace('png', 'pdf').
+                  replace('0_PNG', '1_PDF') or None,
+                         'parent_bom': None,
+                         'wizard_id': self.id,
+                         })
+        i = [line_0] + i
         for line in i:
-            local_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+            remote_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
+            local_file = '/tmp/' + remote_file[remote_file.rfind('/'):][1:]
+
             try:
-                with open('local_file', 'wb') as fp:
-                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, local_file, fp, timeout=30)
+                with open(local_file, 'wb') as file_obj:
+                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, remote_file, file_obj, timeout=30)
+                    files_to_merge.append(local_file)
                     line[2]['has_pdf'] = True
 
             except Exception as e:
                 if e:
                     print('No existe el archivo')
 
+        for pdf in files_to_merge:
+            mergeFile.append(PyPDF2.PdfFileReader(open(pdf, 'rb')))
+        mergeFile.write('/tmp' + line_0[2]['path'][line_0[2]['path'].rfind('/'):])
+
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
-                   'default_bom_line_ids': lines}
+                   'default_bom_line_ids': [line_0] + lines,
+                   'default_button_pressed': self.button_pressed
+                   }
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -101,6 +125,7 @@ class PrintBomWiz(models.TransientModel):
         self.remove_bom_lines()
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         conn = self.establish_conn()
+        self.button_pressed = 'Sin HERRAJES'
         lines_without_hrj = []
         i = 0
         for o in self.bom_id:
@@ -126,7 +151,9 @@ class PrintBomWiz(models.TransientModel):
 
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
-                   'default_bom_line_ids': lines_without_hrj}
+                   'default_bom_line_ids': lines_without_hrj,
+                   'default_button_pressed': self.button_pressed
+                   }
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -141,6 +168,7 @@ class PrintBomWiz(models.TransientModel):
         self.remove_bom_lines()
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         conn = self.establish_conn()
+        self.button_pressed = 'Solo HERRAJES'
         lines_only_hrj = []
         i = 0
         for o in self.bom_id:
@@ -166,7 +194,9 @@ class PrintBomWiz(models.TransientModel):
 
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
-                   'default_bom_line_ids': lines_only_hrj}
+                   'default_bom_line_ids': lines_only_hrj,
+                   'default_button_pressed': self.button_pressed
+                   }
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -181,6 +211,7 @@ class PrintBomWiz(models.TransientModel):
         self.remove_bom_lines()
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         conn = self.establish_conn()
+        self.button_pressed = 'Solo MADERA'
         lines_only_mad = []
         i = 0
         for o in self.bom_id:
@@ -208,7 +239,9 @@ class PrintBomWiz(models.TransientModel):
 
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
-                   'default_bom_line_ids': lines_only_mad}
+                   'default_bom_line_ids': lines_only_mad,
+                   'default_button_pressed': self.button_pressed
+                   }
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -223,6 +256,7 @@ class PrintBomWiz(models.TransientModel):
         self.remove_bom_lines()
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         conn = self.establish_conn()
+        self.button_pressed = 'Solo PANTOGRAFO'
         lines_only_ptg = []
         i = 0
         for o in self.bom_id:
@@ -252,7 +286,9 @@ class PrintBomWiz(models.TransientModel):
 
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
-                   'default_bom_line_ids': lines_only_ptg}
+                   'default_bom_line_ids': lines_only_ptg,
+                   'default_button_pressed': self.button_pressed
+                   }
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -267,6 +303,7 @@ class PrintBomWiz(models.TransientModel):
         self.remove_bom_lines()
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         conn = self.establish_conn()
+        self.button_pressed = 'Solo METAL'
         lines_only_met = []
         lines_only_met2 = []
         lines_only_met_reactivate = []
@@ -326,7 +363,9 @@ class PrintBomWiz(models.TransientModel):
 
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
-                   'default_bom_line_ids': lines_only_met2}
+                   'default_bom_line_ids': lines_only_met2,
+                   'default_button_pressed': self.button_pressed
+                   }
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
@@ -364,16 +403,20 @@ class PrintBomWiz(models.TransientModel):
             'target': 'new'}
 
     def print_bom(self):
-        product_ids = self.bom_line_ids
-        context = {'default_bom_id': self.bom_id.id,
-                   'default_bom_line_ids': product_ids}
-        return {
-            'name': 'Imprimir Lista de Materiales',
-            'type': 'ir.actions.act_window',
-            'res_model': 'print.bom.wiz',
-            # 'context': self.env.context,
-            'res_id': 842,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': False,
-            'target': 'new'}
+        wizard_id = self.env.context.get('active_ids', [])
+        impLine = self.env['print.bom.line'].search([('wizard_id', '=', wizard_id[0]),
+                                                     ('to_print', '=', True),
+                                                     ('has_pdf', '=', True)])
+        if self.button_pressed == 'COMPLETA':
+            return self.get_all_bom_lines_with_bom()
+        elif self.button_pressed == 'Sin HERRAJES':
+            return self.get_all_bom_lines_without_hrj()
+        elif self.button_pressed == 'Solo HERRAJES':
+            return self.get_all_bom_lines_only_hrj()
+        elif self.button_pressed == 'Solo MADERA':
+            return self.get_all_bom_lines_only_mad()
+        elif self.button_pressed == 'Solo PANTOGRAFO':
+            return self.get_all_bom_lines_only_ptg()
+        elif self.button_pressed == 'Solo METAL':
+            return self.get_all_bom_lines_only_met()
+
