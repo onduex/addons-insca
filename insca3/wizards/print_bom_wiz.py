@@ -7,6 +7,7 @@ from odoo.exceptions import CacheMiss
 from smb.SMBConnection import SMBConnection
 import PyPDF2
 import pprint
+import os
 
 pp = pprint.PrettyPrinter(indent=4)
 lines = []
@@ -104,7 +105,21 @@ class PrintBomWiz(models.TransientModel):
 
         for pdf in files_to_merge:
             mergeFile.append(PyPDF2.PdfFileReader(open(pdf, 'rb')))
-        mergeFile.write('/tmp' + line_0[2]['path'][line_0[2]['path'].rfind('/'):])
+        local_file_to_remote = '/tmp/' + line_0[2]['path'][line_0[2]['path'].rfind('/'):][1:]
+        mergeFile.write(local_file_to_remote)
+
+        try:
+            remote_file_write_back = ('/DTECNIC/PLANOS/TMP_PDF/' + local_file_to_remote[5:])
+            with open(local_file_to_remote, 'rb') as file_obj:
+                conn.storeFile(res_company_obj.filestore_server_shared_folder_3, remote_file_write_back, file_obj, timeout=30)
+
+        except Exception as e:
+            if e:
+                print('No existe el archivo')
+
+        # for item in os.listdir('/tmp/'):
+        #     if item.endswith(".pdf"):
+        #         os.remove(os.path.join('/tmp/', item))
 
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
