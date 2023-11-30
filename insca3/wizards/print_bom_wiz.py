@@ -27,6 +27,7 @@ class PrintBomWiz(models.TransientModel):
     bom_id = fields.Many2one(comodel_name='mrp.bom',
                              string="Lista de materiales",
                              readonly=False, ondelete="cascade")
+
     bom_line_ids = fields.One2many(
         comodel_name='print.bom.line',
         inverse_name='id',
@@ -112,6 +113,10 @@ class PrintBomWiz(models.TransientModel):
             except Exception as e:
                 if e:
                     print('No existe el archivo')
+
+        for pdf in files_to_merge:
+            mergeFile.append(PyPDF2.PdfFileReader(open(pdf, 'rb')))
+        mergeFile.write('/tmp' + line_0[2]['path'][line_0[2]['path'].rfind('/'):])
 
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
