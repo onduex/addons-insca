@@ -142,16 +142,16 @@ class PrintBomWiz(models.TransientModel):
                     list_madera.append(rec.id)
                 if rec['route'] and 'PTG' in rec['route']:
                     list_pantografo.append(rec.id)
-                if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A31.':
-                    list_metal.append(rec.id)
-                if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A30.' and rec['default_code'][0:4] != 'A30.':
-                    list_metal.append(rec.id)
-                if rec['default_code'][0:4] != 'A70.' \
-                        or rec['default_code'][0:4] != 'A10.' \
-                        or rec['default_code'][0:4] != 'A11.' \
-                        or rec['default_code'][0:4] != 'A12.' \
-                        or rec['default_code'][0:4] != 'A15.':
-                    list_metal.append(rec.id)
+                # if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A31.':
+                #     list_metal.append(rec.id)
+                # if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A30.' and rec['default_code'][0:4] != 'A30.':
+                #     list_metal.append(rec.id)
+                # if rec['default_code'][0:4] != 'A70.' \
+                #         or rec['default_code'][0:4] != 'A10.' \
+                #         or rec['default_code'][0:4] != 'A11.' \
+                #         or rec['default_code'][0:4] != 'A12.' \
+                #         or rec['default_code'][0:4] != 'A15.':
+                #     list_metal.append(rec.id)
         return [list_completa, list_herrajes, list_madera, list_pantografo, list_metal]
 
     @api.onchange('completa', 'herrajes', 'madera', 'pantografo', 'metal')
