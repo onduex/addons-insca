@@ -131,6 +131,8 @@ class PrintBomWiz(models.TransientModel):
         list_completa = []
         list_herrajes = []
         list_madera = []
+        list_pantografo = []
+        list_metal = []
         if self.bom_line_ids:
             for rec in self.bom_line_ids:
                 list_completa.append(rec.id)
@@ -138,9 +140,21 @@ class PrintBomWiz(models.TransientModel):
                     list_herrajes.append(rec.id)
                 if rec['default_code'][0:4] == 'A10.' or rec['default_code'][0:4] == 'A11.':
                     list_madera.append(rec.id)
-        return [list_completa, list_herrajes, list_madera]
+                if rec['route'] and 'PTG' in rec['route']:
+                    list_pantografo.append(rec.id)
+                if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A31.':
+                    list_metal.append(rec.id)
+                if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A30.' and rec['default_code'][0:4] != 'A30.':
+                    list_metal.append(rec.id)
+                if rec['default_code'][0:4] != 'A70.' \
+                        or rec['default_code'][0:4] != 'A10.' \
+                        or rec['default_code'][0:4] != 'A11.' \
+                        or rec['default_code'][0:4] != 'A12.' \
+                        or rec['default_code'][0:4] != 'A15.':
+                    list_metal.append(rec.id)
+        return [list_completa, list_herrajes, list_madera, list_pantografo, list_metal]
 
-    @api.onchange('completa', 'herrajes', 'madera')
+    @api.onchange('completa', 'herrajes', 'madera', 'pantografo', 'metal')
     def onchange_filter(self):
         lists = self.get_lists()
         if not self.completa:
@@ -167,7 +181,22 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[2]:
                     line.to_print = True
-        print('eureka')
+        if not self.pantografo:
+            for line in self.bom_line_ids:
+                if line.id in lists[3]:
+                    line.to_print = False
+        if self.pantografo:
+            for line in self.bom_line_ids:
+                if line.id in lists[3]:
+                    line.to_print = True
+        if not self.metal:
+            for line in self.bom_line_ids:
+                if line.id in lists[4]:
+                    line.to_print = False
+        if self.metal:
+            for line in self.bom_line_ids:
+                if line.id in lists[4]:
+                    line.to_print = True
 
     def establish_conn(self):
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
