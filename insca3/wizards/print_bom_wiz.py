@@ -71,11 +71,6 @@ class PrintBomWiz(models.TransientModel):
         self.remove_bom_lines()
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         conn = self.establish_conn()
-        self.completa = True
-        self.herrajes = True
-        self.madera = True
-        self.pantografo = True
-        self.metal = True
 
         i = 0
         for o in self.bom_id:
@@ -103,7 +98,6 @@ class PrintBomWiz(models.TransientModel):
             files_to_merge.append(remote_file)
             try:
                 file_obj = tempfile.NamedTemporaryFile()
-                # with open(local_file, 'wb') as file_obj:
                 file_attributes, filesize = conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3,
                                                               remote_file, file_obj, timeout=30)
                 if filesize:
@@ -113,15 +107,15 @@ class PrintBomWiz(models.TransientModel):
             except Exception as e:
                 if e:
                     print('No existe el archivo')
-
-        for pdf in files_to_merge:
-            mergeFile.append(PyPDF2.PdfFileReader(open(pdf, 'rb')))
-        mergeFile.write('/tmp' + line_0[2]['path'][line_0[2]['path'].rfind('/'):])
-
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': [line_0] + lines,
-                   'default_button_pressed': self.button_pressed
+                   'default_button_pressed': 'COMPLETA',
+                   'default_completa': True,
+                   'default_herrajes': True,
+                   'default_madera': True,
+                   'default_pantografo': True,
+                   'default_metal': True
                    }
         return {
             'name': 'Imprimir Lista de Materiales',
@@ -132,6 +126,17 @@ class PrintBomWiz(models.TransientModel):
             'view_mode': 'form',
             'view_id': 2787,
             'target': 'new'}
+
+    @api.onchange('herrajes', 'completa')
+    def onchange_hrj(self):
+        list_completa = []
+        list_herrajes = []
+        if self.bom_line_ids:
+            for rec in self.bom_line_ids:
+                list_completa.append(rec.id)
+                if rec['default_code'][0:4] == 'A70.' or rec['default_code'][0:4] == 'A72.':
+                    list_herrajes.append(rec.id)
+            print('eureka')
 
     def establish_conn(self):
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])

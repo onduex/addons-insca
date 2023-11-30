@@ -23,11 +23,19 @@
                                 string="Solo METAL" class="oe_highlight"/>-->
                         <button name="print_bom" type="object"
                                 string="IMPRIMIR" class="oe_highlight"/>
+                        <button special="cancel" string="Cancelar"/>
                     </header>
                     <sheet>
                         <div>
                             <group>
-                                <group>
+                                <group style="width: 30%">
+                                    <field name="completa" widget="boolean_toggle"/>
+                                    <field name="herrajes" widget="boolean_toggle"/>
+                                    <field name="madera" widget="boolean_toggle"/>
+                                    <field name="pantografo" widget="boolean_toggle"/>
+                                    <field name="metal" widget="boolean_toggle"/>
+                                </group>
+                                <group style="width: 70%">
                                     <label for="button_pressed" string="Solicitud"/>
                                     <div>
                                         <field name="button_pressed" readonly="1"/>
@@ -36,13 +44,6 @@
                                     <div>
                                         <field name="bom_id"/>
                                     </div>
-                                </group>
-                                <group>
-                                    <field name="completa" widget="boolean_toggle"/>
-                                    <field name="herrajes" widget="boolean_toggle"/>
-                                    <field name="madera" widget="boolean_toggle"/>
-                                    <field name="pantografo" widget="boolean_toggle"/>
-                                    <field name="metal" widget="boolean_toggle"/>
                                 </group>
                             </group>
                         </div>
@@ -73,7 +74,6 @@
                     </sheet>
                     <footer>
                         <!--<button name="print_bom" type="object" string="Aplicar" class="oe_highlight"/>-->
-                        <button special="cancel" string="Cancelar"/>
                     </footer>
                 </form>
             </field>
