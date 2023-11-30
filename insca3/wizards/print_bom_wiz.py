@@ -127,16 +127,47 @@ class PrintBomWiz(models.TransientModel):
             'view_id': 2787,
             'target': 'new'}
 
-    @api.onchange('herrajes', 'completa')
-    def onchange_hrj(self):
+    def get_lists(self):
         list_completa = []
         list_herrajes = []
+        list_madera = []
         if self.bom_line_ids:
             for rec in self.bom_line_ids:
                 list_completa.append(rec.id)
                 if rec['default_code'][0:4] == 'A70.' or rec['default_code'][0:4] == 'A72.':
                     list_herrajes.append(rec.id)
-            print('eureka')
+                if rec['default_code'][0:4] == 'A10.' or rec['default_code'][0:4] == 'A11.':
+                    list_madera.append(rec.id)
+        return [list_completa, list_herrajes, list_madera]
+
+    @api.onchange('completa', 'herrajes', 'madera')
+    def onchange_filter(self):
+        lists = self.get_lists()
+        if not self.completa:
+            for line in self.bom_line_ids:
+                if line.id in lists[0]:
+                    line.to_print = False
+        if self.completa:
+            for line in self.bom_line_ids:
+                if line.id in lists[0]:
+                    line.to_print = True
+        if not self.herrajes:
+            for line in self.bom_line_ids:
+                if line.id in lists[1]:
+                    line.to_print = False
+        if self.herrajes:
+            for line in self.bom_line_ids:
+                if line.id in lists[1]:
+                    line.to_print = True
+        if not self.madera:
+            for line in self.bom_line_ids:
+                if line.id in lists[2]:
+                    line.to_print = False
+        if self.madera:
+            for line in self.bom_line_ids:
+                if line.id in lists[2]:
+                    line.to_print = True
+        print('eureka')
 
     def establish_conn(self):
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
