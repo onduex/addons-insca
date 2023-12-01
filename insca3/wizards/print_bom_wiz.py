@@ -166,6 +166,10 @@ class PrintBomWiz(models.TransientModel):
                 if line.id in lists[0]:
                     line.to_print = False
         if self.completa:
+            self.herrajes = True
+            self.madera = True
+            self.pantografo = True
+            self.metal = True
             for line in self.bom_line_ids:
                 if line.id in lists[0]:
                     line.to_print = True
