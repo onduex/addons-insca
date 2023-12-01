@@ -141,7 +141,8 @@ class PrintBomWiz(models.TransientModel):
                     list_herrajes.append(rec.id)
                 if rec['default_code'][0:4] == 'A10.' or rec['default_code'][0:4] == 'A11.':
                     list_madera.append(rec.id)
-                if rec['route'] and 'PTG' in rec['route']:
+                if (rec['route'] and 'PTG' in rec['route'] and
+                        (rec['default_code'][0:4] == 'A10.' or rec['default_code'][0:4] == 'A11.')):
                     list_pantografo.append(rec.id)
                 if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A31.':
                     list_metal.append(rec.id)
@@ -191,10 +192,12 @@ class PrintBomWiz(models.TransientModel):
     def onchange_madera(self):
         lists = self.get_lists()
         if not self.madera:
+            self.pantografo = False
             for line in self.bom_line_ids:
                 if line.id in lists[2]:
                     line.to_print = False
         if self.madera:
+            self.pantografo = True
             for line in self.bom_line_ids:
                 if line.id in lists[2]:
                     line.to_print = True
@@ -238,6 +241,7 @@ class PrintBomWiz(models.TransientModel):
 
     def remove_bom_lines(self):
         lines.clear()
+        self.button_pressed = ''
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': lines}
         return {
