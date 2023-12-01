@@ -157,11 +157,11 @@ class PrintBomWiz(models.TransientModel):
     @api.onchange('completa')
     def onchange_completa(self):
         lists = self.get_lists()
-        self.herrajes = False
-        self.madera = False
-        self.pantografo = False
-        self.metal = False
         if not self.completa:
+            self.herrajes = False
+            self.madera = False
+            self.pantografo = False
+            self.metal = False
             for line in self.bom_line_ids:
                 if line.id in lists[0]:
                     line.to_print = False
