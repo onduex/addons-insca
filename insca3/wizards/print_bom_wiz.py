@@ -302,10 +302,10 @@ class PrintBomWiz(models.TransientModel):
 
         for pdf in files_to_merge2:
             mergeFile.append(PyPDF2.PdfFileReader(open(pdf, 'rb')))
-        local_file_to_remote = files_to_merge2[0][files_to_merge2[0].rfind('/'):][1:]
+        local_file_to_remote = '/tmp/' + files_to_merge2[0][files_to_merge2[0].rfind('/'):][1:]
         mergeFile.write(local_file_to_remote)
         try:
-            remote_file_write_back = ('/DTECNIC/PLANOS/TMP_PDF/' + local_file_to_remote)
+            remote_file_write_back = ('/DTECNIC/PLANOS/TMP_PDF/' + local_file_to_remote[5:])
             with open(local_file_to_remote, 'rb') as file_obj:
                 conn.storeFile(res_company_obj.filestore_server_shared_folder_3, remote_file_write_back, file_obj,
                                timeout=30)
