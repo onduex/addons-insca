@@ -5,6 +5,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import CacheMiss
 from smb.SMBConnection import SMBConnection
+from odoo.exceptions import ValidationError
 import tempfile
 import PyPDF2
 import pprint
@@ -94,7 +95,6 @@ class PrintBomWiz(models.TransientModel):
         i = [line_0] + i
         for line in i:
             remote_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
-            local_file = '/tmp/' + remote_file[remote_file.rfind('/'):][1:]
             files_to_merge.append(remote_file)
             try:
                 file_obj = tempfile.NamedTemporaryFile()
@@ -276,20 +276,40 @@ class PrintBomWiz(models.TransientModel):
             'target': 'new'}
 
     def print_bom(self):
+        mergeFile = PyPDF2.PdfFileMerger()
+        files_to_merge = []
+        files_to_merge2 = []
+        conn = self.establish_conn()
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         wizard_id = self.env.context.get('active_ids', [])
-        impLine = self.env['print.bom.line'].search([('wizard_id', '=', wizard_id[0]),
-                                                     ('to_print', '=', True),
-                                                     ('has_pdf', '=', True)])
-        if self.button_pressed == 'COMPLETA':
-            return self.get_all_bom_lines_with_bom()
-        elif self.button_pressed == 'Sin HERRAJES':
-            return self.get_all_bom_lines_without_hrj()
-        elif self.button_pressed == 'Solo HERRAJES':
-            return self.get_all_bom_lines_only_hrj()
-        elif self.button_pressed == 'Solo MADERA':
-            return self.get_all_bom_lines_only_mad()
-        elif self.button_pressed == 'Solo PANTOGRAFO':
-            return self.get_all_bom_lines_only_ptg()
-        elif self.button_pressed == 'Solo METAL':
-            return self.get_all_bom_lines_only_met()
+        impLine = self.env['print.bom.line'].search([('wizard_id', '=', wizard_id[0])])
 
+        for rec in impLine:
+            if rec.to_print and rec.has_pdf:
+                files_to_merge.append(rec.path)
+
+        for file_path in files_to_merge:
+            remote_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + file_path)
+            local_file = '/tmp/' + remote_file[remote_file.rfind('/'):][1:]
+            try:
+                with open(local_file, 'wb') as file_obj:
+                    conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3, remote_file, file_obj,
+                                      timeout=30)
+                    files_to_merge2.append(local_file)
+            except Exception as e:
+                if e:
+                    raise ValidationError(_("No se ha podido descargar el archivo: ") + str(file_path))
+
+        for pdf in files_to_merge2:
+            mergeFile.append(PyPDF2.PdfFileReader(open(pdf, 'rb')))
+        local_file_to_remote = files_to_merge2[0][files_to_merge2[0].rfind('/'):][1:]
+        mergeFile.write(local_file_to_remote)
+        try:
+            remote_file_write_back = ('/DTECNIC/PLANOS/TMP_PDF/' + local_file_to_remote)
+            with open(local_file_to_remote, 'rb') as file_obj:
+                conn.storeFile(res_company_obj.filestore_server_shared_folder_3, remote_file_write_back, file_obj,
+                               timeout=30)
+        except Exception as e:
+            if e:
+                raise ValidationError(_("No se ha podido subir el archivo: ") + str(local_file_to_remote))
+        conn.close()
