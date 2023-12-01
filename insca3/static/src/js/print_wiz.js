@@ -25,7 +25,7 @@ odoo.define('insca3.print_wiz', function (require){
                     res_model: 'print.bom.wiz',
                     view_mode: 'form',
                     view_type: 'form',
-                    views: [[2787, 'form']], // "print_bom_wiz_form_view",
+                    views: [[3023, 'form']], // "print_bom_wiz_form_view",
                     target: 'new',
                     context: {'default_bom_id': field_values['id']},
                 };

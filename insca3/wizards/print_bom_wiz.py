@@ -268,7 +268,7 @@ class PrintBomWiz(models.TransientModel):
             'context': context,
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': 2787,
+            'view_id': 3023,
             'target': 'new'}
 
     def print_bom(self):
