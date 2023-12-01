@@ -134,6 +134,8 @@ class PrintBomWiz(models.TransientModel):
         list_madera = []
         list_pantografo = []
         list_metal = []
+        list_metal_to_postprocessor = []
+        list_metal_postprocessing = []
         if self.bom_line_ids:
             for rec in self.bom_line_ids:
                 list_completa.append(rec.id)
@@ -144,16 +146,31 @@ class PrintBomWiz(models.TransientModel):
                 if (rec['route'] and 'PTG' in rec['route'] and
                         (rec['default_code'][0:4] == 'A10.' or rec['default_code'][0:4] == 'A11.')):
                     list_pantografo.append(rec.id)
-                if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A31.':
+
+                if rec['parent_bom'] and rec['parent_bom'][0:4] == 'A31.':
+                    pass
+                elif rec['parent_bom'] and rec['parent_bom'][0:4] == 'A30.' and rec['default_code'][0:4] == 'A30.':
+                    pass
+                elif rec['default_code'][0:4] == 'A70.' \
+                        or rec['default_code'][0:4] == 'A10.' \
+                        or rec['default_code'][0:4] == 'A11.' \
+                        or rec['default_code'][0:4] == 'A12.' \
+                        or rec['default_code'][0:4] == 'A15.':
+                    pass
+                else:
                     list_metal.append(rec.id)
-                if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A30.' and rec['default_code'][0:4] != 'A30.':
-                    list_metal.append(rec.id)
-                if rec['default_code'][0:4] != 'A70.' \
-                        or rec['default_code'][0:4] != 'A10.' \
-                        or rec['default_code'][0:4] != 'A11.' \
-                        or rec['default_code'][0:4] != 'A12.' \
-                        or rec['default_code'][0:4] != 'A15.':
-                    list_metal.append(rec.id)
+                    list_metal_to_postprocessor.append(rec)
+
+            for record in list_metal_to_postprocessor:
+                if (record['default_code'][0:4] == 'A30.' or record['default_code'][0:4] == 'A31.') and \
+                        (record['parent_bom'][0:4] != 'A31.' or record['parent_bom'][0:4] != 'A32.'):
+                    if record['parent_bom'] not in list_metal_postprocessing:
+                        list_metal_postprocessing.append(record['parent_bom'])
+
+            for rec2 in self.bom_line_ids:
+                if rec2['default_code'] in list_metal_postprocessing:
+                    list_metal.append(rec2.id)
+
         return [list_completa, list_herrajes, list_madera, list_pantografo, list_metal]
 
     @api.onchange('completa')
