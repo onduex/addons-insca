@@ -157,15 +157,18 @@ class PrintBomWiz(models.TransientModel):
                         or rec['default_code'][0:4] == 'A12.' \
                         or rec['default_code'][0:4] == 'A15.':
                     pass
+                elif rec['default_code'][0:4] == 'A00.':
+                    pass
                 else:
                     list_metal.append(rec.id)
                     list_metal_to_postprocessor.append(rec)
 
             for record in list_metal_to_postprocessor:
-                if (record['default_code'][0:4] == 'A30.' or record['default_code'][0:4] == 'A31.') and \
-                        (record['parent_bom'][0:4] != 'A31.' or record['parent_bom'][0:4] != 'A32.'):
-                    if record['parent_bom'] not in list_metal_postprocessing:
-                        list_metal_postprocessing.append(record['parent_bom'])
+                if record['parent_bom'] and record['parent_bom'][0:4] != 'A00.':
+                    if (record['default_code'][0:4] == 'A30.' or record['default_code'][0:4] == 'A31.') and \
+                            (record['parent_bom'][0:4] != 'A31.' or record['parent_bom'][0:4] != 'A32.'):
+                        if record['parent_bom'] not in list_metal_postprocessing:
+                            list_metal_postprocessing.append(record['parent_bom'])
 
             for rec2 in self.bom_line_ids:
                 if rec2['default_code'] in list_metal_postprocessing:
@@ -239,6 +242,7 @@ class PrintBomWiz(models.TransientModel):
                 if line.id in lists[4]:
                     line.to_print = False
         if self.metal:
+            lists[4].append(self.bom_line_ids[0].id)
             for line in self.bom_line_ids:
                 if line.id in lists[4]:
                     line.to_print = True
