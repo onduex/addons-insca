@@ -17,7 +17,7 @@ class PrintBomWiz(models.TransientModel):
     _name = 'print.bom.wiz'
     _description = 'Wizard para imprimir LdM'
 
-    button_pressed = fields.Char(string='Solicitud', required=False, readonly=True, default='#')
+    button_pressed = fields.Char(string='Solicitud', required=False, readonly=True)
     completa = fields.Boolean(string='Completa', required=False, default=False)
     herrajes = fields.Boolean(string='Herrajes', required=False, default=False)
     madera = fields.Boolean(string='Madera', required=False, default=False)
@@ -106,11 +106,12 @@ class PrintBomWiz(models.TransientModel):
 
             except Exception as e:
                 if e:
+                    self.button_pressed += ' |' + line[2]['default_code']
                     print('No existe el archivo')
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': [line_0] + lines,
-                   'default_button_pressed': 'COMPLETA',
+                   'default_button_pressed': self.button_pressed,
                    'default_completa': True,
                    'default_herrajes': True,
                    'default_madera': True,
