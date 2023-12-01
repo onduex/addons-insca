@@ -47,6 +47,7 @@
                                     <label for="button_pressed" string="Códigos sin PDF"/>
                                     <div class="alert alert-info" role="alert">
                                             <span class="fa fa-info-circle"/>
+                                            <![CDATA[&nbsp;]]>
                                             <field name="button_pressed" readonly="1"/>
                                     </div>
                                 </group>
