@@ -49,7 +49,8 @@ class MrpWorkorder(models.Model):
                 a10_searched = 'B' + record.default_code[1:4] + record.default_code[5:-7]
 
             if a10_searched in folders:
-                record.ptg_link = ("H:/" + a10_searched)
+                record.ptg_link = ("H:/" + res_company_obj.filestore_server_shared_folder_level1_2
+                                   + "/" + a10_searched)
             else:
                 record.ptg_link = None
 

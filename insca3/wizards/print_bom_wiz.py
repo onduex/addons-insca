@@ -17,7 +17,7 @@ class PrintBomWiz(models.TransientModel):
     _name = 'print.bom.wiz'
     _description = 'Wizard para imprimir LdM'
 
-    button_pressed = fields.Char(string='Solicitud', required=False, readonly=True)
+    button_pressed = fields.Char(string='Solicitud', required=False, readonly=True, default='')
     completa = fields.Boolean(string='Completa', required=False, default=False)
     herrajes = fields.Boolean(string='Herrajes', required=False, default=False)
     madera = fields.Boolean(string='Madera', required=False, default=False)
@@ -106,8 +106,8 @@ class PrintBomWiz(models.TransientModel):
 
             except Exception as e:
                 if e:
-                    self.button_pressed += ' |' + line[2]['default_code']
-                    print('No existe el archivo')
+                    string = str(' | ') + str(line[2]['default_code'])
+                    self.button_pressed += string
         conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': [line_0] + lines,
@@ -143,16 +143,16 @@ class PrintBomWiz(models.TransientModel):
                     list_madera.append(rec.id)
                 if rec['route'] and 'PTG' in rec['route']:
                     list_pantografo.append(rec.id)
-                # if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A31.':
-                #     list_metal.append(rec.id)
-                # if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A30.' and rec['default_code'][0:4] != 'A30.':
-                #     list_metal.append(rec.id)
-                # if rec['default_code'][0:4] != 'A70.' \
-                #         or rec['default_code'][0:4] != 'A10.' \
-                #         or rec['default_code'][0:4] != 'A11.' \
-                #         or rec['default_code'][0:4] != 'A12.' \
-                #         or rec['default_code'][0:4] != 'A15.':
-                #     list_metal.append(rec.id)
+                if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A31.':
+                    list_metal.append(rec.id)
+                if rec['parent_bom'] and rec['parent_bom'][0:4] != 'A30.' and rec['default_code'][0:4] != 'A30.':
+                    list_metal.append(rec.id)
+                if rec['default_code'][0:4] != 'A70.' \
+                        or rec['default_code'][0:4] != 'A10.' \
+                        or rec['default_code'][0:4] != 'A11.' \
+                        or rec['default_code'][0:4] != 'A12.' \
+                        or rec['default_code'][0:4] != 'A15.':
+                    list_metal.append(rec.id)
         return [list_completa, list_herrajes, list_madera, list_pantografo, list_metal]
 
     @api.onchange('completa')
