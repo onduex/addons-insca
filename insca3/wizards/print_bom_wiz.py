@@ -154,8 +154,8 @@ class PrintBomWiz(models.TransientModel):
                 #     list_metal.append(rec.id)
         return [list_completa, list_herrajes, list_madera, list_pantografo, list_metal]
 
-    @api.onchange('completa', 'herrajes', 'madera', 'pantografo', 'metal')
-    def onchange_filter(self):
+    @api.onchange('completa')
+    def onchange_completa(self):
         lists = self.get_lists()
         if not self.completa:
             for line in self.bom_line_ids:
@@ -165,6 +165,10 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[0]:
                     line.to_print = True
+
+    @api.onchange('herrajes')
+    def onchange_herrajes(self):
+        lists = self.get_lists()
         if not self.herrajes:
             for line in self.bom_line_ids:
                 if line.id in lists[1]:
@@ -173,6 +177,10 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[1]:
                     line.to_print = True
+
+    @api.onchange('madera')
+    def onchange_madera(self):
+        lists = self.get_lists()
         if not self.madera:
             for line in self.bom_line_ids:
                 if line.id in lists[2]:
@@ -181,6 +189,10 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[2]:
                     line.to_print = True
+
+    @api.onchange('pantografo')
+    def onchange_pantografo(self):
+        lists = self.get_lists()
         if not self.pantografo:
             for line in self.bom_line_ids:
                 if line.id in lists[3]:
@@ -189,6 +201,10 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[3]:
                     line.to_print = True
+
+    @api.onchange('metal')
+    def onchange_metal(self):
+        lists = self.get_lists()
         if not self.metal:
             for line in self.bom_line_ids:
                 if line.id in lists[4]:
