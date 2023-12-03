@@ -6,7 +6,11 @@ from odoo import models, fields, api, _
 from odoo.exceptions import CacheMiss
 from smb.SMBConnection import SMBConnection
 from odoo.exceptions import ValidationError
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
 import tempfile
+from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 import PyPDF2
 import pprint
 
@@ -277,12 +281,14 @@ class PrintBomWiz(models.TransientModel):
 
     def print_bom(self):
         mergeFile = PyPDF2.PdfFileMerger()
+        writerFile = PyPDF2.PdfFileWriter()
         files_to_merge = []
         files_to_merge2 = []
         conn = self.establish_conn()
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
-        wizard_id = self.env.context.get('active_ids', [])
-        impLine = self.env['print.bom.line'].search([('wizard_id', '=', wizard_id[0])])
+        wizard_ids = self.env.context.get('active_ids', [])
+
+        impLine = self.env['print.bom.line'].search([('wizard_id', '=', wizard_ids[0])])
 
         for rec in impLine:
             if rec.to_print and rec.has_pdf:
@@ -304,6 +310,24 @@ class PrintBomWiz(models.TransientModel):
             mergeFile.append(PyPDF2.PdfFileReader(open(pdf, 'rb')))
         local_file_to_remote = '/tmp/' + files_to_merge2[0][files_to_merge2[0].rfind('/'):][1:]
         mergeFile.write(local_file_to_remote)
+
+        pdf_enumerado = PyPDF2.PdfFileReader(local_file_to_remote)
+
+        for page in range(pdf_enumerado.getNumPages()):
+            packet = io.BytesIO()
+            can = canvas.Canvas(packet, pagesize=A4)
+            can.drawRightString(818, 10, str(page + 1) + ' / ' + str(pdf_enumerado.getNumPages()))  # add page number
+            can.save()
+            packet.seek(0)
+            watermark = PdfFileReader(packet)
+            watermark_page = watermark.getPage(0)
+            pdf_page = pdf_enumerado.getPage(page)
+            pdf_page.mergePage(watermark_page)
+            writerFile.addPage(pdf_page)
+
+        with open(local_file_to_remote, 'wb') as fh:
+            writerFile.write(fh)
+
         try:
             remote_file_write_back = ('/DTECNIC/PLANOS/TMP_PDF/' + local_file_to_remote[5:])
             with open(local_file_to_remote, 'rb') as file_obj:
