@@ -10,7 +10,7 @@
                         <!--<button name="remove_bom_lines" type="object" string="Borrar" class="oe_highlight"/>-->
                         <!--<button name="get_all_bom_lines" type="object" string="Completa" class="oe_highlight"/>-->
                         <button name="get_all_bom_lines_with_bom" type="object"
-                                string="OBTENER" class="oe_highlight"/>
+                                string="OFTENER" class="oe_highlight"/>
                         <!--<button name="get_all_bom_lines_without_hrj" type="object"
                                 string="Sin HERRAJES" class="oe_highlight"/>
                         <button name="get_all_bom_lines_only_hrj" type="object"
@@ -49,6 +49,10 @@
                                             <span class="fa fa-info-circle"/>
                                             <![CDATA[&nbsp;]]>
                                             <field name="button_pressed" readonly="1"/>
+                                    </div>
+                                    <label for="pdf_link" string="PDF Link"/>
+                                    <div>
+                                        <field name="pdf_link"/>
                                     </div>
                                 </group>
                             </group>

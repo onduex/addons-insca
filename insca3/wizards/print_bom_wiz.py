@@ -13,6 +13,8 @@ import tempfile
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 import PyPDF2
 import pprint
+from datetime import datetime
+
 
 pp = pprint.PrettyPrinter(indent=4)
 lines = []
@@ -28,6 +30,7 @@ class PrintBomWiz(models.TransientModel):
     madera = fields.Boolean(string='Madera', required=False, default=False)
     pantografo = fields.Boolean(string='Pantografo', required=False, default=False)
     metal = fields.Boolean(string='Metal', required=False, default=False)
+    pdf_link = fields.Char(string='PDF Link', required=False, store=True)
 
     bom_id = fields.Many2one(comodel_name='mrp.bom',
                              string="Lista de materiales",
@@ -314,9 +317,12 @@ class PrintBomWiz(models.TransientModel):
         pdf_enumerado = PyPDF2.PdfFileReader(local_file_to_remote)
 
         for page in range(pdf_enumerado.getNumPages()):
+            current_dateTime = datetime.now()
             packet = io.BytesIO()
             can = canvas.Canvas(packet, pagesize=A4)
-            can.drawRightString(818, 10, str(page + 1) + ' / ' + str(pdf_enumerado.getNumPages()))  # add page number
+            can.drawRightString(818, 10, current_dateTime.strftime("%d-%m-%Y - %H:%M:%S") + ' - ' +
+                                files_to_merge2[0][files_to_merge2[0].rfind('/'):][1:][:-4] + ' - ' +
+                                str(page + 1) + ' / ' + str(pdf_enumerado.getNumPages()))  # add page number
             can.save()
             packet.seek(0)
             watermark = PdfFileReader(packet)
@@ -333,7 +339,19 @@ class PrintBomWiz(models.TransientModel):
             with open(local_file_to_remote, 'rb') as file_obj:
                 conn.storeFile(res_company_obj.filestore_server_shared_folder_3, remote_file_write_back, file_obj,
                                timeout=30)
+                self.pdf_link = remote_file_write_back
         except Exception as e:
             if e:
                 raise ValidationError(_("No se ha podido subir el archivo: ") + str(local_file_to_remote))
         conn.close()
+
+        context = {'default_bom_id': self.bom_id.id}
+        return {
+            'name': 'Imprimir Lista de Materiales',
+            'type': 'ir.actions.act_window',
+            'res_model': 'print.bom.wiz',
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': 3023,
+            'target': 'new'}
