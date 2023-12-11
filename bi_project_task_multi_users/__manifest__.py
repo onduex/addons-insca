@@ -20,7 +20,7 @@
     "price": 15,
     "currency": 'EUR',
     'website': 'https://www.browseinfo.com',
-    'depends': ['base', 'project'],
+    'depends': ['base', 'project', 'hr_timesheet'],
     'data': [
         'security/ir.model.access.csv',
         'security/multi_user_assign_security.xml',

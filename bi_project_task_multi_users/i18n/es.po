@@ -20,6 +20,7 @@ msgstr ""
 #. module: bi_project_task_multi_users
 #: model_terms:ir.ui.view,arch_db:bi_project_task_multi_users.project_task_multiple_users_form
 #: model_terms:ir.ui.view,arch_db:bi_project_task_multi_users.project_task_multiple_users_tree
+#: model_terms:ir.ui.view,arch_db:bi_project_task_multi_users.project_task_multiple_users_search
 msgid "Allowed Users"
 msgstr "Asignada a varios"
 
