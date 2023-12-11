@@ -43,15 +43,19 @@ class MrpWorkorder(models.Model):
             folders.append(rec.filename)
 
         for record in product_tmpl_ids:
-            if record.default_code[4] == '0':
-                a10_searched = record.default_code[0:4] + record.default_code[5:-7]
-            elif record.default_code[4] == '1':
-                a10_searched = 'B' + record.default_code[1:4] + record.default_code[5:-7]
-
-            if a10_searched in folders:
+            if record.default_code[0:10] in folders:
                 record.ptg_link = ("H:/" + res_company_obj.filestore_server_shared_folder_level1_2
-                                   + "/" + a10_searched)
-            else:
-                record.ptg_link = None
+                                   + "/" + record.default_code[0:10])
+            else:               
+                if record.default_code[4] == '0':
+                    a10_searched = record.default_code[0:4] + record.default_code[5:-7]
+                elif record.default_code[4] == '1':
+                    a10_searched = 'B' + record.default_code[1:4] + record.default_code[5:-7]
+    
+                if a10_searched in folders:
+                    record.ptg_link = ("H:/" + res_company_obj.filestore_server_shared_folder_level1_2
+                                       + "/" + a10_searched)
+                else:
+                    record.ptg_link = None
 
         conn.close()
