@@ -296,6 +296,11 @@ class PrintBomWiz(models.TransientModel):
         for rec in impLine:
             if rec.to_print and rec.has_pdf:
                 files_to_merge.append(rec.path)
+            elif not rec.to_print and not rec.has_pdf:
+                continue
+            else:
+                raise ValidationError(_("No está permitido tener seleccionado el check de impresión y "
+                                        "que haya ausencia de PDF: ") + str(rec.default_code))
 
         for file_path in files_to_merge:
             remote_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + file_path)
