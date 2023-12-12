@@ -149,7 +149,7 @@
     </record>
 
     <!--Menu-->
-    <menuitem id="supplier_list_root_menu" name="LdM Proveedores"
+    <menuitem id="supplier_list_root_menu" name="LdM Proveedores" groups="insca4.ldm_proveedores_group"
               sequence="10" web_icon="insca4,static/description/icon.png"/>
     <menuitem id="datos_principales" name="Datos principales" parent="supplier_list_root_menu" sequence="117"/>
     <menuitem id="res_componentes" name="Componentes" parent="datos_principales"
