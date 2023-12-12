@@ -27,12 +27,13 @@
 
     # always loaded
     'data': [
+        'data/res_groups_data.xml',
+        'data/ir_actions_server.xml',
         'security/ir.model.access.csv',
         'views/folder_config.xml',
         'views/res_company_form.xml',
         'views/mrp_workorder_view.xml',
         'views/assets.xml',
-        'data/ir_actions_server.xml',
         'wizards/print_bom_wiz.xml'
     ],
 
