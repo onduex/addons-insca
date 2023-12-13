@@ -75,11 +75,7 @@ class PrintBomWiz(models.TransientModel):
         return lines
 
     def get_all_bom_lines_with_bom(self):
-        files_to_merge = []
         self.remove_bom_lines()
-        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
-        conn = self.establish_conn()
-
         i = 0
         for o in self.bom_id:
             i += 1
@@ -99,23 +95,6 @@ class PrintBomWiz(models.TransientModel):
                          'parent_bom': None,
                          'wizard_id': self.id,
                          })
-        i = [line_0] + i
-        for line in i:
-            remote_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line[2]['path'])
-            files_to_merge.append(remote_file)
-            try:
-                file_obj = tempfile.NamedTemporaryFile()
-                file_attributes, filesize = conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3,
-                                                              remote_file, file_obj, timeout=30)
-                if filesize:
-                    line[2]['has_pdf'] = True
-                file_obj.close()
-
-            except Exception as e:
-                if e:
-                    string = str(' | ') + str(line[2]['default_code'])
-                    self.button_pressed += string
-        conn.close()
         context = {'default_bom_id': self.bom_id.id,
                    'default_bom_line_ids': [line_0] + lines,
                    'default_button_pressed': self.button_pressed,
@@ -183,6 +162,25 @@ class PrintBomWiz(models.TransientModel):
 
         return [list_completa, list_herrajes, list_madera, list_pantografo, list_metal]
 
+    def check_has_pdf_by_list(self, line_id, conn):
+        self.button_pressed = ''
+        res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
+        line = self.bom_line_ids.filtered(lambda x: x.id == line_id)
+        if line['path']:
+            remote_file = ('/' + res_company_obj.filestore_server_shared_folder_level1_3 + '/' + line['path'])
+            try:
+                file_obj = tempfile.NamedTemporaryFile()
+                file_attributes, filesize = conn.retrieveFile(res_company_obj.filestore_server_shared_folder_3,
+                                                              remote_file, file_obj, timeout=30)
+                if filesize:
+                    return True
+                file_obj.close()
+            except Exception as e:
+                if e:
+                    string = str(' | ') + str(line['default_code'])
+                    self.button_pressed += string
+                    return False
+
     @api.onchange('completa')
     def onchange_completa(self):
         lists = self.get_lists()
@@ -194,14 +192,17 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[0]:
                     line.to_print = False
+                    line.has_pdf = False
         if self.completa:
             self.herrajes = True
             self.madera = True
-            self.pantografo = True
             self.metal = True
+            conn = self.establish_conn()
             for line in self.bom_line_ids:
                 if line.id in lists[0]:
                     line.to_print = True
+                    line.has_pdf = self.check_has_pdf_by_list(line.id, conn)
+            conn.close()
 
     @api.onchange('herrajes')
     def onchange_herrajes(self):
@@ -210,24 +211,33 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[1]:
                     line.to_print = False
+                    line.has_pdf = False
         if self.herrajes:
+            conn = self.establish_conn()
             for line in self.bom_line_ids:
                 if line.id in lists[1]:
                     line.to_print = True
+                    line.has_pdf = self.check_has_pdf_by_list(line.id, conn)
+            conn.close()
 
     @api.onchange('madera')
     def onchange_madera(self):
+
         lists = self.get_lists()
         if not self.madera:
             self.pantografo = False
             for line in self.bom_line_ids:
                 if line.id in lists[2]:
                     line.to_print = False
+                    line.has_pdf = False
         if self.madera:
+            conn = self.establish_conn()
             self.pantografo = True
             for line in self.bom_line_ids:
                 if line.id in lists[2]:
                     line.to_print = True
+                    line.has_pdf = self.check_has_pdf_by_list(line.id, conn)
+            conn.close()
 
     @api.onchange('pantografo')
     def onchange_pantografo(self):
@@ -236,10 +246,14 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[3]:
                     line.to_print = False
+                    line.has_pdf = False
         if self.pantografo:
+            conn = self.establish_conn()
             for line in self.bom_line_ids:
                 if line.id in lists[3]:
                     line.to_print = True
+                    line.has_pdf = self.check_has_pdf_by_list(line.id, conn)
+            conn.close()
 
     @api.onchange('metal')
     def onchange_metal(self):
@@ -248,11 +262,15 @@ class PrintBomWiz(models.TransientModel):
             for line in self.bom_line_ids:
                 if line.id in lists[4]:
                     line.to_print = False
+                    line.has_pdf = False
         if self.metal:
             lists[4].append(self.bom_line_ids[0].id)
+            conn = self.establish_conn()
             for line in self.bom_line_ids:
                 if line.id in lists[4]:
                     line.to_print = True
+                    line.has_pdf = self.check_has_pdf_by_list(line.id, conn)
+            conn.close()
 
     def establish_conn(self):
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
