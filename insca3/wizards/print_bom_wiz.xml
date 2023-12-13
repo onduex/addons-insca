@@ -7,20 +7,8 @@
             <field name="arch" type="xml">
                 <form string="Check LdM artículos">
                     <header>
-                        <!--<button name="remove_bom_lines" type="object" string="Borrar" class="oe_highlight"/>-->
-                        <!--<button name="get_all_bom_lines" type="object" string="Completa" class="oe_highlight"/>-->
                         <button name="get_all_bom_lines_with_bom" type="object"
                                 string="OBTENER" class="oe_highlight"/>
-                        <!--<button name="get_all_bom_lines_without_hrj" type="object"
-                                string="Sin HERRAJES" class="oe_highlight"/>
-                        <button name="get_all_bom_lines_only_hrj" type="object"
-                                string="Solo HERRAJES" class="oe_highlight"/>
-                        <button name="get_all_bom_lines_only_mad" type="object"
-                                string="Solo MADERA" class="oe_highlight"/>
-                        <button name="get_all_bom_lines_only_ptg" type="object"
-                                string="Solo PANTOGRAFO" class="oe_highlight"/>
-                        <button name="get_all_bom_lines_only_met" type="object"
-                                string="Solo METAL" class="oe_highlight"/>-->
                         <button name="print_bom" type="object"
                                 string="IMPRIMIR" class="oe_highlight"/>
                         <button special="cancel" string="Cancelar"/>
@@ -36,23 +24,13 @@
                                     <field name="metal" widget="boolean_toggle"/>
                                 </group>
                                 <group style="width: 70%">
-                                    <!--<label for="button_pressed" string="Solicitud"/>
-                                    <div>
-                                        <field name="button_pressed" readonly="1"/>
-                                    </div>-->
                                     <label for="bom_id" string="Lista de Materiales"/>
                                     <div>
                                         <field name="bom_id"/>
                                     </div>
-                                    <label for="button_pressed" string="Códigos sin PDF"/>
-                                    <div class="alert alert-info" role="alert">
-                                            <span class="fa fa-info-circle"/>
-                                            <![CDATA[&nbsp;]]>
-                                            <field name="button_pressed" readonly="1"/>
-                                    </div>
                                     <label for="pdf_link" string="PDF Link"/>
                                     <div>
-                                        <field name="pdf_link"/>
+                                        <field name="pdf_link" widget="url"/>
                                     </div>
                                 </group>
                             </group>

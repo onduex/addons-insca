@@ -30,7 +30,7 @@ class PrintBomWiz(models.TransientModel):
     madera = fields.Boolean(string='Madera', required=False, default=False)
     pantografo = fields.Boolean(string='Pantografo', required=False, default=False)
     metal = fields.Boolean(string='Metal', required=False, default=False)
-    pdf_link = fields.Char(string='PDF Link', required=False, store=True)
+    pdf_link = fields.Char(string='PDF Link', required=False, store=True, readonly=True, default='')
 
     bom_id = fields.Many2one(comodel_name='mrp.bom',
                              string="Lista de materiales",
@@ -163,7 +163,6 @@ class PrintBomWiz(models.TransientModel):
         return [list_completa, list_herrajes, list_madera, list_pantografo, list_metal]
 
     def check_has_pdf_by_list(self, line_id, conn):
-        self.button_pressed = ''
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         line = self.bom_line_ids.filtered(lambda x: x.id == line_id)
         if line['path']:
@@ -177,8 +176,6 @@ class PrintBomWiz(models.TransientModel):
                 file_obj.close()
             except Exception as e:
                 if e:
-                    string = str(' | ') + str(line['default_code'])
-                    self.button_pressed += string
                     return False
 
     @api.onchange('completa')
@@ -213,6 +210,7 @@ class PrintBomWiz(models.TransientModel):
                     line.to_print = False
                     line.has_pdf = False
         if self.herrajes:
+            lists[1].append(self.bom_line_ids[0].id)
             conn = self.establish_conn()
             for line in self.bom_line_ids:
                 if line.id in lists[1]:
@@ -222,7 +220,6 @@ class PrintBomWiz(models.TransientModel):
 
     @api.onchange('madera')
     def onchange_madera(self):
-
         lists = self.get_lists()
         if not self.madera:
             self.pantografo = False
@@ -231,6 +228,7 @@ class PrintBomWiz(models.TransientModel):
                     line.to_print = False
                     line.has_pdf = False
         if self.madera:
+            lists[2].append(self.bom_line_ids[0].id)
             conn = self.establish_conn()
             self.pantografo = True
             for line in self.bom_line_ids:
@@ -248,6 +246,7 @@ class PrintBomWiz(models.TransientModel):
                     line.to_print = False
                     line.has_pdf = False
         if self.pantografo:
+            lists[3].append(self.bom_line_ids[0].id)
             conn = self.establish_conn()
             for line in self.bom_line_ids:
                 if line.id in lists[3]:
@@ -368,7 +367,9 @@ class PrintBomWiz(models.TransientModel):
                 raise ValidationError(_("No se ha podido subir el archivo: ") + str(local_file_to_remote))
         conn.close()
 
-        context = {'default_bom_id': self.bom_id.id}
+        context = {'default_bom_id': self.bom_id.id,
+                   'default_pdf_link': ("file:///R:/DTECNIC/PLANOS/TMP_PDF/" + local_file_to_remote[5:])
+                   }
         return {
             'name': 'Imprimir Lista de Materiales',
             'type': 'ir.actions.act_window',
