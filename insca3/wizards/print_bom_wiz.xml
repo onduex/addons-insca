@@ -16,22 +16,32 @@
                     <sheet>
                         <div>
                             <group>
-                                <group style="width: 30%">
+                                <label for="bom_id" string="Lista de Materiales"/>
+                                <div>
+                                    <field name="bom_id"/>
+                                </div>
+                                <label for="pdf_link" string="PDF Link"/>
+                                <div>
+                                    <field name="pdf_link" widget="url"/>
+                                </div>
+                                <label for="folder_link" string="DIR Link"/>
+                                <div>
+                                    <field name="folder_link" widget="url"/>
+                                </div>
+                            </group>
+                        </div>
+
+                        <div>
+                            <group>
+                                <group style="width: 50%">
                                     <field name="completa" widget="boolean_toggle"/>
                                     <field name="herrajes" widget="boolean_toggle"/>
                                     <field name="madera" widget="boolean_toggle"/>
-                                    <field name="pantografo" widget="boolean_toggle"/>
-                                    <field name="metal" widget="boolean_toggle"/>
                                 </group>
-                                <group style="width: 70%">
-                                    <label for="bom_id" string="Lista de Materiales"/>
-                                    <div>
-                                        <field name="bom_id"/>
-                                    </div>
-                                    <label for="pdf_link" string="PDF Link"/>
-                                    <div>
-                                        <field name="pdf_link" widget="url"/>
-                                    </div>
+                                <group style="width: 50%">
+                                    <field name="pantografo" widget="boolean_toggle"/>
+                                    <field name="iluminacion" widget="boolean_toggle"/>
+                                    <field name="metal" widget="boolean_toggle"/>
                                 </group>
                             </group>
                         </div>

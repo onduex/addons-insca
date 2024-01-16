@@ -29,8 +29,10 @@ class PrintBomWiz(models.TransientModel):
     herrajes = fields.Boolean(string='Herrajes', required=False, default=False)
     madera = fields.Boolean(string='Madera', required=False, default=False)
     pantografo = fields.Boolean(string='Pantografo', required=False, default=False)
+    iluminacion = fields.Boolean(string='Iluminación', required=False, default=False)
     metal = fields.Boolean(string='Metal', required=False, default=False)
     pdf_link = fields.Char(string='PDF Link', required=False, store=True, readonly=True, default='')
+    folder_link = fields.Char(string='DIR Link', required=False, store=True, readonly=True, default='')
 
     bom_id = fields.Many2one(comodel_name='mrp.bom',
                              string="Lista de materiales",
@@ -119,6 +121,7 @@ class PrintBomWiz(models.TransientModel):
         list_herrajes = []
         list_madera = []
         list_pantografo = []
+        list_iluminacion = []
         list_metal = []
         list_metal_to_postprocessor = []
         list_metal_postprocessing = []
@@ -132,12 +135,17 @@ class PrintBomWiz(models.TransientModel):
                 if (rec['route'] and 'PTG' in rec['route'] and
                         (rec['default_code'][0:4] == 'A10.' or rec['default_code'][0:4] == 'A11.')):
                     list_pantografo.append(rec.id)
+                if rec['default_code'][0:4] == 'A50.' or rec['default_code'][0:4] == 'A55.':
+                    list_iluminacion.append(rec.id)
 
                 if rec['parent_bom'] and rec['parent_bom'][0:4] == 'A31.':
                     pass
                 elif rec['parent_bom'] and rec['parent_bom'][0:4] == 'A30.' and rec['default_code'][0:4] == 'A30.':
                     pass
                 elif rec['default_code'][0:4] == 'A70.' \
+                        or rec['default_code'][0:4] == 'A60.' \
+                        or rec['default_code'][0:4] == 'A50.' \
+                        or rec['default_code'][0:4] == 'A55.' \
                         or rec['default_code'][0:4] == 'A10.' \
                         or rec['default_code'][0:4] == 'A11.' \
                         or rec['default_code'][0:4] == 'A12.' \
@@ -160,7 +168,7 @@ class PrintBomWiz(models.TransientModel):
                 if rec2['default_code'] in list_metal_postprocessing:
                     list_metal.append(rec2.id)
 
-        return [list_completa, list_herrajes, list_madera, list_pantografo, list_metal]
+        return [list_completa, list_herrajes, list_madera, list_pantografo, list_iluminacion, list_metal]
 
     def check_has_pdf_by_list(self, line_id, conn):
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
@@ -185,6 +193,7 @@ class PrintBomWiz(models.TransientModel):
             self.herrajes = False
             self.madera = False
             self.pantografo = False
+            self.iluminacion = False
             self.metal = False
             for line in self.bom_line_ids:
                 if line.id in lists[0]:
@@ -193,6 +202,7 @@ class PrintBomWiz(models.TransientModel):
         if self.completa:
             self.herrajes = True
             self.madera = True
+            self.iluminacion = True
             self.metal = True
             conn = self.establish_conn()
             for line in self.bom_line_ids:
@@ -254,19 +264,36 @@ class PrintBomWiz(models.TransientModel):
                     line.has_pdf = self.check_has_pdf_by_list(line.id, conn)
             conn.close()
 
+    @api.onchange('iluminacion')
+    def onchange_iluminacion(self):
+        lists = self.get_lists()
+        if not self.iluminacion:
+            for line in self.bom_line_ids:
+                if line.id in lists[4]:
+                    line.to_print = False
+                    line.has_pdf = False
+        if self.iluminacion:
+            lists[4].append(self.bom_line_ids[0].id)
+            conn = self.establish_conn()
+            for line in self.bom_line_ids:
+                if line.id in lists[4]:
+                    line.to_print = True
+                    line.has_pdf = self.check_has_pdf_by_list(line.id, conn)
+            conn.close()
+
     @api.onchange('metal')
     def onchange_metal(self):
         lists = self.get_lists()
         if not self.metal:
             for line in self.bom_line_ids:
-                if line.id in lists[4]:
+                if line.id in lists[5]:
                     line.to_print = False
                     line.has_pdf = False
         if self.metal:
-            lists[4].append(self.bom_line_ids[0].id)
+            lists[5].append(self.bom_line_ids[0].id)
             conn = self.establish_conn()
             for line in self.bom_line_ids:
-                if line.id in lists[4]:
+                if line.id in lists[5]:
                     line.to_print = True
                     line.has_pdf = self.check_has_pdf_by_list(line.id, conn)
             conn.close()
@@ -368,7 +395,8 @@ class PrintBomWiz(models.TransientModel):
         conn.close()
 
         context = {'default_bom_id': self.bom_id.id,
-                   'default_pdf_link': ("file:///R:/DTECNIC/PLANOS/TMP_PDF/" + local_file_to_remote[5:])
+                   'default_pdf_link': ("file:///R:/DTECNIC/PLANOS/TMP_PDF/" + local_file_to_remote[5:]),
+                   'default_folder_link': "file:///R:/DTECNIC/PLANOS/TMP_PDF"
                    }
         return {
             'name': 'Imprimir Lista de Materiales',
