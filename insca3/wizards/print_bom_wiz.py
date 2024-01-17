@@ -9,11 +9,14 @@ from odoo.exceptions import ValidationError
 import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 import tempfile
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 import PyPDF2
 import pprint
 from datetime import datetime
+import pytz
 
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -204,7 +207,11 @@ class PrintBomWiz(models.TransientModel):
             self.madera = True
             self.iluminacion = True
             self.metal = True
-            conn = self.establish_conn()
+            try:
+                conn = self.establish_conn()
+            except Exception as e:
+                if e:
+                    raise ValidationError(_("No se ha podido conectar con el servidor remoto, inténtelo de nuevo."))
             for line in self.bom_line_ids:
                 if line.id in lists[0]:
                     line.to_print = True
@@ -221,7 +228,11 @@ class PrintBomWiz(models.TransientModel):
                     line.has_pdf = False
         if self.herrajes:
             lists[1].append(self.bom_line_ids[0].id)
-            conn = self.establish_conn()
+            try:
+                conn = self.establish_conn()
+            except Exception as e:
+                if e:
+                    raise ValidationError(_("No se ha podido conectar con el servidor remoto, inténtelo de nuevo."))
             for line in self.bom_line_ids:
                 if line.id in lists[1]:
                     line.to_print = True
@@ -239,7 +250,11 @@ class PrintBomWiz(models.TransientModel):
                     line.has_pdf = False
         if self.madera:
             lists[2].append(self.bom_line_ids[0].id)
-            conn = self.establish_conn()
+            try:
+                conn = self.establish_conn()
+            except Exception as e:
+                if e:
+                    raise ValidationError(_("No se ha podido conectar con el servidor remoto, inténtelo de nuevo."))
             self.pantografo = True
             for line in self.bom_line_ids:
                 if line.id in lists[2]:
@@ -257,7 +272,11 @@ class PrintBomWiz(models.TransientModel):
                     line.has_pdf = False
         if self.pantografo:
             lists[3].append(self.bom_line_ids[0].id)
-            conn = self.establish_conn()
+            try:
+                conn = self.establish_conn()
+            except Exception as e:
+                if e:
+                    raise ValidationError(_("No se ha podido conectar con el servidor remoto, inténtelo de nuevo."))
             for line in self.bom_line_ids:
                 if line.id in lists[3]:
                     line.to_print = True
@@ -274,7 +293,11 @@ class PrintBomWiz(models.TransientModel):
                     line.has_pdf = False
         if self.iluminacion:
             lists[4].append(self.bom_line_ids[0].id)
-            conn = self.establish_conn()
+            try:
+                conn = self.establish_conn()
+            except Exception as e:
+                if e:
+                    raise ValidationError(_("No se ha podido conectar con el servidor remoto, inténtelo de nuevo."))
             for line in self.bom_line_ids:
                 if line.id in lists[4]:
                     line.to_print = True
@@ -291,7 +314,11 @@ class PrintBomWiz(models.TransientModel):
                     line.has_pdf = False
         if self.metal:
             lists[5].append(self.bom_line_ids[0].id)
-            conn = self.establish_conn()
+            try:
+                conn = self.establish_conn()
+            except Exception as e:
+                if e:
+                    raise ValidationError(_("No se ha podido conectar con el servidor remoto, inténtelo de nuevo."))
             for line in self.bom_line_ids:
                 if line.id in lists[5]:
                     line.to_print = True
@@ -366,12 +393,16 @@ class PrintBomWiz(models.TransientModel):
         pdf_enumerado = PyPDF2.PdfFileReader(local_file_to_remote)
 
         for page in range(pdf_enumerado.getNumPages()):
-            current_dateTime = datetime.now()
+            madrid_tz = pytz.timezone('Europe/Madrid')
+            current_dateTime = datetime.now(madrid_tz)
             packet = io.BytesIO()
+            pdfmetrics.registerFont(TTFont('DejaVuSans',
+                                           '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'))
             can = canvas.Canvas(packet, pagesize=A4)
-            can.drawRightString(818, 10, current_dateTime.strftime("%d-%m-%Y - %H:%M:%S") + ' - ' +
-                                files_to_merge2[0][files_to_merge2[0].rfind('/'):][1:][:-4] + ' - ' +
-                                str(page + 1) + ' / ' + str(pdf_enumerado.getNumPages()))  # add page number
+            can.setFont('DejaVuSans', 8)
+            can.drawString(30, 10, current_dateTime.strftime("%d-%m-%Y - %H:%M:%S") + ' - ' +
+                           files_to_merge2[0][files_to_merge2[0].rfind('/'):][1:][:-4] + ' - ' +
+                           str(page + 1) + ' / ' + str(pdf_enumerado.getNumPages()))  # add page number
             can.save()
             packet.seek(0)
             watermark = PdfFileReader(packet)
