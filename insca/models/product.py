@@ -629,6 +629,10 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals.get('default_code') and len(vals['default_code']) == 10:
+            # print(vals['default_code'])
+            return self.browse()
+
         var = ''
         res = super(ProductTemplate, self).create(vals)
 
