@@ -629,6 +629,19 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
+        if ((vals.get('default_code')[0:3] == 'A00' or vals.get('default_code')[0:3] == 'A10' or
+                vals.get('default_code')[0:3] == 'A11' or vals.get('default_code')[0:3] == 'A12' or
+                vals.get('default_code')[0:3] == 'A15' or vals.get('default_code')[0:3] == 'A20' or
+                vals.get('default_code')[0:3] == 'A21' or vals.get('default_code')[0:3] == 'A30' or
+                vals.get('default_code')[0:3] == 'A31' or vals.get('default_code')[0:3] == 'A32' or
+                vals.get('default_code')[0:3] == 'A50' or vals.get('default_code')[0:3] == 'A55' or
+                vals.get('default_code')[0:3] == 'A60' or vals.get('default_code')[0:3] == 'A70' or
+                vals.get('default_code')[0:3] == 'A72' or vals.get('default_code')[0:3] == 'A80' or
+                vals.get('default_code')[0:3] == 'A82' or vals.get('default_code')[0:3] == 'A90' or
+                vals.get('default_code')[0:3] == 'A91') and len(vals['default_code']) == 10):
+            # print(vals['default_code'])
+            return self.browse()
+
         var = ''
         res = super(ProductTemplate, self).create(vals)
 
