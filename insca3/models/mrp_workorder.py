@@ -23,7 +23,6 @@ class MrpWorkorder(models.Model):
     @api.model
     def check_dir(self):
         folders = []
-        a10_searched = ''
         res_company_obj = self.env['res.company'].search([('id', '=', self.env.user.company_id.id)])
         product_tmpl_ids = self.env['product.template'].search(['|', ('default_code', 'ilike', 'A10.'),
                                                                 ('default_code', 'ilike', 'A11.')])
@@ -43,6 +42,7 @@ class MrpWorkorder(models.Model):
             folders.append(rec.filename)
 
         for record in product_tmpl_ids:
+            a10_searched = ''
             if record.default_code[0:10] in folders:
                 record.ptg_link = ("H:/" + res_company_obj.filestore_server_shared_folder_level1_2
                                    + "/" + record.default_code[0:10])
