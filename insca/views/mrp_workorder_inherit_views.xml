@@ -9,8 +9,9 @@
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="vault_material_name" readonly="1" optional="show"/>
                 <field name="png_link" readonly="1" optional="show" widget="url" text="PNG"/>
-                <field name="png_a00_link" readonly="1" optional="show" widget="url" text="A00"/>
                 <field name="vault_web_link" readonly="1" optional="show" widget="url" text="VLT"/>
+                <field name="png_a00_link" readonly="1" optional="show" widget="url" text="A00"/>
+                <field name="png_a00_default_code" readonly="1" optional="show" string="Producto principal"/>
             </xpath>
         </field>
     </record>
