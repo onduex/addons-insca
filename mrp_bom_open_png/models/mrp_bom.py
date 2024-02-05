@@ -19,8 +19,12 @@ class ProductTemplate(models.Model):
                 product.png_link = ("file:///R:/DTECNIC/PLANOS/0_PNG/" + product.default_code[0:3] + "/" +
                                     product.default_code[0:7] + "/" +
                                     product.default_code + suffix + ".png")
+                product.pdf_link = ("file:///R:/DTECNIC/PLANOS/1_PDF/" + product.default_code[0:3] + "/" +
+                                    product.default_code[0:7] + "/" +
+                                    product.default_code + suffix + ".pdf")
 
     png_link = fields.Char(string='PNG', store=True, compute='_set_png_link')
+    pdf_link = fields.Char(string='PDF', store=True, compute='_set_png_link')
 
 
 class MrpBom(models.Model):
