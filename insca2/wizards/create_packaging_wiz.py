@@ -99,8 +99,9 @@ class CreatePackagingWiz(models.TransientModel):
 
         self.n_bulto_lines = len(self.embalaje_bom.bom_line_ids)
 
-        self.bulto = 'BULTO ' + str(self.largo).zfill(4) + 'x' + str(self.ancho).zfill(4) + 'x' + \
-                     str(self.alto).zfill(4) + 'mm'
+        self.bulto = 'BULTO ' + str(self.largo + int(self.espesor_general) + int(self.espesor_general)).zfill(4) \
+                     + 'x' + str(self.ancho + int(self.espesor_general) + int(self.espesor_general)).zfill(4) \
+                     + 'x' + str(self.alto + int(self.espesor_base) + int(self.espesor_general) + int(alto_tacos)).zfill(4) + 'mm'
         self.tapa = self.get_major_dimension_type_one(self.largo, self.ancho, self.espesor_general)
         self.base = self.get_major_dimension_type_two(self.largo, self.ancho, self.espesor_base)
         self.l_largo = self.get_major_dimension_type_three(self.largo, self.alto, self.espesor_general, alto_tacos,
