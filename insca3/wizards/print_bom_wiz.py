@@ -63,7 +63,12 @@ class PrintBomWiz(models.TransientModel):
                        'parent_bom': ch.bom_id.product_tmpl_id.default_code or None,
                        'wizard_id': self.id,
                        })
-        if line[2]['has_bom_line_ids'] != 0:
+        if line[2]['default_code'][0:4] == 'A80.' or \
+                line[2]['default_code'][0:4] == 'A81.' or \
+                line[2]['default_code'][0:4] == 'A90.' or \
+                line[2]['default_code'][0:4] == 'A91.':
+            lines.append(line)
+        elif line[2]['has_bom_line_ids'] != 0:
             lines.append(line)
         try:
             for child in ch.child_line_ids:
