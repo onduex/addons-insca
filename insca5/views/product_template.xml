@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_form_view_maincer" model="ir.ui.view">
+            <field name="name">product.template.form.view.maincer</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="priority" eval="116"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                    <div class="oe_title" invisible="1">
+                        <label for="name" string="Product Name"/>
+                        <h1>
+                            <div class="d-flex">
+                                <field name="priority" widget="priority" class="mr-3"/>
+                                <field class="text-break" name="name" placeholder="e.g. Cheese Burger"/>
+                            </div>
+                        </h1>
+                    </div>
+                    <div class="d-flex">
+                            <group>
+                                <label for="default_code" string="Código"/>
+                                <span><field name="default_code"/></span>
+                                <field name="name"/>
+                                <field name="material"/>
+                                <field name="acabado"/>
+                                <field name="estado"/>
+                            </group>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp.product_template_action" model="ir.actions.act_window">
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <record id="product_template_tree_view_maincer" model="ir.ui.view">
+            <field name="name">product.template.tree.view.maincer</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="priority" eval="116"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree[1]" position="replace">
+                    <tree string="Product" multi_edit="1" sample="1" editable="bottom">
+                        <header>
+                            <button string="Print Labels" type="object" name="action_open_label_layout"/>
+                        </header>
+                        <button type="object" name="get_formview_action" string="Abrir" icon="fa-edit"/>
+                        <field name="product_variant_count" invisible="1"/>
+                        <field name="sale_ok" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="cost_currency_id" invisible="1"/>
+                        <field name="priority" widget="priority" optional="hide" nolabel="1"/>
+                        <field name="default_code" optional="show" string="Código"/>
+                        <field name="name" string="Nombre / Descripción"/>
+                        <field name="material" string="Material"/>
+                        <field name="acabado" string="Acabado"/>
+                        <field name="bom_count" string="Nº LdM"/>
+                        <field name="responsible_id" widget="many2one_avatar_user"/>
+                        <field name="barcode" optional="hide"
+                               attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"
+                               optional="hide"/>
+                        <field name="list_price" string="Sales Price" widget="monetary"
+                               options="{'currency_field': 'currency_id'}" optional="hide"
+                               decoration-muted="not sale_ok"/>
+                        <field name="standard_price" widget="monetary" options="{'currency_field': 'cost_currency_id'}"
+                               optional="hide" readonly="1"/>
+                        <field name="categ_id" optional="hide"/>
+                        <field name="detailed_type" optional="hide" readonly="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
+                        <field name="active" invisible="1"/>
+                        <field name="activity_exception_decoration" widget="activity_exception"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
