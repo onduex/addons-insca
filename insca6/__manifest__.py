@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "insca3",
+    'name': "insca6",
 
     'summary': """
-        Añadir tabla de configuración para la madera""",
+        Módulo expedientes""",
 
     'description': """
-        Añadir tabla de configuración para la madera""",
+        Módulo expedientes""",
 
     'author': "Onduex sl",
     'website': "http://www.onduex.com",
