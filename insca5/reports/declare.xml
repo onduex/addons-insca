@@ -1,47 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="action_report_hoja_material3" model="ir.actions.report">
-        <field name="name">R.48-03 Hoja de material suma</field>
-        <field name="model">mrp.bom</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">maincer.report_hoja_material3</field>
-        <field name="report_file">maincer.report_hoja_material3</field>
-        <field name="print_report_name">'Hoja Material - %s' % (object.product_tmpl_id.name)</field>
-        <field name="binding_model_id" ref="model_mrp_bom"/>
-        <field name="binding_type">report</field>
+    <!-- Mrp Workorder -->
+    <report id="mrp_workorder_herrajes_report"
+            string="Desglose herrajes"
+            model="mrp.workorder"
+            report_type="qweb-pdf"
+            name="insca5.report_herrajes"/>
+
+    <record id="paperformat_mrp_herrajes" model="report.paperformat">
+        <field name="name">Desglose herrajes</field>
+        <field name="format">A4</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">50</field>
+        <field name="orientation">Portrait</field>
     </record>
 
-    <record id="action_report_hoja_material2" model="ir.actions.report">
-        <field name="name">Listado por Subconjunto</field>
-        <field name="model">mrp.bom</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">maincer.report_hoja_material2</field>
-        <field name="report_file">maincer.report_hoja_material2</field>
-        <field name="print_report_name">'Listado por Subconjunto - %s' % (object.product_tmpl_id.name)</field>
-        <field name="binding_model_id" ref="model_mrp_bom"/>
-        <field name="binding_type">report</field>
+    <record id="mrp_workorder_herrajes_report" model="ir.actions.report">
+        <field name="paperformat_id" ref="insca5.paperformat_mrp_herrajes"/>
     </record>
 
-    <!--<record id="action_report_hoja_material" model="ir.actions.report">
-        <field name="name">R.48-01 Hoja de material</field>
-        <field name="model">mrp.bom.line</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">maincer.report_hoja_material</field>
-        <field name="report_file">maincer.report_hoja_material</field>
-        <field name="print_report_name">'Hoja Material - %s' % (object.product_tmpl_id.name)</field>
-        <field name="binding_model_id" ref="model_mrp_bom_line"/>
-        <field name="binding_type">report</field>
-    </record>-->
-
-    <!--<record id="action_report_hoja_compras" model="ir.actions.report">
-        <field name="name">R.45-03 Pedido interno compras</field>
-        <field name="model">mrp.bom.line</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">maincer.report_hoja_compras</field>
-        <field name="report_file">maincer.report_hoja_compras</field>
-        <field name="print_report_name">'Hoja Compras - %s' % (object.product_tmpl_id.name)</field>
-        <field name="binding_model_id" ref="model_mrp_bom_line"/>
-        <field name="binding_type">report</field>
-    </record>-->
 </odoo>

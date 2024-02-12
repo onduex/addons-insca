@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <odoo>
-    <template id="maincer.report_hoja_material2">
+    <template id="insca5.report_herrajes">
         <t t-call="web.html_container" t-lang="es_ES">
-            <t t-call="maincer.external_layout_maincer">
+            <t t-call="insca5.external_layout_workorder">
                 <t t-foreach="docs" t-as="doc">
                     <t t-set="data" t-value="docs.recurse(doc.bom_line_ids, line_qty=1)"/>
-                    <t t-set="all_data" t-value="docs.compute_all_lines_by_subconjunto()"/>
+                    <t t-set="all_data" t-value="docs.compute_all_lines_and_sum()"/>
 
                     <div class="page" style="font-size:3.5mm">
 
@@ -53,44 +53,44 @@
                                 <tbody class="material_tbody">
                                     <t t-foreach="all_data[1]" t-as="values">
                                         <t t-foreach="values" t-as="line">
-                                            <t t-set="groups2" t-value="line['subconjunto'] + ' - ' + line['seccion']"/>
-                                                <t t-if="groups2 == groups">
-                                                    <tr>
-                                                        <td name="gestwin" style="border: 0.5mm solid black;">
-                                                            <t t-esc="line['gestwin']"/>
-                                                        </td>
-                                                        <td name="entregado" style="border: 0.5mm solid black;">
-                                                            <t t-esc="line['entregado']"/>
-                                                        </td>
-                                                        <td name="recibido" style="border: 0.5mm solid black;">
-                                                            <t t-esc="line['recibido']"/>
-                                                        </td>
-                                                        <td class="text-right" style="border: 0.5mm solid black;">
-                                                            <t t-if="line['product_qty'] == int(line['product_qty'])">
-                                                                <span t-esc="'%.0f'% line['product_qty']"/>
-                                                            </t>
-                                                            <t t-else="">
-                                                                <span t-esc="'%.2f'% line['product_qty']"/>
-                                                            </t>
-                                                        </td>
-                                                        <td class="text-left" style="border: 0.5mm solid black;">
-                                                            <t t-esc="line['default_code']"/>
-                                                        </td>
-                                                        <td class="text-left" style="border: 0.5mm solid black;">
-                                                            <t t-esc="line['name']"/>
-                                                        </td>
-                                                        <td class="text-left" style="border: 0.5mm solid black;">
-                                                            <t t-esc="line['material']"/>
-                                                        </td>
-                                                        <td class="text-left" style="border: 0.5mm solid black;">
-                                                            <t t-esc="line['acabado']"/>
-                                                        </td>
-                                                    </tr>
+                                            <t t-if="line['seccion'] == groups">
+                                                <tr>
+                                                    <td name="gestwin" style="border: 0.5mm solid black;">
+                                                        <t t-esc="line['gestwin']"/>
+                                                    </td>
+                                                    <td name="entregado" style="border: 0.5mm solid black;">
+                                                        <t t-esc="line['entregado']"/>
+                                                    </td>
+                                                    <td name="recibido" style="border: 0.5mm solid black;">
+                                                        <t t-esc="line['recibido']"/>
+                                                    </td>
+                                                    <td class="text-right" style="border: 0.5mm solid black;">
+                                                        <t t-if="line['product_qty'] == int(line['product_qty'])">
+                                                            <span t-esc="'%.0f'% line['product_qty']"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-esc="'%.2f'% line['product_qty']"/>
+                                                        </t>
+                                                    </td>
+                                                    <td class="text-left" style="border: 0.5mm solid black;">
+                                                        <t t-esc="line['default_code']"/>
+                                                    </td>
+                                                    <td class="text-left" style="border: 0.5mm solid black;">
+                                                        <t t-esc="line['name']"/>
+                                                    </td>
+                                                    <td class="text-left" style="border: 0.5mm solid black;">
+                                                        <t t-esc="line['material']"/>
+                                                    </td>
+                                                    <td class="text-left" style="border: 0.5mm solid black;">
+                                                        <t t-esc="line['acabado']"/>
+                                                    </td>
+                                                </tr>
                                             </t>
                                         </t>
                                     </t>
                                 </tbody>
                             </table>
+                            <p style="page-break-before:always;"/>
                         </t>
                     </div>
                 </t>
