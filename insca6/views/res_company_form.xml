@@ -1,0 +1,51 @@
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="res_company_form_expedientes" model="ir.ui.view">
+        <field name="name">res.company.form.expedientes</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Expedientes" name="expedientes">
+                    <group>
+                        <group name="left">
+                            <field name="ds_sequence_start"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="left" string="Odoo Lnx Server">
+                            <field name="smb_user"/>
+                            <field name="smb_pass" password="True"/>
+                            <field name="odoo_server_name"/>
+                        </group>
+                        <group name="right" string="Filestore Win Server">
+                            <field name="filestore_server_name"/>
+                            <field name="filestore_server_ip"/>
+                            <field name="filestore_server_port"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="left" string="Shared 1">
+                            <field name="filestore_server_shared_folder"/>
+                            <field name="filestore_server_shared_folder_level1"/>
+                        </group>
+                        <group name="right" string="Shared 2">
+                            <field name="filestore_server_shared_folder_2"/>
+                            <field name="filestore_server_shared_folder_level1_2"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="left" string="Shared 3">
+                            <field name="filestore_server_shared_folder_3"/>
+                            <field name="filestore_server_shared_folder_level1_3"/>
+                        </group>
+                        <group name="right" string="Shared 4">
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
