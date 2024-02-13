@@ -14,12 +14,13 @@
     'license': 'AGPL-3',
 
     # any module necessary for this one to work correctly
-    'depends': ['mrp'
+    'depends': ['mrp',
+                'base',
                 ],
 
     "data": [
         'reports/external_layout_workorder.xml',
-        'reports/external_layout_boxed_workorder.xml',
+        'reports/external_layout_standard_workorder.xml',
         'reports/declare.xml',
         'reports/report_herrajes.xml',
     ],
