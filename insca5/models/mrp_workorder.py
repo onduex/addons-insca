@@ -18,7 +18,7 @@ class MrpWorkorder(models.Model):
             all_components.append({'default_code': line['product_id']['default_code'],
                                    'name': line['product_id']['name'],
                                    'product_qty': line_qty * line.product_qty,
-                                   'bom_id': line['bom_id']['id']
+                                   'bom_id': line['bom_id']['product_tmpl_id']['default_code']
                                    })
             if len(line.child_line_ids) > 0:
                 MrpWorkorder.recurse(line.child_line_ids, line_qty=line_qty * line.product_qty)
@@ -36,13 +36,11 @@ class MrpWorkorder(models.Model):
                                    })
         return components
 
-
     def compute_all_lines_and_sum(self):
         components = []
         key_list = []
         value_list = []
         all_components_sum = []
-        secciones_name = []
         all_components_sum_by_section = []
 
         for component in all_components:
@@ -57,20 +55,19 @@ class MrpWorkorder(models.Model):
         all_components_sum.clear()
         all_components_sum_by_section.clear()
         for component in components:
-            unique_code = str(component['default_code']) + str(component['bom_id'])
-            if unique_code not in [x['unique_code'] for x in all_components_sum]:
-                all_components_sum.append({'default_code': component['default_code'],
-                                           'name': component['name'],
-                                           'product_qty': component['product_qty'],
-                                           'bom_id': component['bom_id'],
-                                           'unique_code': unique_code,
-                                           })
-            else:
-                for component_sum in all_components_sum:
-                    if component_sum['unique_code'] == component['unique_code']:
-                        component_sum['product_qty'] += component['product_qty']
-        # for rec in self.env['mrp.bom'].search([]):
-        #     secciones_name.append(rec.name)
+            if component['default_code'][0:3] == 'A70':
+                unique_code = str(component['default_code']) + str(component['bom_id'])
+                if unique_code not in [x['unique_code'] for x in all_components_sum]:
+                    all_components_sum.append({'default_code': component['default_code'],
+                                               'name': component['name'],
+                                               'product_qty': component['product_qty'],
+                                               'bom_id': component['bom_id'],
+                                               'unique_code': unique_code,
+                                               })
+                else:
+                    for component_sum in all_components_sum:
+                        if component_sum['unique_code'] == component['unique_code']:
+                            component_sum['product_qty'] += component['product_qty']
         all_components_sum_by_section = sorted(all_components_sum, key=itemgetter('bom_id'))
         for key, value in groupby(all_components_sum_by_section, key=itemgetter('bom_id')):
             key_list.append(key)

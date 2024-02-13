@@ -8,16 +8,15 @@
                     <t t-set="all_data" t-value="docs.compute_all_lines_and_sum()"/>
 
                     <div class="page" style="font-size:3.5mm">
+                        <h4>
+                            <span t-field="doc.production_id.name"/>
+                            <br/>
+                            <span t-field="doc.product_id.default_code"/>
+                            <span t-field="doc.product_id.name"/>
+                        </h4>
                         <t t-foreach="all_data[0]" t-as="groups">
                             <table class="table table-sm o_main_table" name="bom_line_table">
                                 <thead>
-                                    <tr>
-                                        <th colspan="8">
-                                            <strong>
-                                                <t t-esc="groups"/>
-                                            </strong>
-                                        </th>
-                                    </tr>
                                     <tr>
                                         <th name="th_ref_interna" style="width:60mm; text-align:left">
                                             <span>REF. INTERNA</span>
@@ -27,6 +26,13 @@
                                         </th>
                                         <th name="th_qty" style="width:30mm; text-align:right">
                                             <span>CANTIDAD</span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="8">
+                                            <strong>
+                                                <t t-esc="groups"/>
+                                            </strong>
                                         </th>
                                     </tr>
                                 </thead>
@@ -55,9 +61,9 @@
                                     </t>
                                 </tbody>
                             </table>
-                            <p style="page-break-before:always;"/>
                         </t>
                     </div>
+                    <p style="page-break-before:always;"/>
                 </t>
             </t>
         </t>
