@@ -5,53 +5,64 @@
             <t t-call="insca5.external_layout_workorder">
                 <t t-foreach="docs" t-as="doc">
                     <t t-set="data" t-value="docs.recurse(doc.product_id.bom_ids[0].bom_line_ids, line_qty=1)"/>
-                    <t t-set="all_data" t-value="docs.compute_all_lines()"/>
-                    <div>
-                            <strong>
-                                <t-field name="doc.product_id.default_code"/>
-                            </strong>
-                        </div>
-                    <div class="page" style="font-size:3.5mm">
+                    <t t-set="all_data" t-value="docs.compute_all_lines_and_sum()"/>
 
-                        <table class="table table-sm o_main_table" name="bom_line_table">
-                            <thead>
-                                <tr>
-                                    <th name="th_ref_interna" style="width:60mm; text-align:left">
-                                        <span>REF. INTERNA</span>
-                                    </th>
-                                    <th name="th_description" style="width:130mm; text-align:left">
-                                        <span>DESCRIPCIÓN</span>
-                                    </th>
-                                    <th name="th_qty" style="width:30mm; text-align:right">
-                                        <span>CANTIDAD</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="material_tbody">
-                                <t t-foreach="all_data" t-as="line">
+                    <div class="page" style="font-size:3.5mm">
+                        <t t-foreach="all_data[0]" t-as="groups">
+                            <table class="table table-sm o_main_table" name="bom_line_table">
+                                <thead>
                                     <tr>
-                                        <td style="border-bottom: 0.5mm solid black; text-align:left">
-                                            <t t-esc="line['default_code']"/>
-                                        </td>
-                                        <td style="border-bottom: 0.5mm solid black; text-align:left">
-                                            <t t-esc="line['name']"/>
-                                        </td>
-                                        <td style="border-bottom: 0.5mm solid black; text-align:right">
-                                            <t t-if="line['product_qty'] == int(line['product_qty'])">
-                                                <span t-esc="'%.0f'% line['product_qty']"/>
-                                            </t>
-                                            <t t-else="">
-                                                <span t-esc="'%.2f'% line['product_qty']"/>
-                                            </t>
-                                        </td>
+                                        <th colspan="8">
+                                            <strong>
+                                                <t t-esc="groups"/>
+                                            </strong>
+                                        </th>
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                        <!--<p style="page-break-before:always;"/>-->
+                                    <tr>
+                                        <th name="th_ref_interna" style="width:60mm; text-align:left">
+                                            <span>REF. INTERNA</span>
+                                        </th>
+                                        <th name="th_description" style="width:130mm; text-align:left">
+                                            <span>DESCRIPCIÓN</span>
+                                        </th>
+                                        <th name="th_qty" style="width:30mm; text-align:right">
+                                            <span>CANTIDAD</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="material_tbody">
+                                    <t t-foreach="all_data[1]" t-as="values">
+                                        <t t-foreach="values" t-as="line">
+                                            <t t-if="line['bom_id'] == groups">
+                                                <tr>
+                                                    <td style="border-bottom: 0.5mm solid black; text-align:left">
+                                                        <t t-esc="line['default_code']"/>
+                                                    </td>
+                                                    <td style="border-bottom: 0.5mm solid black; text-align:left">
+                                                        <t t-esc="line['name']"/>
+                                                    </td>
+                                                    <td style="border-bottom: 0.5mm solid black; text-align:right">
+                                                        <t t-if="line['product_qty'] == int(line['product_qty'])">
+                                                            <span t-esc="'%.0f'% line['product_qty']"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-esc="'%.2f'% line['product_qty']"/>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <p style="page-break-before:always;"/>
+                        </t>
                     </div>
                 </t>
             </t>
         </t>
     </template>
 </odoo>
+
+
+
