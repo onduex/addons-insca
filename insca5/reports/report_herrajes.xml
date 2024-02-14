@@ -14,20 +14,24 @@
                             <span t-field="doc.product_id.default_code"/>
                             <span t-field="doc.product_id.name"/>
                         </h4>
+                        <table class="table table-sm o_main_table" name="bom_line_table">
+                            <thead>
+                                <tr>
+                                    <th name="th_ref_interna" style="width:60mm; text-align:left">
+                                        <span>REF. INTERNA</span>
+                                    </th>
+                                    <th name="th_description" style="width:130mm; text-align:left">
+                                        <span>DESCRIPCIÓN</span>
+                                    </th>
+                                    <th name="th_qty" style="width:30mm; text-align:right">
+                                        <span>CANTIDAD</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
                         <t t-foreach="all_data[0]" t-as="groups">
                             <table class="table table-sm o_main_table" name="bom_line_table">
                                 <thead>
-                                    <tr>
-                                        <th name="th_ref_interna" style="width:60mm; text-align:left">
-                                            <span>REF. INTERNA</span>
-                                        </th>
-                                        <th name="th_description" style="width:130mm; text-align:left">
-                                            <span>DESCRIPCIÓN</span>
-                                        </th>
-                                        <th name="th_qty" style="width:30mm; text-align:right">
-                                            <span>CANTIDAD</span>
-                                        </th>
-                                    </tr>
                                     <tr>
                                         <th colspan="8">
                                             <strong>
@@ -41,13 +45,16 @@
                                         <t t-foreach="values" t-as="line">
                                             <t t-if="line['bom_id'] == groups">
                                                 <tr>
-                                                    <td style="border-bottom: 0.5mm solid black; text-align:left">
+                                                    <td style="border-bottom: 0.5mm solid black; text-align:left;
+                                                    width:60mm;">
                                                         <t t-esc="line['default_code']"/>
                                                     </td>
-                                                    <td style="border-bottom: 0.5mm solid black; text-align:left">
+                                                    <td style="border-bottom: 0.5mm solid black; text-align:left;
+                                                    width:130mm;">
                                                         <t t-esc="line['name']"/>
                                                     </td>
-                                                    <td style="border-bottom: 0.5mm solid black; text-align:right">
+                                                    <td style="border-bottom: 0.5mm solid black; text-align:right;
+                                                    width:30mm;">
                                                         <t t-if="line['product_qty'] == int(line['product_qty'])">
                                                             <span t-esc="'%.0f'% line['product_qty']"/>
                                                         </t>

@@ -47,7 +47,7 @@ class MrpWorkorder(models.Model):
             unique_code = str(component['default_code']) + str(component['bom_id'])
             components.append({'default_code': component['default_code'],
                                'name': component['name'],
-                               'product_qty': component['product_qty'],
+                               'product_qty': component['product_qty'] * self.qty_production,
                                'bom_id': component['bom_id'],
                                'unique_code': unique_code,
                                })
