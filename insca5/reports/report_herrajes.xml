@@ -11,6 +11,9 @@
                         <h4>
                             <span t-field="doc.production_id.name"/>
                             <br/>
+                            Cant. Pendiente: <span t-esc="'%.0f'% doc.qty_remaining"/>
+                            / Cant. Total: <span t-esc="'%.0f'% doc.qty_production"/>
+                            <br/>
                             <span t-field="doc.product_id.default_code"/>
                             <span t-field="doc.product_id.name"/>
                         </h4>

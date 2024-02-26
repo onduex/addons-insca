@@ -28,7 +28,7 @@ class MrpWorkorder(models.Model):
         components = []
         all_components.sort(key=itemgetter('name'))
         for component in all_components:
-            if component['default_code'][0:3] == 'A70':
+            if component['default_code'][0:3] == 'A70' or component['default_code'][0:3] == 'A72':
                 components.append({'default_code': component['default_code'],
                                    'name': component['name'],
                                    'product_qty': component['product_qty'],
@@ -55,7 +55,7 @@ class MrpWorkorder(models.Model):
         all_components_sum.clear()
         all_components_sum_by_section.clear()
         for component in components:
-            if component['default_code'][0:3] == 'A70':
+            if component['default_code'][0:3] == 'A70' or component['default_code'][0:3] == 'A72':
                 unique_code = str(component['default_code']) + str(component['bom_id'])
                 if unique_code not in [x['unique_code'] for x in all_components_sum]:
                     all_components_sum.append({'default_code': component['default_code'],
