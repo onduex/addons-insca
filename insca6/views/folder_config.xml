@@ -49,8 +49,8 @@
     </record>
 
     <!--Menu-->
-    <menuitem id="res_folder_root_menu" name="Expedientes" groups="insca3.expedientes_group"
-              sequence="10" web_icon="insca3,static/description/icon.png"/>
+    <menuitem id="res_folder_root_menu" name="Expedientes" groups="insca6.expedientes_group"
+              sequence="10" web_icon="insca6,static/description/icon.png"/>
     <menuitem id="tablas_varias" name="Tablas" parent="res_folder_root_menu" sequence="117"/>
     <menuitem id="carpetas_proyectos" name="Carpetas proyectos" parent="tablas_varias"
               action="action_carpetas_proyectos" sequence="117"/>
