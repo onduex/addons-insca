@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Tree View-->
+    <record id="view_tree_res_code001" model="ir.ui.view">
+        <field name="name">Seccionadora</field>
+        <field name="model">res.seccionadora</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Seccionadora" default_order="name asc">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="value"/>
+                <field name="unit"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_tree_res_code002" model="ir.ui.view">
+        <field name="name">Pantógrafo</field>
+        <field name="model">res.pantografo</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Pantógrafo" default_order="name asc">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="value"/>
+                <field name="unit"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_tree_res_code003" model="ir.ui.view">
+        <field name="name">Chapadora</field>
+        <field name="model">res.chapadora</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Chapadora" default_order="name asc">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="value"/>
+                <field name="unit"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_tree_res_code004" model="ir.ui.view">
+        <field name="name">Encolado</field>
+        <field name="model">res.encolado</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Encolado" default_order="name asc">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="value"/>
+                <field name="unit"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_tree_res_code005" model="ir.ui.view">
+        <field name="name">Pintura</field>
+        <field name="model">res.pintura</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Pintura" default_order="name asc">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="value"/>
+                <field name="unit"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Actions-->
+    <record id="action_res_codes001" model="ir.actions.act_window">
+        <field name="name">Seccionadora</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.seccionadora</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+    <record id="action_res_codes002" model="ir.actions.act_window">
+        <field name="name">Pantógrafo</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.pantografo</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+    <record id="action_res_codes003" model="ir.actions.act_window">
+        <field name="name">Chapadora</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.chapadora</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+    <record id="action_res_codes004" model="ir.actions.act_window">
+        <field name="name">Encolado</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.encolado</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+    <record id="action_res_codes005" model="ir.actions.act_window">
+        <field name="name">Pintura</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.pintura</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Text Here</p>
+            <p>More details about what a user can do with this object will be OK</p>
+        </field>
+    </record>
+
+    <!--Menu-->
+    <menuitem id="codes000" name="Tablas CT" parent="base.menu_board_root" sequence="117"/>
+    <menuitem id="codes001" name="Seccionadora" parent="codes000" action="action_res_codes001" sequence="118"/>
+    <menuitem id="codes002" name="Pantógrafo" parent="codes000" action="action_res_codes002" sequence="119"/>
+    <menuitem id="codes003" name="Chapadora" parent="codes000" action="action_res_codes003" sequence="120"/>
+    <menuitem id="codes004" name="Encolado" parent="codes000" action="action_res_codes004" sequence="121"/>
+    <menuitem id="codes005" name="Pintura" parent="codes000" action="action_res_codes005" sequence="122"/>
+
+</odoo>

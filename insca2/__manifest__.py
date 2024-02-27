@@ -12,7 +12,7 @@
     'website': "http://www.onduex.com",
 
     'category': 'Uncategorized',
-    'version': '13.1.0.0',
+    'version': '2',
 
     # any module necessary for this one to work correctly
     'depends': [
@@ -25,10 +25,14 @@
     # always loaded
     'data': [
         'wizards/create_packaging_wiz.xml',
+
         'views/product_inherit_views.xml',
         'views/wood_config.xml',
         'views/a80_a90_sequence.xml',
+        'views/ct_tables.xml',
+
         'data/packaging_data.xml',
+
         'security/ir.model.access.csv',
     ],
 

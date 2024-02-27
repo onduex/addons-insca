@@ -8,5 +8,5 @@ class ResEncolado(models.Model):
 
     name = fields.Char(string='Nombre', required=True)
     code = fields.Char(string='Código', required=True)
-    value = fields.Integer(string='Valor', required=False)
-    unit = fields.Char(string='Código', required=True)
+    value = fields.Float(string='Valor', required=False)
+    unit = fields.Char(string='Unidades', required=True)
