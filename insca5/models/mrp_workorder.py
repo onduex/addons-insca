@@ -37,43 +37,44 @@ class MrpWorkorder(models.Model):
         return components
 
     def compute_all_lines_and_sum(self):
-        components = []
-        key_list = []
-        value_list = []
-        all_components_sum = []
-        all_components_sum_by_section = []
+        for record in self:
+            components = []
+            key_list = []
+            value_list = []
+            all_components_sum = []
+            all_components_sum_by_section = []
 
-        for component in all_components:
-            unique_code = str(component['default_code']) + str(component['bom_id'])
-            components.append({'default_code': component['default_code'],
-                               'name': component['name'],
-                               'product_qty': component['product_qty'] * self.qty_production,
-                               'bom_id': component['bom_id'],
-                               'unique_code': unique_code,
-                               })
-        all_components.clear()
-        all_components_sum.clear()
-        all_components_sum_by_section.clear()
-        for component in components:
-            if component['default_code'][0:3] == 'A70' or component['default_code'][0:3] == 'A72':
+            for component in all_components:
                 unique_code = str(component['default_code']) + str(component['bom_id'])
-                if unique_code not in [x['unique_code'] for x in all_components_sum]:
-                    all_components_sum.append({'default_code': component['default_code'],
-                                               'name': component['name'],
-                                               'product_qty': component['product_qty'],
-                                               'bom_id': component['bom_id'],
-                                               'unique_code': unique_code,
-                                               })
-                else:
-                    for component_sum in all_components_sum:
-                        if component_sum['unique_code'] == component['unique_code']:
-                            component_sum['product_qty'] += component['product_qty']
-        all_components_sum_by_section = sorted(all_components_sum, key=itemgetter('bom_id'))
-        for key, value in groupby(all_components_sum_by_section, key=itemgetter('bom_id')):
-            key_list.append(key)
-            value_list.append(list(value))
+                components.append({'default_code': component['default_code'],
+                                   'name': component['name'],
+                                   'product_qty': component['product_qty'] * record.qty_production,
+                                   'bom_id': component['bom_id'],
+                                   'unique_code': unique_code,
+                                   })
+            all_components.clear()
+            all_components_sum.clear()
+            all_components_sum_by_section.clear()
+            for component in components:
+                if component['default_code'][0:3] == 'A70' or component['default_code'][0:3] == 'A72':
+                    unique_code = str(component['default_code']) + str(component['bom_id'])
+                    if unique_code not in [x['unique_code'] for x in all_components_sum]:
+                        all_components_sum.append({'default_code': component['default_code'],
+                                                   'name': component['name'],
+                                                   'product_qty': component['product_qty'],
+                                                   'bom_id': component['bom_id'],
+                                                   'unique_code': unique_code,
+                                                   })
+                    else:
+                        for component_sum in all_components_sum:
+                            if component_sum['unique_code'] == component['unique_code']:
+                                component_sum['product_qty'] += component['product_qty']
+            all_components_sum_by_section = sorted(all_components_sum, key=itemgetter('bom_id'))
+            for key, value in groupby(all_components_sum_by_section, key=itemgetter('bom_id')):
+                key_list.append(key)
+                value_list.append(list(value))
 
-        for i in value_list:
-            i.sort(key=lambda x: x['default_code'])
+            for i in value_list:
+                i.sort(key=lambda x: x['default_code'])
 
-        return key_list, value_list
+            return key_list, value_list
