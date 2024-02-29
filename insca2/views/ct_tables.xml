@@ -11,6 +11,7 @@
                 <field name="code"/>
                 <field name="value"/>
                 <field name="unit"/>
+                <field name="notes"/>
             </tree>
         </field>
     </record>
@@ -23,6 +24,7 @@
                 <field name="code"/>
                 <field name="value"/>
                 <field name="unit"/>
+                <field name="notes"/>
             </tree>
         </field>
     </record>
@@ -35,6 +37,7 @@
                 <field name="code"/>
                 <field name="value"/>
                 <field name="unit"/>
+                <field name="notes"/>
             </tree>
         </field>
     </record>
@@ -47,6 +50,7 @@
                 <field name="code"/>
                 <field name="value"/>
                 <field name="unit"/>
+                <field name="notes"/>
             </tree>
         </field>
     </record>
@@ -59,6 +63,7 @@
                 <field name="code"/>
                 <field name="value"/>
                 <field name="unit"/>
+                <field name="notes"/>
             </tree>
         </field>
     </record>

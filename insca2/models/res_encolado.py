@@ -10,3 +10,4 @@ class ResEncolado(models.Model):
     code = fields.Char(string='Código', required=True)
     value = fields.Float(string='Valor', required=False)
     unit = fields.Char(string='Unidades', required=True)
+    notes = fields.Char(string='Notas', required=False)
