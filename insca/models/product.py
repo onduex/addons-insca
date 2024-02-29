@@ -582,7 +582,7 @@ class ProductTemplate(models.Model):
                                                               'code': self.vault_revision,
                                                               'product_qty': 1,
                                                               'type': 'normal',
-                                                              'routing_id': mrp_routing.id or None,
+                                                              'routing_id': None,
                                                               'bom_line_ids': lines,
                                                               })
                     # Código A90
