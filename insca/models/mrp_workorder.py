@@ -14,3 +14,5 @@ class MrpWorkorder(models.Model):
     png_a00_link = fields.Char(string='A00', store=False, related='main_production_id.product_id.png_link')
     png_a00_default_code = fields.Char(string='Producto principal', store=True, related='main_production_id.product_id.default_code')
     vault_web_link = fields.Char(string='VLT', store=False, related='product_id.vault_web_link')
+    description = fields.Text(string='Notas', required=False, store=True, related='product_id.description')
+
