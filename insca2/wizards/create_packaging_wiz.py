@@ -463,14 +463,31 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     def create_bom_wiz_action(self):
+        product_tmpl_obj = self.env["product.template"]
+        mrp_bom_obj = self.env["mrp.bom"]
+        res_code = self.env['res.code'].search([('name', '=', self.default_code[:3])])
         embalaje_id = self.env["product.template"]. \
             search([("default_code", "ilike", 'EM0.' + self.default_code[4:17]),
                     ("vault_revision", "=", self.vault_revision)])
         embalaje_bom = self.env["mrp.bom"].search([("product_tmpl_id", "=", embalaje_id.id)])
 
+        # Si no encuentra el embalaje, lo crea
+        if not embalaje_id:
+            embalaje_id = product_tmpl_obj.create({'name': 'EMBALAJE',
+                                                   'default_code': 'EM0.' + self.default_code[4:17],
+                                                   'type': res_code.type_store,
+                                                   'categ_id': 2552,  # EMBALAJE
+                                                   'sale_ok': res_code.sale_ok,
+                                                   'purchase_ok': res_code.purchase_ok,
+                                                   'route_ids': [(6, 0, [x.id for x in res_code.product_route_ids])],
+                                                   })
+        # Si no encuentra la ldM del embalaje, la crea
         if not embalaje_bom:
-            raise ValidationError(
-                _('El embalaje %s no tiene LdM' % embalaje_id['default_code']))
+            embalaje_bom = mrp_bom_obj.sudo().create({'product_tmpl_id': embalaje_id.id,
+                                                      'product_qty': 1,
+                                                      'type': 'normal',
+                                                      'routing_id': res_code.route_mrp or None,
+                                                      })
 
         context = {'default_product_id': self.id,
                    'default_embalaje_id': embalaje_id.id,
