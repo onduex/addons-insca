@@ -467,8 +467,7 @@ class ProductTemplate(models.Model):
         mrp_bom_obj = self.env["mrp.bom"]
         res_code = self.env['res.code'].search([('name', '=', self.default_code[:3])])
         embalaje_id = self.env["product.template"]. \
-            search([("default_code", "ilike", 'EM0.' + self.default_code[4:17]),
-                    ("vault_revision", "=", self.vault_revision)])
+                      search([("default_code", "ilike", 'EM0.' + self.default_code[4:17])])
         embalaje_bom = self.env["mrp.bom"].search([("product_tmpl_id", "=", embalaje_id.id)])
 
         # Si no encuentra el embalaje, lo crea
@@ -488,6 +487,19 @@ class ProductTemplate(models.Model):
                                                       'type': 'normal',
                                                       'routing_id': res_code.route_mrp or None,
                                                       })
+        # Crear embalaje como línea de LdM
+        if embalaje_id:
+            embalaje_variant_id = self.env["product.product"]. \
+                                  search([("default_code", "ilike", 'EM0.' + self.default_code[4:17])])
+
+            embalaje_as_bom_line_id = self.env['mrp.bom.line']. \
+                                      search([("product_id", "ilike", 'EM0.' + self.default_code[4:17]),
+                                              ("bom_id", "ilike", self.bom_ids[0].id)])
+            if not embalaje_as_bom_line_id:
+                self.env['mrp.bom.line'].sudo().create({'bom_id': self.bom_ids[0].id,
+                                                        'product_id': embalaje_variant_id.id,
+                                                        'product_qty': 1,
+                                                        })
 
         context = {'default_product_id': self.id,
                    'default_embalaje_id': embalaje_id.id,
