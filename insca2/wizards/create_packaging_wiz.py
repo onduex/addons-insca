@@ -20,9 +20,12 @@ class CreatePackagingWiz(models.TransientModel):
         comodel_name='mrp.bom', string="LdM",
         help="Producto embalaje.", ondelete='cascade', readonly=True)
     n_bulto_lines = fields.Integer(string='Nº de bulto', required=False, compute='onchange_values')
-    largo = fields.Integer(string='Largo', required=False)
-    ancho = fields.Integer(string='Ancho', required=False)
-    alto = fields.Integer(string='Alto', required=False)
+    largo = fields.Integer(string='Largo', required=False, readonly=True)
+    ancho = fields.Integer(string='Ancho', required=False, readonly=True)
+    alto = fields.Integer(string='Alto', required=False, readonly=True)
+    largo_exterior = fields.Integer(string='Largo exterior', required=False)
+    ancho_exterior = fields.Integer(string='Ancho exterior', required=False)
+    alto_exterior = fields.Integer(string='Alto exterior', required=False)
     espesor_general = fields.Selection(string='Espesor general', selection=[('16', '16'), ('19', '19'), ],
                                        required=False, )
     espesor_base = fields.Selection(string='Espesor base', selection=[('25', '25'), ('30', '30'), ], required=False, )

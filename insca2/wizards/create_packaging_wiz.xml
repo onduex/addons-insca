@@ -40,13 +40,16 @@
                                 <group>
                                     <field name="tipo_palet"/>
                                     <field name="n_bultos"/>
-                                    <field name="largo" placeholder="Valor mínimo 750mm" widget="char"/>
-                                    <field name="ancho" placeholder="Valor mínimo 750mm" widget="char"/>
-                                    <field name="alto" attrs="{'readonly':[('tipo_palet','=','2')]}"/>
+                                    <field name="largo_exterior" placeholder="Valor mínimo 750mm" widget="char"/>
+                                    <field name="ancho_exterior" placeholder="Valor mínimo 750mm" widget="char"/>
+                                    <field name="alto_exterior" attrs="{'readonly':[('tipo_palet','=','2')]}"/>
                                     <field name="espesor_general" attrs="{'readonly':[('tipo_palet','=','2')]}"/>
                                     <field name="espesor_base"/>
                                 </group>
                                 <group>
+                                    <field name="largo" placeholder="Valor mínimo 750mm" widget="char"/>
+                                    <field name="ancho" placeholder="Valor mínimo 750mm" widget="char"/>
+                                    <field name="alto"/>
                                     <field name="largo_taco"/>
                                     <field name="largo_taco_lateral"/>
                                     <field name="largo_taco_costado"/>
