@@ -180,6 +180,7 @@ class CreatePackagingWiz(models.TransientModel):
                                           'sale_ok': False,
                                           'purchase_ok': False,
                                           'product_package_number': self.n_bultos,
+                                          'route_ids': [(6, 0, [x for x in (1, 5)])]
                                           })['id']
         product_obj = self.env['product.product'].search([('product_tmpl_id', '=', new_id)])
         # Crear LdM del bulto
@@ -217,7 +218,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                'vault_thinkness': str(self.espesor_base),
                                                                'vault_sup_madera': str(float(self.largo) *
                                                                                        float(self.ancho) / 1000000),
-                                                               'vault_route': 'SEC'
+                                                               'vault_route': 'SEC',
+                                                               'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                }).id,
                                 'qty': 1,
                                 'name': self.base,
@@ -248,7 +250,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                        float(ancho_tacos) *
                                                                                        float(self.largo_taco)
                                                                                        / 1000000000),
-                                                               'vault_route': 'MAN'
+                                                               'vault_route': 'MAN',
+                                                               'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                }).id,
                                 'qty': self.n_tacos,
                                 'name': self.taco,
@@ -281,7 +284,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                            float(
                                                                                                self.largo_taco_lateral)
                                                                                            / 1000000000),
-                                                                   'vault_route': 'MAN'
+                                                                   'vault_route': 'MAN',
+                                                                   'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                    }).id,
                                     'qty': self.n_tacos_lateral,
                                     'name': self.taco_lateral,
@@ -314,7 +318,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                                            float(
                                                                                                self.largo_taco_costado)
                                                                                            / 1000000000),
-                                                                   'vault_route': 'MAN'
+                                                                   'vault_route': 'MAN',
+                                                                   'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                    }).id,
                                     'qty': self.n_tacos_costado,
                                     'name': self.taco_costado,
@@ -350,7 +355,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                    'vault_thinkness': str(self.espesor_general),
                                                                    'vault_sup_madera': str(float(self.largo) *
                                                                                            float(self.ancho) / 1000000),
-                                                                   'vault_route': 'SEC'
+                                                                   'vault_route': 'SEC',
+                                                                   'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                    }).id,
                                     'qty': 1,
                                     'name': self.tapa,
@@ -383,7 +389,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                    'vault_thinkness': str(self.espesor_general),
                                                                    'vault_sup_madera': str(float(self.largo) *
                                                                                            float(self.alto) / 1000000),
-                                                                   'vault_route': 'SEC'
+                                                                   'vault_route': 'SEC',
+                                                                   'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                    }).id,
                                     'qty': 2,
                                     'name': self.l_largo,
@@ -414,7 +421,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                    'vault_thinkness': str(self.espesor_general),
                                                                    'vault_sup_madera': str(float(self.largo) *
                                                                                            float(self.ancho) / 1000000),
-                                                                   'vault_route': 'SEC'
+                                                                   'vault_route': 'SEC',
+                                                                   'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                    }).id,
                                     'qty': 2,
                                     'name': self.l_corto,
