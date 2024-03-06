@@ -58,6 +58,13 @@ class CreatePackagingWiz(models.TransientModel):
     taco_lateral_id = fields.Integer(string='Taco lateral Id', required=False, readonly=True)
     taco_costado_id = fields.Integer(string='Taco costado Id', required=False, readonly=True)
 
+    @api.onchange('largo_exterior', 'ancho_exterior', 'alto_exterior', 'espesor_general', 'espesor_base')
+    def onchange_medidas_exteriores(self):
+        alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
+        self.largo = self.largo_exterior - (2 * int(self.espesor_general)) - 1
+        self.ancho = self.ancho_exterior - (2 * int(self.espesor_general)) - 1
+        self.alto = self.alto_exterior - int(self.espesor_general) - 10 - alto_tacos
+
     @api.onchange('largo', 'ancho', 'espesor_general')
     def onchange_largo_taco(self):
         sep_taco_lateral = self.env["res.packaging"].search([("name", "=", 'Separación taco lateral')]).value
@@ -102,10 +109,10 @@ class CreatePackagingWiz(models.TransientModel):
 
         self.n_bulto_lines = len(self.embalaje_bom.bom_line_ids)
 
-        self.bulto = 'BULTO ' + str(self.largo + int(self.espesor_general) + int(self.espesor_general)).zfill(4) \
-                     + 'x' + str(self.ancho + int(self.espesor_general) + int(self.espesor_general)).zfill(4) \
-                     + 'x' + str(self.alto + int(self.espesor_base) + int(self.espesor_general) + int(alto_tacos)).zfill(4) + 'mm'
-        self.tapa = self.get_major_dimension_type_one(self.largo, self.ancho, self.espesor_general)
+        self.bulto = 'BULTO ' + str(self.largo_exterior).zfill(4) \
+                     + 'x' + str(self.ancho_exterior).zfill(4) \
+                     + 'x' + str(self.alto_exterior).zfill(4) + 'mm'
+        self.tapa = self.get_major_dimension_type_one(self.largo_exterior, self.ancho_exterior, self.espesor_general)
         self.base = self.get_major_dimension_type_two(self.largo, self.ancho, self.espesor_base)
         self.l_largo = self.get_major_dimension_type_three(self.largo, self.alto, self.espesor_general, alto_tacos,
                                                            self.espesor_base, distancia_suelo, self.tipo_palet)
@@ -129,6 +136,7 @@ class CreatePackagingWiz(models.TransientModel):
         alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
         ancho_tacos = self.env["res.packaging"].search([("name", "=", 'Ancho tacos')]).value
         distancia_suelo = self.env["res.packaging"].search([("name", "=", 'Distancia al suelo del lateral')]).value
+        self.onchange_medidas_exteriores()
         self.onchange_largo_taco()
         self.onchange_values()
         product_ids = []
@@ -327,7 +335,9 @@ class CreatePackagingWiz(models.TransientModel):
             if not self.tapa_id:
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
                                                                    'default_code': self.get_major_code_type_one(
-                                                                       self.largo, self.ancho, self.espesor_general),
+                                                                       self.largo_exterior,
+                                                                       self.ancho_exterior,
+                                                                       self.espesor_general),
                                                                    'type': "product",
                                                                    'categ_id': self.embalaje_id.categ_id.id,
                                                                    'sale_ok': False,

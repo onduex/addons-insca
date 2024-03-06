@@ -36,8 +36,8 @@ class CreatePackagingWiz(models.TransientModel):
     def get_major_dimension_type_three(largo, alto, espesorg, alto_tacos, espesorb, distancia_suelo, tipo_palet):
         res = ''
         if tipo_palet == '1':
-            a = int(largo) + (2 * int(espesorg))
-            b = int(alto) + int(alto_tacos) + int(espesorb) + int(espesorg) - int(distancia_suelo)
+            a = int(largo) + (2 * int(espesorg)) + 1
+            b = int(alto) + int(alto_tacos) - int(distancia_suelo)
             if largo > alto:
                 res = 'PIEZA EMBALAJE ' + str(a).zfill(4) + 'x' + str(b).zfill(4) + 'x' + \
                       str(espesorg).zfill(3) + 'mm'
@@ -45,8 +45,8 @@ class CreatePackagingWiz(models.TransientModel):
                 res = 'PIEZA EMBALAJE ' + str(b).zfill(4) + 'x' + str(a).zfill(4) + 'x' + \
                       str(espesorg).zfill(3) + 'mm'
         elif tipo_palet == '0':
-            a = int(largo) + (2 * int(espesorg))
-            b = int(alto) + int(alto_tacos) + int(espesorb) + int(espesorg) - int(espesorg) - int(alto_tacos)
+            a = int(largo) + (2 * int(espesorg)) + 1
+            b = int(alto) + int(alto_tacos) - int(alto_tacos)
             if largo > alto:
                 res = 'PIEZA EMBALAJE ' + str(a).zfill(4) + 'x' + str(b).zfill(4) + 'x' + \
                       str(espesorg).zfill(3) + 'mm'
@@ -89,15 +89,15 @@ class CreatePackagingWiz(models.TransientModel):
     def get_major_code_type_three(largo, alto, espesorg, alto_tacos, espesorb, distancia_suelo, tipo_palet):
         res = ''
         if tipo_palet == '1':
-            a = int(largo) + (2 * int(espesorg))
-            b = int(alto) + int(alto_tacos) + int(espesorb) + int(espesorg) - int(distancia_suelo)
+            a = int(largo) + (2 * int(espesorg)) + 1
+            b = int(alto) + int(alto_tacos) - int(distancia_suelo)
             if largo > alto:
                 res = str(a).zfill(4) + str(b).zfill(4) + str(espesorg).zfill(3)
             else:
                 res = str(b).zfill(4) + str(a).zfill(4) + str(espesorg).zfill(3)
         elif tipo_palet == '0':
-            a = int(largo) + (2 * int(espesorg))
-            b = int(alto) + int(alto_tacos) + int(espesorb) + int(espesorg) - int(espesorg) - int(alto_tacos)
+            a = int(largo) + (2 * int(espesorg)) + 1
+            b = int(alto) + int(alto_tacos) - int(alto_tacos)
             if largo > alto:
                 res = str(a).zfill(4) + str(b).zfill(4) + str(espesorg).zfill(3)
             else:

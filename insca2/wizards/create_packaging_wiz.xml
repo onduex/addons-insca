@@ -47,8 +47,8 @@
                                     <field name="espesor_base"/>
                                 </group>
                                 <group>
-                                    <field name="largo" placeholder="Valor mínimo 750mm" widget="char"/>
-                                    <field name="ancho" placeholder="Valor mínimo 750mm" widget="char"/>
+                                    <field name="largo"/>
+                                    <field name="ancho"/>
                                     <field name="alto"/>
                                     <field name="largo_taco"/>
                                     <field name="largo_taco_lateral"/>
