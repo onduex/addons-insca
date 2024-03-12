@@ -505,7 +505,7 @@ class ProductTemplate(models.Model):
         if not embalaje_bom:
             embalaje_bom = mrp_bom_obj.sudo().create({'product_tmpl_id': embalaje_id.id,
                                                       'product_qty': 1,
-                                                      'type': 'normal',
+                                                      'type': 'phantom',
                                                       'routing_id': res_code.route_mrp or None,
                                                       })
         # Crear embalaje como línea de LdM
