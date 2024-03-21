@@ -55,7 +55,7 @@ class CreatePackagingWiz(models.TransientModel):
                       str(espesorg).zfill(3) + 'mm'
         elif tipo_palet == '4' or tipo_palet == '5':
             a = int(largo) + (2 * int(espesorg)) + 1
-            b = int(alto) + int(espesorg) + int(espesorb) + 1
+            b = int(alto) + int(espesorb)
             if largo > alto:
                 res = 'PIEZA EMBALAJE ' + str(a).zfill(4) + 'x' + str(b).zfill(4) + 'x' + \
                       str(espesorg).zfill(3) + 'mm'
@@ -66,13 +66,23 @@ class CreatePackagingWiz(models.TransientModel):
 
     # Lateral corto
     @staticmethod
-    def get_major_dimension_type_four(alto, ancho, espesorg):
-        if alto > ancho:
-            res = 'PIEZA EMBALAJE ' + str(alto).zfill(4) + 'x' + str(ancho).zfill(4) + 'x' + \
-                  str(espesorg).zfill(3) + 'mm'
+    def get_major_dimension_type_four(alto, ancho, espesorg, tipo_palet, espesorb, alto_tacos):
+        if tipo_palet != '4' and tipo_palet != '5':
+            if alto > ancho:
+                res = 'PIEZA EMBALAJE ' + str(alto).zfill(4) + 'x' + str(ancho).zfill(4) + 'x' + \
+                      str(espesorg).zfill(3) + 'mm'
+            else:
+                res = 'PIEZA EMBALAJE ' + str(ancho).zfill(4) + 'x' + str(alto).zfill(4) + 'x' + \
+                      str(espesorg).zfill(3) + 'mm'
         else:
-            res = 'PIEZA EMBALAJE ' + str(ancho).zfill(4) + 'x' + str(alto).zfill(4) + 'x' + \
-                  str(espesorg).zfill(3) + 'mm'
+            a = int(ancho) + (2 * int(espesorg)) + 1
+            b = int(alto) + int(espesorb)
+            if alto > ancho:
+                res = 'PIEZA EMBALAJE ' + str(b).zfill(4) + 'x' + str(a).zfill(4) + 'x' + \
+                      str(espesorg).zfill(3) + 'mm'
+            else:
+                res = 'PIEZA EMBALAJE ' + str(a).zfill(4) + 'x' + str(b).zfill(4) + 'x' + \
+                      str(espesorg).zfill(3) + 'mm'
         return res
 
     # Tapa
@@ -113,20 +123,26 @@ class CreatePackagingWiz(models.TransientModel):
                 res = str(b).zfill(4) + str(a).zfill(4) + str(espesorg).zfill(3)
         elif tipo_palet == '4' or tipo_palet == '5':
             a = int(largo) + (2 * int(espesorg)) + 1
-            b = int(alto) + int(espesorg) + int(espesorb) + 1
+            b = int(alto) + int(espesorb)
             if largo > alto:
-                res = str(a).zfill(4) + 'x' + str(b).zfill(4) + 'x' + \
-                      str(espesorg).zfill(3) + 'mm'
+                res = str(a).zfill(4) + str(b).zfill(4) + str(espesorg).zfill(3)
             else:
-                res = str(b).zfill(4) + 'x' + str(a).zfill(4) + 'x' + \
-                      str(espesorg).zfill(3) + 'mm'
+                res = str(b).zfill(4) + str(a).zfill(4) + str(espesorg).zfill(3)
         return res
 
     # TapaLateral corto
     @staticmethod
-    def get_major_code_type_four(alto, ancho, espesorg):
-        if alto > ancho:
-            res = str(alto).zfill(4) + str(ancho).zfill(4) + str(espesorg).zfill(3)
+    def get_major_code_type_four(alto, ancho, espesorg, tipo_palet, espesorb, alto_tacos):
+        if tipo_palet != '4' and tipo_palet != '5':
+            if alto > ancho:
+                res = str(alto).zfill(4) + str(ancho).zfill(4) + str(espesorg).zfill(3)
+            else:
+                res = str(ancho).zfill(4) + str(alto).zfill(4) + str(espesorg).zfill(3)
         else:
-            res = str(ancho).zfill(4) + str(alto).zfill(4) + str(espesorg).zfill(3)
+            a = int(ancho) + (2 * int(espesorg)) + 1
+            b = int(alto) + int(espesorb)
+            if alto > ancho:
+                res = str(b).zfill(4) + str(a).zfill(4) + str(espesorg).zfill(3)
+            else:
+                res = str(a).zfill(4) + str(b).zfill(4) + str(espesorg).zfill(3)
         return res

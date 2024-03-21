@@ -64,7 +64,10 @@ class CreatePackagingWiz(models.TransientModel):
         alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
         self.largo = self.largo_exterior - (2 * int(self.espesor_general)) - 1
         self.ancho = self.ancho_exterior - (2 * int(self.espesor_general)) - 1
-        self.alto = self.alto_exterior - int(self.espesor_general) - 10 - alto_tacos
+        if self.tipo_palet != "4" and self.tipo_palet != "5":
+            self.alto = self.alto_exterior - int(self.espesor_general) - alto_tacos - 10
+        else:
+            self.alto = self.alto_exterior - int(self.espesor_general) - int(self.espesor_base) - alto_tacos
 
     @api.onchange('largo_exterior', 'ancho_exterior', 'alto_exterior', 'largo', 'ancho', 'espesor_general', 'tipo_palet')
     def onchange_largo_taco(self):
@@ -129,7 +132,8 @@ class CreatePackagingWiz(models.TransientModel):
         self.base = self.get_major_dimension_type_two(self.largo, self.ancho, self.espesor_base)
         self.l_largo = self.get_major_dimension_type_three(self.largo, self.alto, self.espesor_general, alto_tacos,
                                                            self.espesor_base, distancia_suelo, self.tipo_palet)
-        self.l_corto = self.get_major_dimension_type_four(self.alto, self.ancho, self.espesor_general)
+        self.l_corto = self.get_major_dimension_type_four(self.alto, self.ancho, self.espesor_general, self.tipo_palet,
+                                                          self.espesor_base, alto_tacos)
         self.taco = 'TACO PINO PAIS ' + str(alto_tacos).zfill(3) + 'x' + str(ancho_tacos).zfill(3) + 'x' + \
                     str(self.largo_taco).zfill(4) + 'mm'
         self.taco_lateral = 'TACO PINO PAIS ' + str(alto_tacos).zfill(3) + 'x' + str(ancho_tacos).zfill(3) + 'x' + \
@@ -421,7 +425,9 @@ class CreatePackagingWiz(models.TransientModel):
             if not self.l_corto_id:
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
                                                                    'default_code': self.get_major_code_type_four(
-                                                                       self.alto, self.ancho, self.espesor_general),
+                                                                       self.alto, self.ancho, self.espesor_general,
+                                                                       self.tipo_palet, self.espesor_base,
+                                                                       alto_tacos),
                                                                    'type': "product",
                                                                    'categ_id': self.embalaje_id.categ_id.id,
                                                                    'sale_ok': False,
