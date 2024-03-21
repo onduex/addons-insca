@@ -53,6 +53,15 @@ class CreatePackagingWiz(models.TransientModel):
             else:
                 res = 'PIEZA EMBALAJE ' + str(b).zfill(4) + 'x' + str(a).zfill(4) + 'x' + \
                       str(espesorg).zfill(3) + 'mm'
+        elif tipo_palet == '4' or tipo_palet == '5':
+            a = int(largo) + (2 * int(espesorg)) + 1
+            b = int(alto) + int(espesorg) + int(espesorb) + 1
+            if largo > alto:
+                res = 'PIEZA EMBALAJE ' + str(a).zfill(4) + 'x' + str(b).zfill(4) + 'x' + \
+                      str(espesorg).zfill(3) + 'mm'
+            else:
+                res = 'PIEZA EMBALAJE ' + str(b).zfill(4) + 'x' + str(a).zfill(4) + 'x' + \
+                      str(espesorg).zfill(3) + 'mm'
         return res
 
     # Lateral corto
@@ -102,6 +111,15 @@ class CreatePackagingWiz(models.TransientModel):
                 res = str(a).zfill(4) + str(b).zfill(4) + str(espesorg).zfill(3)
             else:
                 res = str(b).zfill(4) + str(a).zfill(4) + str(espesorg).zfill(3)
+        elif tipo_palet == '4' or tipo_palet == '5':
+            a = int(largo) + (2 * int(espesorg)) + 1
+            b = int(alto) + int(espesorg) + int(espesorb) + 1
+            if largo > alto:
+                res = str(a).zfill(4) + 'x' + str(b).zfill(4) + 'x' + \
+                      str(espesorg).zfill(3) + 'mm'
+            else:
+                res = str(b).zfill(4) + 'x' + str(a).zfill(4) + 'x' + \
+                      str(espesorg).zfill(3) + 'mm'
         return res
 
     # TapaLateral corto

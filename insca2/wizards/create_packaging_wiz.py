@@ -30,7 +30,8 @@ class CreatePackagingWiz(models.TransientModel):
                                        required=False, )
     espesor_base = fields.Selection(string='Espesor base', selection=[('25', '25'), ('30', '30'), ], required=False, )
     tipo_palet = fields.Selection(string='Tipo palet', selection=[('0', 'Sin mordida'), ('1', 'Con mordida'),
-                                                                  ('2', 'Sólo base')],
+                                                                  ('2', 'Sólo base'), ('4', 'Pequeño'),
+                                                                  ('5', 'Pequeño sólo base')],
                                   required=False, )
 
     n_tacos = fields.Integer(string='Nº tacos', required=False, readonly=True)
@@ -58,14 +59,14 @@ class CreatePackagingWiz(models.TransientModel):
     taco_lateral_id = fields.Integer(string='Taco lateral Id', required=False, readonly=True)
     taco_costado_id = fields.Integer(string='Taco costado Id', required=False, readonly=True)
 
-    @api.onchange('largo_exterior', 'ancho_exterior', 'alto_exterior', 'espesor_general', 'espesor_base')
+    @api.onchange('largo_exterior', 'ancho_exterior', 'alto_exterior', 'espesor_general', 'espesor_base', 'tipo_palet')
     def onchange_medidas_exteriores(self):
         alto_tacos = self.env["res.packaging"].search([("name", "=", 'Alto tacos')]).value
         self.largo = self.largo_exterior - (2 * int(self.espesor_general)) - 1
         self.ancho = self.ancho_exterior - (2 * int(self.espesor_general)) - 1
         self.alto = self.alto_exterior - int(self.espesor_general) - 10 - alto_tacos
 
-    @api.onchange('largo', 'ancho', 'espesor_general')
+    @api.onchange('largo_exterior', 'ancho_exterior', 'alto_exterior', 'largo', 'ancho', 'espesor_general', 'tipo_palet')
     def onchange_largo_taco(self):
         sep_taco_lateral = self.env["res.packaging"].search([("name", "=", 'Separación taco lateral')]).value
         l_taco_lateral = self.env["res.packaging"].search([("name", "=", 'Largo taco lateral')]).value
@@ -74,14 +75,16 @@ class CreatePackagingWiz(models.TransientModel):
 
         # Cálculo taco principal
         if 0 < self.largo < 750:
-            raise UserError(_('Largo minimo 750mm vs %smm' % self.largo))
+            if self.tipo_palet != "4" and self.tipo_palet != "5":
+                self.largo_exterior = 0
+                raise UserError(_('Largo minimo 750mm vs %smm, debe usar tipo de palet pequeño' % self.largo))
         elif 750 <= self.largo <= 1350:
             self.largo_taco = l_taco_lateral
         elif self.largo > 1350:
             self.largo_taco = (a + self.largo - b - l_taco_lateral) / 2
 
         # Cálculo taco lateral
-        if self.largo >= 800:
+        if self.largo >= 800 and (self.tipo_palet != "4" and self.tipo_palet != "5"):
             self.n_tacos_lateral = 2
             self.largo_taco_lateral = l_taco_lateral
         else:
@@ -90,8 +93,13 @@ class CreatePackagingWiz(models.TransientModel):
 
         # Cálculo taco costado
         if 0 < self.ancho < 750:
-            raise UserError(_('Ancho minimo 750mm vs %smm' % self.ancho))
-        if self.ancho >= 800:
+            if self.tipo_palet != "4" and self.tipo_palet != "5":
+                self.ancho_exterior = 0
+                raise UserError(_('Ancho minimo 750mm vs %smm, debe usar tipo de palet pequeño' % self.ancho))
+            else:
+                'largo taco para tipo de palet pequeño'
+                self.largo_taco = self.ancho
+        if self.ancho >= 800 and (self.tipo_palet != "4" and self.tipo_palet != "5"):
             self.n_tacos_costado = 2
             self.largo_taco_costado = self.largo_taco - 100
         else:
@@ -105,7 +113,12 @@ class CreatePackagingWiz(models.TransientModel):
         ancho_tacos = self.env["res.packaging"].search([("name", "=", 'Ancho tacos')]).value
         distancia_suelo = self.env["res.packaging"].search([("name", "=", 'Distancia al suelo del lateral')]).value
 
-        self.n_tacos = self.env["res.packaging"].search([("name", "=", 'Número de tacos')]).value
+        if self.tipo_palet != "4" and self.tipo_palet != "5":
+            self.n_tacos = self.env["res.packaging"].search([("name", "=", 'Número de tacos')]).value
+        elif (self.tipo_palet == "4" or self.tipo_palet == "5") and self.largo_exterior < 1000:
+            self.n_tacos = 2
+        elif (self.tipo_palet == "4" or self.tipo_palet == "5") and self.largo_exterior >= 1000:
+            self.n_tacos = 3
 
         self.n_bulto_lines = len(self.embalaje_bom.bom_line_ids)
 
