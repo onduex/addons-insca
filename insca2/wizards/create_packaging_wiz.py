@@ -196,6 +196,12 @@ class CreatePackagingWiz(models.TransientModel):
                                           'categ_id': self.embalaje_id.categ_id.id,
                                           'sale_ok': False,
                                           'purchase_ok': False,
+                                          'product_length': float(self.largo_exterior) / 1000,
+                                          'product_width': float(self.ancho_exterior) / 1000,
+                                          'product_height': float(self.alto_exterior) / 1000,
+                                          'volume': float(self.largo_exterior) / 1000 *
+                                                    float(self.ancho_exterior) / 1000 *
+                                                    float(self.alto_exterior) / 1000,
                                           'product_package_number': self.n_bultos,
                                           'route_ids': [(6, 0, [x for x in (1, 5)])]
                                           })['id']
