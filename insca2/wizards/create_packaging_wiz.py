@@ -199,9 +199,10 @@ class CreatePackagingWiz(models.TransientModel):
                                           'product_length': float(self.largo_exterior) / 1000,
                                           'product_width': float(self.ancho_exterior) / 1000,
                                           'product_height': float(self.alto_exterior) / 1000,
-                                          'volume': float(self.largo_exterior) / 1000 *
-                                                    float(self.ancho_exterior) / 1000 *
-                                                    float(self.alto_exterior) / 1000,
+                                          'volume': (float(self.largo_exterior) / 1000 *
+                                                     float(self.ancho_exterior) / 1000 *
+                                                     float(self.alto_exterior) / 1000
+                                                     ),
                                           'product_package_number': self.n_bultos,
                                           'route_ids': [(6, 0, [x for x in (1, 5)])]
                                           })['id']
@@ -227,13 +228,16 @@ class CreatePackagingWiz(models.TransientModel):
                                 'vault_route': 'SEC'
                                 })
         if not self.base_id:
+            default_code = self.get_major_code_type_two(self.largo, self.ancho, self.espesor_base)
             product_ids.append({'id': product_tmpl_obj.create({'name': self.base,
-                                                               'default_code': self.get_major_code_type_two(
-                                                                   self.largo, self.ancho, self.espesor_base),
+                                                               'default_code': default_code,
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
                                                                'purchase_ok': False,
+                                                               'product_length': float(default_code[:4]) / 1000,
+                                                               'product_width': float(default_code[4:8]) / 1000,
+                                                               'product_height': float(default_code[8:]) / 1000,
                                                                'vault_material_code': 'VT.00AAM0'
                                                                                       + str(self.espesor_base) + 'mm',
                                                                'vault_length': str(self.largo),
@@ -259,15 +263,16 @@ class CreatePackagingWiz(models.TransientModel):
                                 'vault_route': 'MAN'
                                 })
         if not self.taco_id:
+            default_code = 'TC.' + str(alto_tacos).zfill(3) + str(ancho_tacos).zfill(3) + str(self.largo_taco).zfill(4)
             product_ids.append({'id': product_tmpl_obj.create({'name': self.taco,
-                                                               'default_code': 'TC.' +
-                                                                               str(alto_tacos).zfill(3) +
-                                                                               str(ancho_tacos).zfill(3) +
-                                                                               str(self.largo_taco).zfill(4),
+                                                               'default_code': default_code,
                                                                'type': "product",
                                                                'categ_id': self.embalaje_id.categ_id.id,
                                                                'sale_ok': False,
                                                                'purchase_ok': False,
+                                                               'product_length': float(default_code[9:]) / 1000,
+                                                               'product_width': float(default_code[6:9]) / 1000,
+                                                               'product_height': float(default_code[3:6]) / 1000,
                                                                'vault_material_code': taco_material,
                                                                'vault_sup_madera': str(float(alto_tacos) *
                                                                                        float(ancho_tacos) *
@@ -291,16 +296,17 @@ class CreatePackagingWiz(models.TransientModel):
                                     'vault_route': 'MAN'
                                     })
             if not self.taco_lateral_id:
+                default_code = ('TC.' + str(alto_tacos).zfill(3) + str(ancho_tacos).zfill(3) +
+                                str(self.largo_taco).zfill(4))
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_lateral,
-                                                                   'default_code': 'TC.' +
-                                                                                   str(alto_tacos).zfill(3) +
-                                                                                   str(ancho_tacos).zfill(3) +
-                                                                                   str(self.largo_taco_lateral).zfill(
-                                                                                       4),
+                                                                   'default_code': default_code,
                                                                    'type': "product",
                                                                    'categ_id': self.embalaje_id.categ_id.id,
                                                                    'sale_ok': False,
                                                                    'purchase_ok': False,
+                                                                   'product_length': float(default_code[9:]) / 1000,
+                                                                   'product_width': float(default_code[6:9]) / 1000,
+                                                                   'product_height': float(default_code[3:6]) / 1000,
                                                                    'vault_material_code': taco_material,
                                                                    'vault_sup_madera': str(float(alto_tacos) *
                                                                                            float(ancho_tacos) *
@@ -325,16 +331,17 @@ class CreatePackagingWiz(models.TransientModel):
                                     'vault_route': 'MAN'
                                     })
             if not self.taco_costado_id:
+                default_code = ('TC.' + str(alto_tacos).zfill(3) + str(ancho_tacos).zfill(3) +
+                                str(self.largo_taco_costado).zfill(4))
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_costado,
-                                                                   'default_code': 'TC.' +
-                                                                                   str(alto_tacos).zfill(3) +
-                                                                                   str(ancho_tacos).zfill(3) +
-                                                                                   str(self.largo_taco_costado).zfill(
-                                                                                       4),
+                                                                   'default_code': default_code,
                                                                    'type': "product",
                                                                    'categ_id': self.embalaje_id.categ_id.id,
                                                                    'sale_ok': False,
                                                                    'purchase_ok': False,
+                                                                   'product_length': float(default_code[9:]) / 1000,
+                                                                   'product_width': float(default_code[6:9]) / 1000,
+                                                                   'product_height': float(default_code[3:6]) / 1000,
                                                                    'vault_material_code': taco_material,
                                                                    'vault_sup_madera': str(float(alto_tacos) *
                                                                                            float(ancho_tacos) *
@@ -361,18 +368,20 @@ class CreatePackagingWiz(models.TransientModel):
                                     'vault_route': 'SEC'
                                     })
             if not self.tapa_id:
+                default_code = self.get_major_code_type_one(self.largo_exterior, self.ancho_exterior,
+                                                            self.espesor_general)
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
-                                                                   'default_code': self.get_major_code_type_one(
-                                                                       self.largo_exterior,
-                                                                       self.ancho_exterior,
-                                                                       self.espesor_general),
+                                                                   'default_code': default_code,
                                                                    'type': "product",
                                                                    'categ_id': self.embalaje_id.categ_id.id,
                                                                    'sale_ok': False,
                                                                    'purchase_ok': False,
+                                                                   'product_length': float(default_code[:4]) / 1000,
+                                                                   'product_width': float(default_code[4:8]) / 1000,
+                                                                   'product_height': float(default_code[8:]) / 1000,
                                                                    'vault_material_code': 'VT.00AAM0'
-                                                                                          + str(
-                                                                       self.espesor_general) + 'mm',
+                                                                                          + str(self.espesor_general)
+                                                                                          + 'mm',
                                                                    'vault_length': str(self.largo),
                                                                    'vault_width': str(self.ancho),
                                                                    'vault_thinkness': str(self.espesor_general),
@@ -395,15 +404,18 @@ class CreatePackagingWiz(models.TransientModel):
                                     'vault_route': 'SEC'
                                     })
             if not self.l_largo_id:
+                default_code = self.get_major_code_type_three(self.largo, self.alto, self.espesor_general,
+                                                              alto_tacos, self.espesor_base, distancia_suelo,
+                                                              self.tipo_palet)
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.l_largo,
-                                                                   'default_code': self.get_major_code_type_three(
-                                                                       self.largo, self.alto, self.espesor_general,
-                                                                       alto_tacos, self.espesor_base, distancia_suelo,
-                                                                       self.tipo_palet),
+                                                                   'default_code': default_code,
                                                                    'type': "product",
                                                                    'categ_id': self.embalaje_id.categ_id.id,
                                                                    'sale_ok': False,
                                                                    'purchase_ok': False,
+                                                                   'product_length': float(default_code[:4]) / 1000,
+                                                                   'product_width': float(default_code[4:8]) / 1000,
+                                                                   'product_height': float(default_code[8:]) / 1000,
                                                                    'vault_material_code': 'VT.00AAM0'
                                                                                           + str(
                                                                        self.espesor_general) + 'mm',
@@ -429,15 +441,17 @@ class CreatePackagingWiz(models.TransientModel):
                                     'vault_route': 'SEC'
                                     })
             if not self.l_corto_id:
+                default_code = self.get_major_code_type_four(self.alto, self.ancho, self.espesor_general,
+                                                             self.tipo_palet, self.espesor_base, alto_tacos)
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
-                                                                   'default_code': self.get_major_code_type_four(
-                                                                       self.alto, self.ancho, self.espesor_general,
-                                                                       self.tipo_palet, self.espesor_base,
-                                                                       alto_tacos),
+                                                                   'default_code': default_code,
                                                                    'type': "product",
                                                                    'categ_id': self.embalaje_id.categ_id.id,
                                                                    'sale_ok': False,
                                                                    'purchase_ok': False,
+                                                                   'product_length': float(default_code[:4]) / 1000,
+                                                                   'product_width': float(default_code[4:8]) / 1000,
+                                                                   'product_height': float(default_code[8:]) / 1000,
                                                                    'vault_material_code': 'VT.00AAM0'
                                                                                           + str(
                                                                        self.espesor_general) + 'mm',
