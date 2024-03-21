@@ -159,6 +159,7 @@ class CreatePackagingWiz(models.TransientModel):
         product_ids = []
         product_tmpl_obj = self.env['product.template']
         mrp_bom_obj = self.env['mrp.bom']
+        bulto_weight = 0.0
 
         if not self.tipo_palet:
             raise ValidationError(
@@ -229,6 +230,7 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.base_id:
             default_code = self.get_major_code_type_two(self.largo, self.ancho, self.espesor_base)
+            volume = float(default_code[:4]) / 1000 * float(default_code[4:8]) / 1000 * float(default_code[8:]) / 1000
             product_ids.append({'id': product_tmpl_obj.create({'name': self.base,
                                                                'default_code': default_code,
                                                                'type': "product",
@@ -238,13 +240,12 @@ class CreatePackagingWiz(models.TransientModel):
                                                                'product_length': float(default_code[:4]) / 1000,
                                                                'product_width': float(default_code[4:8]) / 1000,
                                                                'product_height': float(default_code[8:]) / 1000,
+                                                               'volume': volume,
+                                                               'weight': volume * 670,
                                                                'vault_material_code': 'VT.00AAM0'
                                                                                       + str(self.espesor_base) + 'mm',
-                                                               'vault_length': str(self.largo),
-                                                               'vault_width': str(self.ancho),
-                                                               'vault_thinkness': str(self.espesor_base),
-                                                               'vault_sup_madera': str(float(self.largo) *
-                                                                                       float(self.ancho) / 1000000),
+                                                               'vault_sup_madera': str(float(default_code[:4]) / 1000 *
+                                                                                       float(default_code[4:8]) / 1000),
                                                                'vault_route': 'SEC',
                                                                'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                }).id,
@@ -264,6 +265,7 @@ class CreatePackagingWiz(models.TransientModel):
                                 })
         if not self.taco_id:
             default_code = 'TC.' + str(alto_tacos).zfill(3) + str(ancho_tacos).zfill(3) + str(self.largo_taco).zfill(4)
+            volume = float(default_code[9:]) / 1000 * float(default_code[6:9]) / 1000 * float(default_code[3:6]) / 1000
             product_ids.append({'id': product_tmpl_obj.create({'name': self.taco,
                                                                'default_code': default_code,
                                                                'type': "product",
@@ -273,6 +275,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                'product_length': float(default_code[9:]) / 1000,
                                                                'product_width': float(default_code[6:9]) / 1000,
                                                                'product_height': float(default_code[3:6]) / 1000,
+                                                               'volume': volume,
+                                                               'weight': volume * 490,
                                                                'vault_material_code': taco_material,
                                                                'vault_sup_madera': str(float(alto_tacos) *
                                                                                        float(ancho_tacos) *
@@ -298,6 +302,8 @@ class CreatePackagingWiz(models.TransientModel):
             if not self.taco_lateral_id:
                 default_code = ('TC.' + str(alto_tacos).zfill(3) + str(ancho_tacos).zfill(3) +
                                 str(self.largo_taco).zfill(4))
+                volume = float(default_code[9:]) / 1000 * float(default_code[6:9]) / 1000 * float(
+                    default_code[3:6]) / 1000
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_lateral,
                                                                    'default_code': default_code,
                                                                    'type': "product",
@@ -307,6 +313,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                    'product_length': float(default_code[9:]) / 1000,
                                                                    'product_width': float(default_code[6:9]) / 1000,
                                                                    'product_height': float(default_code[3:6]) / 1000,
+                                                                   'volume': volume,
+                                                                   'weight': volume * 490,
                                                                    'vault_material_code': taco_material,
                                                                    'vault_sup_madera': str(float(alto_tacos) *
                                                                                            float(ancho_tacos) *
@@ -333,6 +341,8 @@ class CreatePackagingWiz(models.TransientModel):
             if not self.taco_costado_id:
                 default_code = ('TC.' + str(alto_tacos).zfill(3) + str(ancho_tacos).zfill(3) +
                                 str(self.largo_taco_costado).zfill(4))
+                volume = float(default_code[9:]) / 1000 * float(default_code[6:9]) / 1000 * float(
+                    default_code[3:6]) / 1000
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.taco_costado,
                                                                    'default_code': default_code,
                                                                    'type': "product",
@@ -342,6 +352,8 @@ class CreatePackagingWiz(models.TransientModel):
                                                                    'product_length': float(default_code[9:]) / 1000,
                                                                    'product_width': float(default_code[6:9]) / 1000,
                                                                    'product_height': float(default_code[3:6]) / 1000,
+                                                                   'volume': volume,
+                                                                   'weight': volume * 490,
                                                                    'vault_material_code': taco_material,
                                                                    'vault_sup_madera': str(float(alto_tacos) *
                                                                                            float(ancho_tacos) *
@@ -370,6 +382,8 @@ class CreatePackagingWiz(models.TransientModel):
             if not self.tapa_id:
                 default_code = self.get_major_code_type_one(self.largo_exterior, self.ancho_exterior,
                                                             self.espesor_general)
+                volume = float(default_code[:4]) / 1000 * float(default_code[4:8]) / 1000 * float(
+                    default_code[8:]) / 1000
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.tapa,
                                                                    'default_code': default_code,
                                                                    'type': "product",
@@ -379,14 +393,14 @@ class CreatePackagingWiz(models.TransientModel):
                                                                    'product_length': float(default_code[:4]) / 1000,
                                                                    'product_width': float(default_code[4:8]) / 1000,
                                                                    'product_height': float(default_code[8:]) / 1000,
+                                                                   'volume': volume,
+                                                                   'weight': volume * 670,
                                                                    'vault_material_code': 'VT.00AAM0'
                                                                                           + str(self.espesor_general)
                                                                                           + 'mm',
-                                                                   'vault_length': str(self.largo),
-                                                                   'vault_width': str(self.ancho),
-                                                                   'vault_thinkness': str(self.espesor_general),
-                                                                   'vault_sup_madera': str(float(self.largo) *
-                                                                                           float(self.ancho) / 1000000),
+                                                                   'vault_sup_madera': str(
+                                                                       float(default_code[:4]) / 1000 *
+                                                                       float(default_code[4:8]) / 1000),
                                                                    'vault_route': 'SEC',
                                                                    'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                    }).id,
@@ -407,6 +421,8 @@ class CreatePackagingWiz(models.TransientModel):
                 default_code = self.get_major_code_type_three(self.largo, self.alto, self.espesor_general,
                                                               alto_tacos, self.espesor_base, distancia_suelo,
                                                               self.tipo_palet)
+                volume = float(default_code[:4]) / 1000 * float(default_code[4:8]) / 1000 * float(
+                    default_code[8:]) / 1000
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.l_largo,
                                                                    'default_code': default_code,
                                                                    'type': "product",
@@ -416,14 +432,14 @@ class CreatePackagingWiz(models.TransientModel):
                                                                    'product_length': float(default_code[:4]) / 1000,
                                                                    'product_width': float(default_code[4:8]) / 1000,
                                                                    'product_height': float(default_code[8:]) / 1000,
+                                                                   'volume': volume,
+                                                                   'weight': volume * 670,
                                                                    'vault_material_code': 'VT.00AAM0'
-                                                                                          + str(
-                                                                       self.espesor_general) + 'mm',
-                                                                   'vault_length': str(self.largo),
-                                                                   'vault_width': str(self.alto),
-                                                                   'vault_thinkness': str(self.espesor_general),
-                                                                   'vault_sup_madera': str(float(self.largo) *
-                                                                                           float(self.alto) / 1000000),
+                                                                                          + str(self.espesor_general)
+                                                                                          + 'mm',
+                                                                   'vault_sup_madera': str(
+                                                                       float(default_code[:4]) / 1000 *
+                                                                       float(default_code[4:8]) / 1000),
                                                                    'vault_route': 'SEC',
                                                                    'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                    }).id,
@@ -443,6 +459,8 @@ class CreatePackagingWiz(models.TransientModel):
             if not self.l_corto_id:
                 default_code = self.get_major_code_type_four(self.alto, self.ancho, self.espesor_general,
                                                              self.tipo_palet, self.espesor_base, alto_tacos)
+                volume = float(default_code[:4]) / 1000 * float(default_code[4:8]) / 1000 * float(
+                    default_code[8:]) / 1000
                 product_ids.append({'id': product_tmpl_obj.create({'name': self.l_corto,
                                                                    'default_code': default_code,
                                                                    'type': "product",
@@ -452,14 +470,14 @@ class CreatePackagingWiz(models.TransientModel):
                                                                    'product_length': float(default_code[:4]) / 1000,
                                                                    'product_width': float(default_code[4:8]) / 1000,
                                                                    'product_height': float(default_code[8:]) / 1000,
+                                                                   'volume': volume,
+                                                                   'weight': volume * 670,
                                                                    'vault_material_code': 'VT.00AAM0'
-                                                                                          + str(
-                                                                       self.espesor_general) + 'mm',
-                                                                   'vault_length': str(self.alto),
-                                                                   'vault_width': str(self.ancho),
-                                                                   'vault_thinkness': str(self.espesor_general),
-                                                                   'vault_sup_madera': str(float(self.largo) *
-                                                                                           float(self.ancho) / 1000000),
+                                                                                          + str(self.espesor_general)
+                                                                                          + 'mm',
+                                                                   'vault_sup_madera': str(
+                                                                       float(default_code[:4]) / 1000 *
+                                                                       float(default_code[4:8]) / 1000),
                                                                    'vault_route': 'SEC',
                                                                    'route_ids': [(6, 0, [x for x in (1, 5)])]
                                                                    }).id,
@@ -480,6 +498,13 @@ class CreatePackagingWiz(models.TransientModel):
                                                         'product_qty': rec['qty']})
             else:
                 exist.update({'product_qty': exist['product_qty'] + rec['qty']})
+
+            # Sumatorio de los pesos de los productos
+            bulto_weight += (rec['qty'] * self.env['product.product'].
+                             search([('product_tmpl_id', '=', rec['id'])]).weight)
+
+        bulto_obj = self.env['product.template'].search([('id', '=', new_id)])
+        bulto_obj.write({'weight': bulto_weight})
 
         # Crear las LdM de los materiales y su consumo de material prima
         for record in product_ids:
