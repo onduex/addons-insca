@@ -100,7 +100,7 @@ class CreatePackagingWiz(models.TransientModel):
                 self.ancho_exterior = 0
                 raise UserError(_('Ancho minimo 750mm vs %smm, debe usar tipo de palet pequeño' % self.ancho))
             else:
-                'largo taco para tipo de palet pequeño'
+                # largo taco para tipo de palet pequeño
                 self.largo_taco = self.ancho
         if self.ancho >= 800 and (self.tipo_palet != "4" and self.tipo_palet != "5"):
             self.n_tacos_costado = 2
@@ -166,17 +166,17 @@ class CreatePackagingWiz(models.TransientModel):
                 _('¡Obligatorio Tipo de palet definido'))
         else:
             if self.tipo_palet != "2":
-                if self.largo == 0 or \
-                        self.ancho == 0 or \
-                        self.alto == 0 or \
+                if self.largo_exterior == 0 or \
+                        self.ancho_exterior == 0 or \
+                        self.alto_exterior == 0 or \
                         self.espesor_base == 0 or \
                         self.espesor_general == 0 or \
                         self.n_bultos == 0:
                     raise ValidationError(
                         _('¡Obligatorio todas las dimensiones distintas de cero!'))
             else:
-                if self.largo == 0 or \
-                        self.ancho == 0 or \
+                if self.largo_exterior == 0 or \
+                        self.ancho_exterior == 0 or \
                         self.espesor_base == 0:
                     raise ValidationError(
                         _('¡Obligatorio todas las dimensiones activas distintas de cero!'))
@@ -531,6 +531,9 @@ class CreatePackagingWiz(models.TransientModel):
         self.largo = 0
         self.ancho = 0
         self.alto = 0
+        self.largo_exterior = 0
+        self.ancho_exterior = 0
+        self.alto_exterior = 0
 
         return {
             'name': 'Crear embalaje',
